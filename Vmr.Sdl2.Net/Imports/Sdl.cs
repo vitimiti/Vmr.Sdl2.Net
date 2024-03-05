@@ -7,6 +7,8 @@ namespace Vmr.Sdl2.Net.Imports;
 
 internal static partial class Sdl
 {
+    private const string LibraryName = "SDL2";
+
     private static readonly List<KeyValuePair<bool, string>> OsSpecificNames =
     [
         new KeyValuePair<bool, string>(OperatingSystem.IsWindows(), "SDL2.dll"),
