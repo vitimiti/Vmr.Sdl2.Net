@@ -35,4 +35,9 @@ internal static unsafe class SdlPixelFormatMarshaller
     {
         return unmanaged is null ? null : new PixelFormat((nint)unmanaged, ownsHandle);
     }
+
+    public static SdlPixelFormat* ConvertToUnmanaged(PixelFormat? managed)
+    {
+        return managed is null ? null : (SdlPixelFormat*)managed.DangerousGetHandle();
+    }
 }
