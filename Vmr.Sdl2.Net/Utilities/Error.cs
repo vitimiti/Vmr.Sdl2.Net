@@ -2,7 +2,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Vmr.Sdl2.Net;
+namespace Vmr.Sdl2.Net.Utilities;
 
 public delegate void ErrorHandler(string? message);
 public delegate void ErrorCodeHandler(string? message, int errorCode);

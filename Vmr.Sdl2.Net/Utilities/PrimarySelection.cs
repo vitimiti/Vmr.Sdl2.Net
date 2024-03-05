@@ -2,7 +2,7 @@
 
 using Vmr.Sdl2.Net.Imports;
 
-namespace Vmr.Sdl2.Net;
+namespace Vmr.Sdl2.Net.Utilities;
 
 public class PrimarySelection
 {
