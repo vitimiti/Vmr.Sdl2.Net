@@ -7,8 +7,8 @@ namespace Vmr.Sdl2.Net.Utilities;
 public static class CpuInfo
 {
     public static int LogicalCores => Sdl.GetCpuCount();
-    public static int CacheLineSize => Sdl.GetCpuCacheLineSize();
-    public static int SystemRam => Sdl.GetSystemRam();
+    public static int CacheLineSizeInB => Sdl.GetCpuCacheLineSize();
+    public static int SystemRamInMiB => Sdl.GetSystemRam();
     public static bool HasRdtsc => Sdl.HasRdtsc();
     public static bool HasAltiVec => Sdl.HasAltiVec();
     public static bool HasMmx => Sdl.HasMmx();
