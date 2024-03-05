@@ -12,8 +12,17 @@ public sealed class Application : IDisposable
     public static ApplicationSubsystems InitializedSubsystems =>
         Sdl.WasInit(ApplicationSubsystems.None);
 
-    public Application(ApplicationSubsystems subsystems, ErrorCodeHandler errorHandler)
+    public Application(
+        ApplicationSubsystems subsystems,
+        ErrorCodeHandler errorHandler,
+        VersionMismatchHandler? versionMismatchHandler = null
+    )
     {
+        versionMismatchHandler?.Invoke(
+            NativeLibraryInformation.ExpectedVersion,
+            NativeLibraryInformation.Version
+        );
+
         int code = Sdl.Init(subsystems);
         if (code < 0)
         {

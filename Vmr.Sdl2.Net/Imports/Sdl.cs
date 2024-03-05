@@ -37,6 +37,7 @@ internal static partial class Sdl
             searchPath,
             out nint handle
         );
+
         return handle;
     }
 
