@@ -9,12 +9,12 @@ public delegate void ErrorCodeHandler(string? message, int errorCode);
 
 public static class Error
 {
-    public static void DefaultErrorHandler(string? message)
+    public static void DefaultHandler(string? message)
     {
         throw new ExternalException(message);
     }
 
-    public static void DefaultErrorCodeHandler(string? message, int errorCode)
+    public static void DefaultHandlerWithCode(string? message, int errorCode)
     {
         throw new ExternalException(message, errorCode);
     }
