@@ -11,6 +11,7 @@ using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Graphics;
 
+[Serializable]
 public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 {
     private int _userDataSize;
@@ -867,5 +868,10 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
                 errorHandler(Sdl.GetError(), 0);
             }
         }
+    }
+
+    public override string ToString()
+    {
+        return $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
     }
 }

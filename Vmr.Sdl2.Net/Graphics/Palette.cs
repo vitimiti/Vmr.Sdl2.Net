@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
-using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Win32.SafeHandles;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
@@ -9,6 +8,7 @@ using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Graphics;
 
+[Serializable]
 public class Palette : SafeHandleZeroOrMinusOneIsInvalid
 {
     public Color[]? Colors
@@ -51,7 +51,7 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
-    public int RefCount
+    public int ReferenceCount
     {
         get
         {
@@ -118,5 +118,10 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
                 }
             }
         }
+    }
+
+    public override string ToString()
+    {
+        return $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
     }
 }

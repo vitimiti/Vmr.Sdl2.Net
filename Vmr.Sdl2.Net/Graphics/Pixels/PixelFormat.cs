@@ -9,6 +9,7 @@ using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Graphics.Pixels;
 
+[Serializable]
 public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
 {
     public uint Format
@@ -628,5 +629,10 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
     public uint MapRba(Color color)
     {
         return Sdl.MapRgba(handle, color.R, color.G, color.B, color.A);
+    }
+
+    public override string ToString()
+    {
+        return $"{{Format: {Format}, Palette: {Palette}, Bytes Per Pixel: {BytesPerPixel}, Color Masks: {ColorMasks}, Color Loss: {ColorLoss}, Color Shift: {ColorShift}, Reference Count: {ReferenceCount}, Next: {Next}}}";
     }
 }
