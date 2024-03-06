@@ -2,10 +2,11 @@
 
 using System.Drawing;
 using Vmr.Sdl2.Net.Graphics.Colors;
+using Vmr.Sdl2.Net.Graphics.Pixels;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Utilities;
 
-namespace Vmr.Sdl2.Net.Graphics.Pixels;
+namespace Vmr.Sdl2.Net.Extensions;
 
 public static class PixelExtensions
 {
