@@ -2,7 +2,9 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
@@ -11,7 +13,7 @@ namespace Vmr.Sdl2.Net.Graphics;
 
 [Serializable]
 [NativeMarshalling(typeof(SafeHandleMarshaller<Palette>))]
-public class Palette : SafeHandleZeroOrMinusOneIsInvalid
+public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
 {
     internal Palette(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
@@ -80,6 +82,11 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
+    public bool Equals(Palette? other)
+    {
+        return other is not null && Colors == other.Colors;
+    }
+
     protected override bool ReleaseHandle()
     {
         if (handle == nint.Zero)
@@ -122,8 +129,44 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
+        return Equals((Palette)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Colors, Version, ReferenceCount);
+    }
+
     public override string ToString()
     {
-        return $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
+        return
+            $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
+    }
+
+    public static bool operator ==(Palette? left, Palette? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Palette? left, Palette? right)
+    {
+        return !Equals(left, right);
     }
 }

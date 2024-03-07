@@ -2,7 +2,9 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Utilities;
@@ -11,7 +13,7 @@ namespace Vmr.Sdl2.Net.Graphics.Pixels;
 
 [Serializable]
 [NativeMarshalling(typeof(SafeHandleMarshaller<PixelFormat>))]
-public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
+public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<PixelFormat>
 {
     internal PixelFormat(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
@@ -140,6 +142,17 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
                     : new PixelFormat((nint)UnsafeHandle->Next, false);
             }
         }
+    }
+
+    public bool Equals(PixelFormat? other)
+    {
+        return other is not null
+               && Format == other.Format
+               && Palette == other.Palette
+               && BytesPerPixel == other.BytesPerPixel
+               && ColorMasks == other.ColorMasks
+               && ColorLoss == other.ColorLoss
+               && ColorShift == other.ColorShift;
     }
 
     protected override bool ReleaseHandle()
@@ -543,11 +556,11 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
     private static uint Define(uint type, uint order, uint layout, byte bits, byte bytes)
     {
         return (1U << 28)
-            | (type << 24)
-            | (order << 20)
-            | (layout << 16)
-            | ((uint)bits << 8)
-            | ((uint)bytes << 0);
+               | (type << 24)
+               | (order << 20)
+               | (layout << 16)
+               | ((uint)bits << 8)
+               | ((uint)bytes << 0);
     }
 
     public static uint Define(char a, char b, char c, char d)
@@ -632,8 +645,53 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         return Sdl.MapRgba(this, color.R, color.G, color.B, color.A);
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
+        return Equals((PixelFormat)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode code = new();
+        code.Add(Format);
+        code.Add(Palette);
+        code.Add(BytesPerPixel);
+        code.Add(ColorMasks);
+        code.Add(ColorLoss);
+        code.Add(ColorShift);
+        code.Add(ReferenceCount);
+        code.Add(Next);
+        return code.ToHashCode();
+    }
+
     public override string ToString()
     {
-        return $"{{Format: {Format}, Palette: {Palette}, Bytes Per Pixel: {BytesPerPixel}, Color Masks: {ColorMasks}, Color Loss: {ColorLoss}, Color Shift: {ColorShift}, Reference Count: {ReferenceCount}, Next: {Next}}}";
+        return
+            $"{{Format: {Format}, Palette: {Palette}, Bytes Per Pixel: {BytesPerPixel}, Color Masks: {ColorMasks}, Color Loss: {ColorLoss}, Color Shift: {ColorShift}, Reference Count: {ReferenceCount}, Next: {Next}}}";
+    }
+
+    public static bool operator ==(PixelFormat? left, PixelFormat? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(PixelFormat? left, PixelFormat? right)
+    {
+        return !Equals(left, right);
     }
 }

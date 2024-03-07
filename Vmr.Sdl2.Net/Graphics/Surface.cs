@@ -2,7 +2,9 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
 using Vmr.Sdl2.Net.Graphics.Blending;
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Graphics.Pixels;
@@ -14,7 +16,7 @@ namespace Vmr.Sdl2.Net.Graphics;
 
 [Serializable]
 [NativeMarshalling(typeof(SafeHandleMarshaller<Surface>))]
-public class Surface : SafeHandleZeroOrMinusOneIsInvalid
+public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 {
     private int _userDataSize;
 
@@ -282,6 +284,18 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public bool HasRle => Sdl.HasSurfaceRle(this);
     public bool HasColorKey => Sdl.HasColorKey(this);
+
+    public bool Equals(Surface? other)
+    {
+        return other is not null
+               && Flags == other.Flags
+               && PixelFormat == other.PixelFormat
+               && Size == other.Size
+               && Pitch == other.Pitch
+               && Pixels == other.Pixels
+               && HasRle == other.HasRle
+               && HasColorKey == other.HasColorKey;
+    }
 
     protected override bool ReleaseHandle()
     {
@@ -577,8 +591,56 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != GetType())
+        {
+            return false;
+        }
+
+        return Equals((Surface)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode code = new();
+        code.Add(Flags);
+        code.Add(PixelFormat);
+        code.Add(Size);
+        code.Add(Pitch);
+        code.Add(Pixels);
+        code.Add(UserData);
+        code.Add(Locked);
+        code.Add(ClipRectangle);
+        code.Add(ReferenceCount);
+        code.Add(HasRle);
+        code.Add(HasColorKey);
+        return code.ToHashCode();
+    }
+
     public override string ToString()
     {
-        return $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
+        return
+            $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
+    }
+
+    public static bool operator ==(Surface? left, Surface? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(Surface? left, Surface? right)
+    {
+        return !Equals(left, right);
     }
 }
