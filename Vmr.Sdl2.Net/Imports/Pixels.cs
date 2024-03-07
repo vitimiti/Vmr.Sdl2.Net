@@ -3,6 +3,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;
@@ -54,10 +55,11 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetPixelFormatPalette")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial int SetPixelFormatPalette(
-        nint format,
-        [MarshalUsing(typeof(SafeHandleMarshaller<Graphics.Palette>))] Graphics.Palette? palette
-    );
+    public static partial int SetPixelFormatPalette(nint format, Graphics.Palette palette);
+
+    [LibraryImport(LibraryName, EntryPoint = "SDL_SetPixelFormatPalette")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    public static partial int SetPixelFormatPalette(nint format, nint palette);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetPaletteColors")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
@@ -111,9 +113,8 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void CalculateGammaRamp(
         float gamma,
-        [Out]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] ramp
+        [Out] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] ramp
     );
 
     [StructLayout(LayoutKind.Sequential)]

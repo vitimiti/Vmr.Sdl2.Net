@@ -328,7 +328,10 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
     public void SetPalette(Palette? palette, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetSurfacePalette(this, palette);
+        int code = palette is null
+            ? Sdl.SetSurfacePalette(this, nint.Zero)
+            : Sdl.SetSurfacePalette(this, palette);
+
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);

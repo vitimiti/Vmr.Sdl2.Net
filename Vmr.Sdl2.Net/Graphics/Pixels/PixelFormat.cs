@@ -628,7 +628,10 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<PixelFo
 
     public void SetPalette(Palette? palette, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetPixelFormatPalette(handle, palette);
+        int code = palette is null
+            ? Sdl.SetPixelFormatPalette(handle, nint.Zero)
+            : Sdl.SetPixelFormatPalette(handle, palette);
+
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
