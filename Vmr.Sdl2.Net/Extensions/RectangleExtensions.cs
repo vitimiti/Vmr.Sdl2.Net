@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Utilities;
 
@@ -43,5 +44,16 @@ public static class RectangleExtensions
 
         errorHandler(Sdl.GetError());
         return (Point.Empty, Point.Empty);
+    }
+
+    public static int GetDisplayIndex(this Rectangle rectangle, ErrorCodeHandler errorHandler)
+    {
+        int result = Sdl.GetRectDisplayIndex(rectangle);
+        if (result < 0)
+        {
+            errorHandler(Sdl.GetError(), result);
+        }
+
+        return result;
     }
 }

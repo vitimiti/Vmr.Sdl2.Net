@@ -27,17 +27,12 @@ namespace Vmr.Sdl2.Net.Marshalling;
     MarshalMode.UnmanagedToManagedOut,
     typeof(UnmanagedToManagedOut)
 )]
+[CustomMarshaller(typeof(Rectangle), MarshalMode.ElementIn, typeof(ElementIn))]
 internal static unsafe class SdlRectangleMarshaller
 {
     public static SdlRect ConvertToUnmanaged(Rectangle managed)
     {
-        return new SdlRect
-        {
-            X = managed.X,
-            Y = managed.Y,
-            W = managed.Width,
-            H = managed.Height
-        };
+        return new SdlRect { X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height };
     }
 
     public static Rectangle ConvertToManaged(SdlRect unmanaged)
@@ -52,6 +47,27 @@ internal static unsafe class SdlRectangleMarshaller
         public int Y;
         public int W;
         public int H;
+    }
+
+    public static class ElementIn
+    {
+        public static SdlRect ConvertToUnmanaged(Rectangle managed)
+        {
+            return new SdlRect
+            {
+                X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height
+            };
+        }
+
+        public static Rectangle ConvertToManaged(SdlRect unmanaged)
+        {
+            return new Rectangle(unmanaged.X, unmanaged.Y, unmanaged.W, unmanaged.H);
+        }
+
+        public static void Free()
+        {
+            // Nothing to do here
+        }
     }
 
     public ref struct ManagedToUnmanagedIn
@@ -70,10 +86,7 @@ internal static unsafe class SdlRectangleMarshaller
 
             _unmanaged = new SdlRect
             {
-                X = managed.X,
-                Y = managed.Y,
-                W = managed.Width,
-                H = managed.Height
+                X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height
             };
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
             fixed (SdlRect* ptr = &_unmanaged)
@@ -179,10 +192,7 @@ internal static unsafe class SdlRectangleMarshaller
 
             _unmanaged = new SdlRect
             {
-                X = managed.X,
-                Y = managed.Y,
-                W = managed.Width,
-                H = managed.Height
+                X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height
             };
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
             fixed (SdlRect* ptr = &_unmanaged)
