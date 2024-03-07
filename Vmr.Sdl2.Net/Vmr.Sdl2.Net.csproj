@@ -70,18 +70,6 @@
             <Pack>true</Pack>
             <PackagePath>runtimes\linux-x64</PackagePath>
         </Content>
-        <Content Include="..\runtimes\linux-x64\libSDL2-2.0.so.0">
-            <Link>libSDL2-2.0.so.0</Link>
-            <Visible>false</Visible>
-            <Pack>true</Pack>
-            <PackagePath>runtimes\linux-x64</PackagePath>
-        </Content>
-        <Content Include="..\runtimes\linux-x64\libSDL2-2.0.so.0.3000.1">
-            <Link>libSDL2-2.0.so.0.3000.1</Link>
-            <Visible>false</Visible>
-            <Pack>true</Pack>
-            <PackagePath>runtimes\linux-x64</PackagePath>
-        </Content>
     </ItemGroup>
 
     <ItemGroup>

@@ -40,17 +40,5 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </None>
-        <None Include="$(PkgVmr_Sdl2_Net)\runtimes\linux-x64\libSDL2-2.0.so.0">
-            <Link>libSDL2-2.0.so.0</Link>
-            <Visible>false</Visible>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </None>
-        <None Include="$(PkgVmr_Sdl2_Net)\runtimes\linux-x64\libSDL2-2.0.so.0.3000.1">
-            <Link>libSDL2-2.0.so.0.3000.1</Link>
-            <Visible>false</Visible>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </None>
     </ItemGroup>
 </Project>
