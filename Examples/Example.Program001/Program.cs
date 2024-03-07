@@ -4,7 +4,6 @@ using System.Text;
 
 using Vmr.Sdl2.Net;
 using Vmr.Sdl2.Net.Graphics;
-using Vmr.Sdl2.Net.Utilities;
 using Vmr.Sdl2.Net.Video;
 using Vmr.Sdl2.Net.Video.Messages;
 
@@ -33,15 +32,14 @@ try
             CriticalError
         );
 
-    using Surface? screenSurface = window.GetSurface(Error.DefaultHandler);
+    using Surface? screenSurface = window.GetSurface(CriticalError);
     screenSurface?.Fill(
         Rectangle.Empty,
         screenSurface.PixelFormat?.MapRgb(Color.DarkOrange) ?? 0U,
         CriticalErrorWithCode
     );
 
-    window.UpdateSurface(Error.DefaultHandlerWithCode);
-
+    window.UpdateSurface(CriticalErrorWithCode);
     Thread.Sleep(TimeSpan.FromSeconds(3));
 }
 catch (Exception e)
