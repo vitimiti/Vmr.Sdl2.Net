@@ -19,26 +19,19 @@ public static class PointFExtensions
 
     public static RectangleF EncloseInRectangleF(this PointF[] points, ErrorHandler errorHandler)
     {
-        unsafe
+        bool isValid = Sdl.EnclosePointFs(
+            points,
+            points.Length,
+            RectangleF.Empty,
+            out RectangleF result
+        );
+
+        if (isValid)
         {
-            var sdlPoints = new SdlPointFMarshaller.SdlPointF[points.Length];
-            for (int i = 0; i < points.Length; i++)
-            {
-                sdlPoints[i] = SdlPointFMarshaller.ConvertToUnmanaged(points[i]);
-            }
-
-            fixed (SdlPointFMarshaller.SdlPointF* sdlPointsHandle = sdlPoints)
-            {
-                SdlRectangleFMarshaller.SdlRectF result = new();
-                bool isValid = Sdl.EnclosePointFs(sdlPointsHandle, points.Length, null, &result);
-                if (isValid)
-                {
-                    return SdlRectangleFMarshaller.ConvertToManaged(result);
-                }
-
-                errorHandler(Sdl.GetError());
-                return RectangleF.Empty;
-            }
+            return result;
         }
+
+        errorHandler(Sdl.GetError());
+        return RectangleF.Empty;
     }
 }

@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Win32.SafeHandles;
 using Vmr.Sdl2.Net.Graphics.Blending;
 using Vmr.Sdl2.Net.Graphics.Colors;
@@ -12,6 +13,7 @@ using Vmr.Sdl2.Net.Utilities;
 namespace Vmr.Sdl2.Net.Graphics;
 
 [Serializable]
+[NativeMarshalling(typeof(SafeHandleMarshaller<Surface>))]
 public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 {
     private int _userDataSize;
@@ -28,7 +30,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlSurfaceMarshaller.SdlSurface*)handle)->Flags;
+                return ((Sdl.Surface*)handle)->Flags;
             }
         }
     }
@@ -39,10 +41,9 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return SdlPixelFormatMarshaller.ConvertToManaged(
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->Format,
-                    false
-                );
+                return ((Sdl.Surface*)handle)->Format is null
+                    ? null
+                    : new PixelFormat((nint)((Sdl.Surface*)handle)->Format, false);
             }
         }
     }
@@ -53,10 +54,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return new Size(
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->W,
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->H
-                );
+                return new Size(((Sdl.Surface*)handle)->W, ((Sdl.Surface*)handle)->H);
             }
         }
     }
@@ -67,7 +65,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlSurfaceMarshaller.SdlSurface*)handle)->Pitch;
+                return ((Sdl.Surface*)handle)->Pitch;
             }
         }
     }
@@ -78,17 +76,14 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                if (((SdlSurfaceMarshaller.SdlSurface*)handle)->Pixels is null)
+                if (((Sdl.Surface*)handle)->Pixels is null)
                 {
                     return null;
                 }
 
-                int size =
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->W
-                    * ((SdlSurfaceMarshaller.SdlSurface*)handle)->H
-                    * sizeof(byte);
+                int size = ((Sdl.Surface*)handle)->W * ((Sdl.Surface*)handle)->H * sizeof(byte);
 
-                byte* pixelsHandle = (byte*)((SdlSurfaceMarshaller.SdlSurface*)handle)->Pixels;
+                byte* pixelsHandle = (byte*)((Sdl.Surface*)handle)->Pixels;
                 var pixels = new byte[size];
                 for (int i = 0; i < size; i++)
                 {
@@ -104,7 +99,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
             {
                 fixed (byte* pixelsHandle = value)
                 {
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->Pixels = pixelsHandle;
+                    ((Sdl.Surface*)handle)->Pixels = pixelsHandle;
                 }
             }
         }
@@ -116,7 +111,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                if (((SdlSurfaceMarshaller.SdlSurface*)handle)->UserData is null)
+                if (((Sdl.Surface*)handle)->UserData is null)
                 {
                     return null;
                 }
@@ -126,7 +121,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
                     return Array.Empty<byte>();
                 }
 
-                byte* userDataHandle = (byte*)((SdlSurfaceMarshaller.SdlSurface*)handle)->Pixels;
+                byte* userDataHandle = (byte*)((Sdl.Surface*)handle)->Pixels;
                 var userData = new byte[_userDataSize];
                 for (int i = 0; i < _userDataSize; i++)
                 {
@@ -142,7 +137,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
             {
                 fixed (byte* pixelsHandle = value)
                 {
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->Pixels = pixelsHandle;
+                    ((Sdl.Surface*)handle)->Pixels = pixelsHandle;
                     _userDataSize = value?.Length ?? 0;
                 }
             }
@@ -155,9 +150,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return IntBoolMarshaller.ConvertToManaged(
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->Locked
-                );
+                return IntBoolMarshaller.ConvertToManaged(((Sdl.Surface*)handle)->Locked);
             }
         }
     }
@@ -168,9 +161,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return SdlRectangleMarshaller.ConvertToManaged(
-                    ((SdlSurfaceMarshaller.SdlSurface*)handle)->ClipRect
-                );
+                return SdlRectangleMarshaller.ConvertToManaged(((Sdl.Surface*)handle)->ClipRect);
             }
         }
     }
@@ -181,13 +172,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlSurfaceMarshaller.SdlSurface*)handle)->ReferenceCount;
+                return ((Sdl.Surface*)handle)->ReferenceCount;
             }
         }
     }
 
-    public bool HasRle => Sdl.HasSurfaceRle(handle);
-    public bool HasColorKey => Sdl.HasColorKey(handle);
+    public bool HasRle => Sdl.HasSurfaceRle(this);
+    public bool HasColorKey => Sdl.HasColorKey(this);
 
     internal Surface(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
@@ -321,7 +312,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void SetPalette(Palette? palette, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetSurfacePalette(handle, palette);
+        int code = Sdl.SetSurfacePalette(this, palette);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -330,7 +321,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void Lock(ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.LockSurface(handle);
+        int code = Sdl.LockSurface(this);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -339,12 +330,12 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void Unlock()
     {
-        Sdl.UnlockSurface(handle);
+        Sdl.UnlockSurface(this);
     }
 
     public void SaveBmp(RwOps dst, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SaveBmpRw(handle, dst, false);
+        int code = Sdl.SaveBmpRw(this, dst, false);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -353,7 +344,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void SetRleEnabled(bool enabled, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetSurfaceRle(handle, enabled);
+        int code = Sdl.SetSurfaceRle(this, enabled);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -362,7 +353,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void SetColorKey(bool enabled, uint key, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetColorKey(handle, enabled, key);
+        int code = Sdl.SetColorKey(this, enabled, key);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -371,7 +362,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public uint GetColorKey(ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.GetColorKey(handle, out uint key);
+        int code = Sdl.GetColorKey(this, out uint key);
         if (code >= 0)
         {
             return key;
@@ -383,13 +374,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void SetColorMod(Color color, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetSurfaceColorMod(handle, color.R, color.G, color.B);
+        int code = Sdl.SetSurfaceColorMod(this, color.R, color.G, color.B);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
         }
 
-        code = Sdl.SetSurfaceAlphaMod(handle, color.A);
+        code = Sdl.SetSurfaceAlphaMod(this, color.A);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -398,14 +389,14 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public Color GetColorMod(ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.GetSurfaceColorMod(handle, out byte r, out byte g, out byte b);
+        int code = Sdl.GetSurfaceColorMod(this, out byte r, out byte g, out byte b);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
             return Color.Black;
         }
 
-        code = Sdl.GetSurfaceAlphaMod(handle, out byte a);
+        code = Sdl.GetSurfaceAlphaMod(this, out byte a);
         if (code >= 0)
         {
             return Color.FromArgb(a, r, g, b);
@@ -417,7 +408,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void SetBlendMode(BlendMode blendMode, ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.SetSurfaceBlendMode(handle, blendMode);
+        int code = Sdl.SetSurfaceBlendMode(this, blendMode);
         if (code < 0)
         {
             errorHandler(Sdl.GetError(), code);
@@ -426,7 +417,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public BlendMode GetBlendMode(ErrorCodeHandler errorHandler)
     {
-        int code = Sdl.GetSurfaceBlendMode(handle, out BlendMode blendMode);
+        int code = Sdl.GetSurfaceBlendMode(this, out BlendMode blendMode);
         if (code >= 0)
         {
             return blendMode;
@@ -438,33 +429,22 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public void SetClipRectangle(Rectangle clip, ErrorHandler errorHandler)
     {
-        unsafe
+        bool isValid = Sdl.SetClipRect(this, clip);
+        if (!isValid)
         {
-            SdlRectangleMarshaller.SdlRect sdlClip = SdlRectangleMarshaller.ConvertToUnmanaged(
-                clip
-            );
-
-            bool isValid = Sdl.SetClipRect(handle, &sdlClip);
-            if (!isValid)
-            {
-                errorHandler(Sdl.GetError());
-            }
+            errorHandler(Sdl.GetError());
         }
     }
 
     public Rectangle GetClipRectangle()
     {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect result = new();
-            Sdl.GetClipRect(handle, &result);
-            return SdlRectangleMarshaller.ConvertToManaged(result);
-        }
+        Sdl.GetClipRect(this, out Rectangle result);
+        return result;
     }
 
     public Surface? Duplicate(ErrorHandler errorHandler)
     {
-        nint surfaceHandle = Sdl.DuplicateSurface(handle);
+        nint surfaceHandle = Sdl.DuplicateSurface(this);
         if (surfaceHandle != nint.Zero)
         {
             return new Surface(surfaceHandle, true);
@@ -476,7 +456,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public Surface? Convert(PixelFormat format, ErrorHandler errorHandler)
     {
-        nint surfaceHandle = Sdl.ConvertSurface(handle, format, 0);
+        nint surfaceHandle = Sdl.ConvertSurface(this, format, 0);
         if (surfaceHandle != nint.Zero)
         {
             return new Surface(surfaceHandle, true);
@@ -488,7 +468,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
     public Surface? Convert(uint pixelFormat, ErrorHandler errorHandler)
     {
-        nint surfaceHandle = Sdl.ConvertSurfaceFormat(handle, pixelFormat, 0);
+        nint surfaceHandle = Sdl.ConvertSurfaceFormat(this, pixelFormat, 0);
         if (surfaceHandle != nint.Zero)
         {
             return new Surface(surfaceHandle, true);
@@ -498,31 +478,12 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         return null;
     }
 
-    public void Fill(uint color, ErrorCodeHandler errorHandler)
-    {
-        unsafe
-        {
-            int code = Sdl.FillRect(handle, null, color);
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-        }
-    }
-
     public void Fill(Rectangle rectangle, uint color, ErrorCodeHandler errorHandler)
     {
-        unsafe
+        int code = Sdl.FillRect(this, rectangle, color);
+        if (code < 0)
         {
-            SdlRectangleMarshaller.SdlRect sdlRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                rectangle
-            );
-
-            int code = Sdl.FillRect(handle, &sdlRect, color);
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
+            errorHandler(Sdl.GetError(), code);
         }
     }
 
@@ -538,7 +499,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 
             fixed (SdlRectangleMarshaller.SdlRect* sdlRectsHandle = sdlRects)
             {
-                int code = Sdl.FillRects(handle, sdlRectsHandle, rectangles.Length, color);
+                int code = Sdl.FillRects(this, sdlRectsHandle, rectangles.Length, color);
                 if (code < 0)
                 {
                     errorHandler(Sdl.GetError(), code);
@@ -558,31 +519,6 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         UpperBlit(srcRect, dst, ref dstRect, doScaledBlit, errorHandler);
     }
 
-    public void Blit(
-        Surface dst,
-        ref Rectangle dstRect,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        UpperBlit(dst, ref dstRect, doScaledBlit, errorHandler);
-    }
-
-    public void Blit(
-        Rectangle srcRect,
-        Surface dst,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        UpperBlit(srcRect, dst, doScaledBlit, errorHandler);
-    }
-
-    public void Blit(Surface dst, bool doScaledBlit, ErrorCodeHandler errorHandler)
-    {
-        UpperBlit(dst, doScaledBlit, errorHandler);
-    }
-
     public void UpperBlit(
         Rectangle srcRect,
         Surface dst,
@@ -591,91 +527,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         ErrorCodeHandler errorHandler
     )
     {
-        unsafe
+        int code = doScaledBlit
+            ? Sdl.UpperBlitScaled(this, srcRect, dst, ref dstRect)
+            : Sdl.UpperBlit(this, srcRect, dst, ref dstRect);
+
+        if (code < 0)
         {
-            SdlRectangleMarshaller.SdlRect sdlSrcRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                srcRect
-            );
-
-            SdlRectangleMarshaller.SdlRect sdlDstRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                dstRect
-            );
-
-            int code = doScaledBlit
-                ? Sdl.UpperBlitScaled(handle, &sdlSrcRect, dst.handle, &sdlDstRect)
-                : Sdl.UpperBlit(handle, &sdlSrcRect, dst.handle, &sdlDstRect);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-
-            dstRect = SdlRectangleMarshaller.ConvertToManaged(sdlDstRect);
-        }
-    }
-
-    public void UpperBlit(
-        Surface dst,
-        ref Rectangle dstRect,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect sdlDstRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                dstRect
-            );
-
-            int code = doScaledBlit
-                ? Sdl.UpperBlitScaled(handle, null, dst.handle, &sdlDstRect)
-                : Sdl.UpperBlit(handle, null, dst.handle, &sdlDstRect);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-
-            dstRect = SdlRectangleMarshaller.ConvertToManaged(sdlDstRect);
-        }
-    }
-
-    public void UpperBlit(
-        Rectangle srcRect,
-        Surface dst,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect sdlSrcRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                srcRect
-            );
-
-            int code = doScaledBlit
-                ? Sdl.UpperBlitScaled(handle, &sdlSrcRect, dst.handle, null)
-                : Sdl.UpperBlit(handle, &sdlSrcRect, dst.handle, null);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-        }
-    }
-
-    public void UpperBlit(Surface dst, bool doScaledBlit, ErrorCodeHandler errorHandler)
-    {
-        unsafe
-        {
-            int code = doScaledBlit
-                ? Sdl.UpperBlitScaled(handle, null, dst.handle, null)
-                : Sdl.UpperBlit(handle, null, dst.handle, null);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
+            errorHandler(Sdl.GetError(), code);
         }
     }
 
@@ -687,94 +545,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         ErrorCodeHandler errorHandler
     )
     {
-        unsafe
+        int code = doScaledBlit
+            ? Sdl.LowerBlitScaled(this, ref srcRect, dst, ref dstRect)
+            : Sdl.LowerBlit(this, ref srcRect, dst, ref dstRect);
+
+        if (code < 0)
         {
-            SdlRectangleMarshaller.SdlRect sdlSrcRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                srcRect
-            );
-
-            SdlRectangleMarshaller.SdlRect sdlDstRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                dstRect
-            );
-
-            int code = doScaledBlit
-                ? Sdl.LowerBlitScaled(handle, &sdlSrcRect, dst.handle, &sdlDstRect)
-                : Sdl.LowerBlit(handle, &sdlSrcRect, dst.handle, &sdlDstRect);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-
-            srcRect = SdlRectangleMarshaller.ConvertToManaged(sdlSrcRect);
-            dstRect = SdlRectangleMarshaller.ConvertToManaged(sdlDstRect);
-        }
-    }
-
-    public void LowerBlit(
-        Surface dst,
-        ref Rectangle dstRect,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect sdlDstRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                dstRect
-            );
-
-            int code = doScaledBlit
-                ? Sdl.LowerBlitScaled(handle, null, dst.handle, &sdlDstRect)
-                : Sdl.LowerBlit(handle, null, dst.handle, &sdlDstRect);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-
-            dstRect = SdlRectangleMarshaller.ConvertToManaged(sdlDstRect);
-        }
-    }
-
-    public void LowerBlit(
-        ref Rectangle srcRect,
-        Surface dst,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect sdlSrcRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                srcRect
-            );
-
-            int code = doScaledBlit
-                ? Sdl.LowerBlitScaled(handle, &sdlSrcRect, dst.handle, null)
-                : Sdl.LowerBlit(handle, &sdlSrcRect, dst.handle, null);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
-
-            srcRect = SdlRectangleMarshaller.ConvertToManaged(sdlSrcRect);
-        }
-    }
-
-    public void LowerBlit(Surface dst, bool doScaledBlit, ErrorCodeHandler errorHandler)
-    {
-        unsafe
-        {
-            int code = doScaledBlit
-                ? Sdl.LowerBlitScaled(handle, null, dst.handle, null)
-                : Sdl.LowerBlit(handle, null, dst.handle, null);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), code);
-            }
+            errorHandler(Sdl.GetError(), code);
         }
     }
 
@@ -786,87 +563,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
         ErrorCodeHandler errorHandler
     )
     {
-        unsafe
+        int code = doLinearStretch
+            ? Sdl.SoftStretchLinear(this, srcRect, dst, dstRect)
+            : Sdl.SoftStretch(this, srcRect, dst, dstRect);
+
+        if (code < 0)
         {
-            SdlRectangleMarshaller.SdlRect sdlSrcRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                srcRect
-            );
-
-            SdlRectangleMarshaller.SdlRect sdlDstRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                dstRect
-            );
-
-            int code = doLinearStretch
-                ? Sdl.SoftStretchLinear(handle, &sdlSrcRect, dst.handle, &sdlDstRect)
-                : Sdl.SoftStretch(handle, &sdlSrcRect, dst.handle, &sdlDstRect);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), 0);
-            }
-        }
-    }
-
-    public void SoftStretch(
-        Surface dst,
-        Rectangle dstRect,
-        bool doLinearStretch,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect sdlDstRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                dstRect
-            );
-
-            int code = doLinearStretch
-                ? Sdl.SoftStretchLinear(handle, null, dst.handle, &sdlDstRect)
-                : Sdl.SoftStretch(handle, null, dst.handle, &sdlDstRect);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), 0);
-            }
-        }
-    }
-
-    public void SoftStretch(
-        Rectangle srcRect,
-        Surface dst,
-        bool doLinearStretch,
-        ErrorCodeHandler errorHandler
-    )
-    {
-        unsafe
-        {
-            SdlRectangleMarshaller.SdlRect sdlSrcRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                srcRect
-            );
-
-            int code = doLinearStretch
-                ? Sdl.SoftStretchLinear(handle, &sdlSrcRect, dst.handle, null)
-                : Sdl.SoftStretch(handle, &sdlSrcRect, dst.handle, null);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), 0);
-            }
-        }
-    }
-
-    public void SoftStretch(Surface dst, bool doLinearStretch, ErrorCodeHandler errorHandler)
-    {
-        unsafe
-        {
-            int code = doLinearStretch
-                ? Sdl.SoftStretchLinear(handle, null, dst.handle, null)
-                : Sdl.SoftStretch(handle, null, dst.handle, null);
-
-            if (code < 0)
-            {
-                errorHandler(Sdl.GetError(), 0);
-            }
+            errorHandler(Sdl.GetError(), 0);
         }
     }
 

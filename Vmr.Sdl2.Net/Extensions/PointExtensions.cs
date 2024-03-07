@@ -29,11 +29,16 @@ public static class PointExtensions
 
             fixed (SdlPointMarshaller.SdlPoint* sdlPointsHandle = sdlPoints)
             {
-                SdlRectangleMarshaller.SdlRect result = new();
-                bool isValid = Sdl.EnclosePoints(sdlPointsHandle, points.Length, null, &result);
+                bool isValid = Sdl.EnclosePoints(
+                    points,
+                    points.Length,
+                    Rectangle.Empty,
+                    out Rectangle result
+                );
+
                 if (isValid)
                 {
-                    return SdlRectangleMarshaller.ConvertToManaged(result);
+                    return result;
                 }
 
                 errorHandler(Sdl.GetError());

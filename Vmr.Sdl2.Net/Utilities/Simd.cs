@@ -1,10 +1,12 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
+using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Win32.SafeHandles;
 using Vmr.Sdl2.Net.Imports;
 
 namespace Vmr.Sdl2.Net.Utilities;
 
+[NativeMarshalling(typeof(SafeHandleMarshaller<Simd>))]
 public class Simd : SafeHandleZeroOrMinusOneIsInvalid
 {
     public static ulong Alignment => Sdl.SimdGetAlignment();
@@ -33,7 +35,7 @@ public class Simd : SafeHandleZeroOrMinusOneIsInvalid
 
     public void Realloc(uint length, ErrorHandler errorHandler)
     {
-        nint resultHandle = Sdl.SimdRealloc(handle, length);
+        nint resultHandle = Sdl.SimdRealloc(this, length);
         if (resultHandle == nint.Zero)
         {
             errorHandler(Sdl.GetError());

@@ -3,14 +3,45 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-using Vmr.Sdl2.Net.Graphics;
-using Vmr.Sdl2.Net.Graphics.Pixels;
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;
 
 internal static unsafe partial class Sdl
 {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Palette
+    {
+        public int NColors;
+        public SdlColorMarshaller.SdlColor* Colors;
+        public uint Version;
+        public int RefCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PixelFormat
+    {
+        public uint Format;
+        public Palette* Palette;
+        public byte BitsPerPixel;
+        public byte BytesPerPixel;
+        private fixed byte _padding[2];
+        public uint RMask;
+        public uint GMask;
+        public uint BMask;
+        public uint AMask;
+        public byte RLoss;
+        public byte GLoss;
+        public byte BLoss;
+        public byte ALoss;
+        public byte RShift;
+        public byte GShift;
+        public byte BShift;
+        public byte AShift;
+        public int RefCount;
+        public PixelFormat* Next;
+    }
+
     [LibraryImport(
         LibraryName,
         EntryPoint = "SDL_GetPixelFormatName",
@@ -58,7 +89,7 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetPixelFormatPalette(
         nint format,
-        [MarshalUsing(typeof(SafeHandleMarshaller<Palette>))] Palette? palette
+        [MarshalUsing(typeof(SafeHandleMarshaller<Graphics.Palette>))] Graphics.Palette? palette
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetPaletteColors")]
@@ -76,17 +107,23 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_MapRGB")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial uint MapRgb(nint format, byte r, byte g, byte b);
+    public static partial uint MapRgb(Graphics.Pixels.PixelFormat format, byte r, byte g, byte b);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_MapRGBA")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial uint MapRgba(nint format, byte r, byte g, byte b, byte a);
+    public static partial uint MapRgba(
+        Graphics.Pixels.PixelFormat format,
+        byte r,
+        byte g,
+        byte b,
+        byte a
+    );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetRGB")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void GetRgb(
         uint pixel,
-        [MarshalUsing(typeof(SafeHandleMarshaller<PixelFormat>))] PixelFormat format,
+        Graphics.Pixels.PixelFormat format,
         out byte r,
         out byte g,
         out byte b
@@ -96,7 +133,7 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void GetRgba(
         uint pixel,
-        [MarshalUsing(typeof(SafeHandleMarshaller<PixelFormat>))] PixelFormat format,
+        Graphics.Pixels.PixelFormat format,
         out byte r,
         out byte g,
         out byte b,

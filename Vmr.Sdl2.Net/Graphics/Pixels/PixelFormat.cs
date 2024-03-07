@@ -1,15 +1,16 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Win32.SafeHandles;
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Graphics.Pixels;
 
 [Serializable]
+[NativeMarshalling(typeof(SafeHandleMarshaller<PixelFormat>))]
 public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
 {
     public uint Format
@@ -18,7 +19,7 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->Format;
+                return ((Sdl.PixelFormat*)handle)->Format;
             }
         }
     }
@@ -29,10 +30,9 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return SdlPaletteMarshaller.ConvertToManaged(
-                    ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->Palette,
-                    false
-                );
+                return ((Sdl.PixelFormat*)handle)->Palette is null
+                    ? null
+                    : new Palette((nint)((Sdl.PixelFormat*)handle)->Palette, false);
             }
         }
     }
@@ -43,7 +43,7 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->BytesPerPixel;
+                return ((Sdl.PixelFormat*)handle)->BytesPerPixel;
             }
         }
     }
@@ -56,11 +56,11 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
             {
                 return new ColorMasks
                 {
-                    BitsPerPixel = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->BitsPerPixel,
-                    Red = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->RMask,
-                    Green = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->GMask,
-                    Blue = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->BMask,
-                    Alpha = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->AMask
+                    BitsPerPixel = ((Sdl.PixelFormat*)handle)->BitsPerPixel,
+                    Red = ((Sdl.PixelFormat*)handle)->RMask,
+                    Green = ((Sdl.PixelFormat*)handle)->GMask,
+                    Blue = ((Sdl.PixelFormat*)handle)->BMask,
+                    Alpha = ((Sdl.PixelFormat*)handle)->AMask
                 };
             }
         }
@@ -74,10 +74,10 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
             {
                 return new ColorLoss
                 {
-                    Red = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->RLoss,
-                    Green = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->GLoss,
-                    Blue = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->BLoss,
-                    Alpha = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->ALoss
+                    Red = ((Sdl.PixelFormat*)handle)->RLoss,
+                    Green = ((Sdl.PixelFormat*)handle)->GLoss,
+                    Blue = ((Sdl.PixelFormat*)handle)->BLoss,
+                    Alpha = ((Sdl.PixelFormat*)handle)->ALoss
                 };
             }
         }
@@ -91,10 +91,10 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
             {
                 return new ColorShift
                 {
-                    Red = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->RShift,
-                    Green = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->GShift,
-                    Blue = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->BShift,
-                    Alpha = ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->AShift
+                    Red = ((Sdl.PixelFormat*)handle)->RShift,
+                    Green = ((Sdl.PixelFormat*)handle)->GShift,
+                    Blue = ((Sdl.PixelFormat*)handle)->BShift,
+                    Alpha = ((Sdl.PixelFormat*)handle)->AShift
                 };
             }
         }
@@ -106,7 +106,7 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->RefCount;
+                return ((Sdl.PixelFormat*)handle)->RefCount;
             }
         }
     }
@@ -117,10 +117,9 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return SdlPixelFormatMarshaller.ConvertToManaged(
-                    ((SdlPixelFormatMarshaller.SdlPixelFormat*)handle)->Next,
-                    false
-                );
+                return ((Sdl.PixelFormat*)handle)->Next is null
+                    ? null
+                    : new PixelFormat((nint)((Sdl.PixelFormat*)handle)->Next, false);
             }
         }
     }
@@ -623,12 +622,12 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
 
     public uint MapRgb(Color color)
     {
-        return Sdl.MapRgb(handle, color.R, color.G, color.B);
+        return Sdl.MapRgb(this, color.R, color.G, color.B);
     }
 
     public uint MapRba(Color color)
     {
-        return Sdl.MapRgba(handle, color.R, color.G, color.B, color.A);
+        return Sdl.MapRgba(this, color.R, color.G, color.B, color.A);
     }
 
     public override string ToString()

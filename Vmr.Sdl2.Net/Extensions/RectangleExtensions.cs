@@ -15,31 +15,14 @@ public static class RectangleExtensions
         ErrorHandler errorHandler
     )
     {
-        unsafe
+        bool isValid = Sdl.EnclosePoints(points, points.Length, clip, out Rectangle result);
+        if (isValid)
         {
-            var sdlPoints = new SdlPointMarshaller.SdlPoint[points.Length];
-            for (int i = 0; i < points.Length; i++)
-            {
-                sdlPoints[i] = SdlPointMarshaller.ConvertToUnmanaged(points[i]);
-            }
-
-            fixed (SdlPointMarshaller.SdlPoint* sdlPointsHandle = sdlPoints)
-            {
-                SdlRectangleMarshaller.SdlRect result = new();
-                SdlRectangleMarshaller.SdlRect sdlClip = SdlRectangleMarshaller.ConvertToUnmanaged(
-                    clip
-                );
-
-                bool isValid = Sdl.EnclosePoints(sdlPointsHandle, points.Length, &sdlClip, &result);
-                if (isValid)
-                {
-                    return SdlRectangleMarshaller.ConvertToManaged(result);
-                }
-
-                errorHandler(Sdl.GetError());
-                return Rectangle.Empty;
-            }
+            return result;
         }
+
+        errorHandler(Sdl.GetError());
+        return Rectangle.Empty;
     }
 
     public static (Point Point1, Point Point2) IntersectWithLine(
@@ -50,15 +33,11 @@ public static class RectangleExtensions
     {
         unsafe
         {
-            SdlRectangleMarshaller.SdlRect sdlRect = SdlRectangleMarshaller.ConvertToUnmanaged(
-                rectangle
-            );
-
             int x1 = line.Point1.X;
             int y1 = line.Point1.Y;
             int x2 = line.Point2.X;
             int y2 = line.Point2.Y;
-            bool isValid = Sdl.IntersectRectangleAndLine(&sdlRect, ref x1, ref y1, ref x2, ref y2);
+            bool isValid = Sdl.IntersectRectangleAndLine(rectangle, ref x1, ref y1, ref x2, ref y2);
             if (isValid)
             {
                 return (new Point(x1, y1), new Point(x2, y2));

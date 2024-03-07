@@ -2,6 +2,7 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Imports;
 
@@ -17,7 +18,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SIMDRealloc")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial nint SimdRealloc(nint mem, nuint len);
+    public static partial nint SimdRealloc(Simd mem, nuint len);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SIMDFree")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

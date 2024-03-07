@@ -2,10 +2,22 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-internal static class SdlRectangleMarshaller
+[CustomMarshaller(typeof(Rectangle), MarshalMode.Default, typeof(SdlRectangleMarshaller))]
+[CustomMarshaller(
+    typeof(Rectangle),
+    MarshalMode.ManagedToUnmanagedOut,
+    typeof(ManagedToUnmanagedOut)
+)]
+[CustomMarshaller(
+    typeof(Rectangle),
+    MarshalMode.UnmanagedToManagedOut,
+    typeof(UnmanagedToManagedOut)
+)]
+internal static unsafe class SdlRectangleMarshaller
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct SdlRect
@@ -30,5 +42,83 @@ internal static class SdlRectangleMarshaller
             W = managed.Width,
             H = managed.Height
         };
+    }
+
+    public ref struct ManagedToUnmanagedOut
+    {
+        private Rectangle _managed;
+        private GCHandle _gcHandle;
+
+        public void FromUnmanaged(SdlRect* unmanaged)
+        {
+            if (unmanaged is null)
+            {
+                _managed = Rectangle.Empty;
+                return;
+            }
+
+            _managed = new Rectangle(unmanaged->X, unmanaged->Y, unmanaged->W, unmanaged->H);
+            _gcHandle = GCHandle.Alloc(_managed, GCHandleType.Pinned);
+        }
+
+        public Rectangle ToManaged()
+        {
+            return _managed;
+        }
+
+        public void Free()
+        {
+            if (_gcHandle.IsAllocated)
+            {
+                _gcHandle.Free();
+            }
+        }
+    }
+
+    public ref struct UnmanagedToManagedOut
+    {
+        private SdlRect* _unmanagedPtr;
+        private SdlRect _unmanaged;
+        private GCHandle _gcHandle;
+
+        public void FromManaged(Rectangle managed)
+        {
+            if (managed == Rectangle.Empty)
+            {
+                _unmanagedPtr = null;
+                return;
+            }
+
+            _unmanaged = new SdlRect
+            {
+                X = managed.X,
+                Y = managed.Y,
+                W = managed.Width,
+                H = managed.Height
+            };
+            _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
+            fixed (SdlRect* ptr = &_unmanaged)
+            {
+                _unmanagedPtr = ptr;
+            }
+        }
+
+        public SdlRect* ToUnmanaged()
+        {
+            return _unmanagedPtr;
+        }
+
+        public void Free()
+        {
+            if (_unmanagedPtr is not null)
+            {
+                _unmanagedPtr = null;
+            }
+
+            if (_gcHandle.IsAllocated)
+            {
+                _gcHandle.Free();
+            }
+        }
     }
 }

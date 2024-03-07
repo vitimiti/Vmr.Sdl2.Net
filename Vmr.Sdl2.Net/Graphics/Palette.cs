@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Win32.SafeHandles;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
@@ -9,6 +10,7 @@ using Vmr.Sdl2.Net.Utilities;
 namespace Vmr.Sdl2.Net.Graphics;
 
 [Serializable]
+[NativeMarshalling(typeof(SafeHandleMarshaller<Palette>))]
 public class Palette : SafeHandleZeroOrMinusOneIsInvalid
 {
     public Color[]? Colors
@@ -17,21 +19,21 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                if (((SdlPaletteMarshaller.SdlPalette*)handle)->Colors is null)
+                if (((Sdl.Palette*)handle)->Colors is null)
                 {
                     return null;
                 }
 
-                if (((SdlPaletteMarshaller.SdlPalette*)handle)->NColors == 0)
+                if (((Sdl.Palette*)handle)->NColors == 0)
                 {
                     return Array.Empty<Color>();
                 }
 
-                var colors = new Color[((SdlPaletteMarshaller.SdlPalette*)handle)->NColors];
-                for (int i = 0; i < ((SdlPaletteMarshaller.SdlPalette*)handle)->NColors; i++)
+                var colors = new Color[((Sdl.Palette*)handle)->NColors];
+                for (int i = 0; i < ((Sdl.Palette*)handle)->NColors; i++)
                 {
                     colors[i] = SdlColorMarshaller.ConvertToManaged(
-                        ((SdlPaletteMarshaller.SdlPalette*)handle)->Colors[i]
+                        ((Sdl.Palette*)handle)->Colors[i]
                     );
                 }
 
@@ -46,7 +48,7 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlPaletteMarshaller.SdlPalette*)handle)->Version;
+                return ((Sdl.Palette*)handle)->Version;
             }
         }
     }
@@ -57,7 +59,7 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         {
             unsafe
             {
-                return ((SdlPaletteMarshaller.SdlPalette*)handle)->RefCount;
+                return ((Sdl.Palette*)handle)->RefCount;
             }
         }
     }

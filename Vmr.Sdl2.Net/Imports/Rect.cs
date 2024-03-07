@@ -1,5 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
@@ -13,17 +14,17 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalUsing(typeof(SdlBoolMarshaller))]
     public static partial bool EnclosePoints(
-        SdlPointMarshaller.SdlPoint* points,
+        [MarshalUsing(typeof(SdlPointArrayMarshaller))] Point[] points,
         int count,
-        SdlRectangleMarshaller.SdlRect* clip,
-        SdlRectangleMarshaller.SdlRect* result
+        [MarshalUsing(typeof(SdlRectangleMarshaller))] Rectangle clip,
+        [MarshalUsing(typeof(SdlRectangleMarshaller))] out Rectangle result
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IntersectRectAndLine")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalUsing(typeof(SdlBoolMarshaller))]
     public static partial bool IntersectRectangleAndLine(
-        SdlRectangleMarshaller.SdlRect* rect,
+        [MarshalUsing(typeof(SdlRectangleMarshaller))] Rectangle rect,
         ref int x1,
         ref int y1,
         ref int x2,
@@ -34,17 +35,17 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalUsing(typeof(SdlBoolMarshaller))]
     public static partial bool EnclosePointFs(
-        SdlPointFMarshaller.SdlPointF* points,
+        [MarshalUsing(typeof(SdlPointFArrayMarshaller))] PointF[] points,
         int count,
-        SdlRectangleFMarshaller.SdlRectF* clip,
-        SdlRectangleFMarshaller.SdlRectF* result
+        [MarshalUsing(typeof(SdlRectangleFMarshaller))] RectangleF clip,
+        [MarshalUsing(typeof(SdlRectangleFMarshaller))] out RectangleF result
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IntersectFRectAndLine")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalUsing(typeof(SdlBoolMarshaller))]
     public static partial bool IntersectRectangleFAndLine(
-        SdlRectangleFMarshaller.SdlRectF* rect,
+        [MarshalUsing(typeof(SdlRectangleFMarshaller))] RectangleF rect,
         ref float x1,
         ref float y1,
         ref float x2,
