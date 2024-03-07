@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vmr.Sdl2.Net", "Vmr.Sdl2.Net\Vmr.Sdl2.Net.csproj", "{D872A81C-0727-40A4-9BB7-A485905FF9C4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{795860F4-FD3C-402D-BE7C-993C82E05F83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Program001", "Examples\Example.Program001\Example.Program001.csproj", "{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,12 @@ Global
 		{D872A81C-0727-40A4-9BB7-A485905FF9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D872A81C-0727-40A4-9BB7-A485905FF9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D872A81C-0727-40A4-9BB7-A485905FF9C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1} = {795860F4-FD3C-402D-BE7C-993C82E05F83}
 	EndGlobalSection
 EndGlobal

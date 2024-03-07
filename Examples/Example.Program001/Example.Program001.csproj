@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <DefineDebug>true</DefineDebug>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DefineDebug>true</DefineDebug>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+        <IsOsx Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOsx>
+        <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+        <IsX64 Condition="'$([System.Environment]::Is64BitOperatingSystem)' == 'true'">true</IsX64>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Vmr.Sdl2.Net\Vmr.Sdl2.Net.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="('$(IsWindows)' == 'true' And '$(IsX64)' != 'true' And '$(RuntimeIdentifier)' == '') Or '$(RuntimeIdentifier)' == 'win-x86'">
+        <None Include="..\..\runtimes\win-x86\SDL2.dll">
+            <Link>SDL2.dll</Link>
+            <Visible>false</Visible>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup Condition="('$(IsWindows)' == 'true' And '$(IsX64)' == 'true' And '$(RuntimeIdentifier)' == '') Or '$(RuntimeIdentifier)' == 'win-x64'">
+        <None Include="..\..\runtimes\win-x64\SDL2.dll">
+            <Link>SDL2.dll</Link>
+            <Visible>false</Visible>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup Condition="('$(IsOsx)' == 'true' And '$(RuntimeIdentifier)' == '') Or ('$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64')">
+        <None Include="..\..\runtimes\osx-x64-arm64\libSDL2.dylib">
+            <Link>libSDL2.dylib</Link>
+            <Visible>false</Visible>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup Condition="('$(IsLinux)' == 'true' And '$(RuntimeIdentifier)' == '') Or '$(RuntimeIdentifier)' == 'linux-x64'">
+        <None Include="..\..\runtimes\linux-x64\libSDL2-2.0.so">
+            <Link>libSDL2-2.0.so</Link>
+            <Visible>false</Visible>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>
