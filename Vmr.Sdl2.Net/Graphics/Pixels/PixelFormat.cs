@@ -13,117 +13,6 @@ namespace Vmr.Sdl2.Net.Graphics.Pixels;
 [NativeMarshalling(typeof(SafeHandleMarshaller<PixelFormat>))]
 public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
 {
-    public uint Format
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.PixelFormat*)handle)->Format;
-            }
-        }
-    }
-
-    public Palette? Palette
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.PixelFormat*)handle)->Palette is null
-                    ? null
-                    : new Palette((nint)((Sdl.PixelFormat*)handle)->Palette, false);
-            }
-        }
-    }
-
-    public byte BytesPerPixel
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.PixelFormat*)handle)->BytesPerPixel;
-            }
-        }
-    }
-
-    public ColorMasks ColorMasks
-    {
-        get
-        {
-            unsafe
-            {
-                return new ColorMasks
-                {
-                    BitsPerPixel = ((Sdl.PixelFormat*)handle)->BitsPerPixel,
-                    Red = ((Sdl.PixelFormat*)handle)->RMask,
-                    Green = ((Sdl.PixelFormat*)handle)->GMask,
-                    Blue = ((Sdl.PixelFormat*)handle)->BMask,
-                    Alpha = ((Sdl.PixelFormat*)handle)->AMask
-                };
-            }
-        }
-    }
-
-    public ColorLoss ColorLoss
-    {
-        get
-        {
-            unsafe
-            {
-                return new ColorLoss
-                {
-                    Red = ((Sdl.PixelFormat*)handle)->RLoss,
-                    Green = ((Sdl.PixelFormat*)handle)->GLoss,
-                    Blue = ((Sdl.PixelFormat*)handle)->BLoss,
-                    Alpha = ((Sdl.PixelFormat*)handle)->ALoss
-                };
-            }
-        }
-    }
-
-    public ColorShift ColorShift
-    {
-        get
-        {
-            unsafe
-            {
-                return new ColorShift
-                {
-                    Red = ((Sdl.PixelFormat*)handle)->RShift,
-                    Green = ((Sdl.PixelFormat*)handle)->GShift,
-                    Blue = ((Sdl.PixelFormat*)handle)->BShift,
-                    Alpha = ((Sdl.PixelFormat*)handle)->AShift
-                };
-            }
-        }
-    }
-
-    public int ReferenceCount
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.PixelFormat*)handle)->RefCount;
-            }
-        }
-    }
-
-    public PixelFormat? Next
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.PixelFormat*)handle)->Next is null
-                    ? null
-                    : new PixelFormat((nint)((Sdl.PixelFormat*)handle)->Next, false);
-            }
-        }
-    }
-
     internal PixelFormat(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
     {
@@ -137,6 +26,119 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
         if (handle == nint.Zero)
         {
             errorHandler(Sdl.GetError());
+        }
+    }
+
+    private unsafe Sdl.PixelFormat* UnsafeHandle => (Sdl.PixelFormat*)handle;
+
+    public uint Format
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Format;
+            }
+        }
+    }
+
+    public Palette? Palette
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Palette is null
+                    ? null
+                    : new Palette((nint)UnsafeHandle->Palette, false);
+            }
+        }
+    }
+
+    public byte BytesPerPixel
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->BytesPerPixel;
+            }
+        }
+    }
+
+    public ColorMasks ColorMasks
+    {
+        get
+        {
+            unsafe
+            {
+                return new ColorMasks
+                {
+                    BitsPerPixel = UnsafeHandle->BitsPerPixel,
+                    Red = UnsafeHandle->RMask,
+                    Green = UnsafeHandle->GMask,
+                    Blue = UnsafeHandle->BMask,
+                    Alpha = UnsafeHandle->AMask
+                };
+            }
+        }
+    }
+
+    public ColorLoss ColorLoss
+    {
+        get
+        {
+            unsafe
+            {
+                return new ColorLoss
+                {
+                    Red = UnsafeHandle->RLoss,
+                    Green = UnsafeHandle->GLoss,
+                    Blue = UnsafeHandle->BLoss,
+                    Alpha = UnsafeHandle->ALoss
+                };
+            }
+        }
+    }
+
+    public ColorShift ColorShift
+    {
+        get
+        {
+            unsafe
+            {
+                return new ColorShift
+                {
+                    Red = UnsafeHandle->RShift,
+                    Green = UnsafeHandle->GShift,
+                    Blue = UnsafeHandle->BShift,
+                    Alpha = UnsafeHandle->AShift
+                };
+            }
+        }
+    }
+
+    public int ReferenceCount
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->RefCount;
+            }
+        }
+    }
+
+    public PixelFormat? Next
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Next is null
+                    ? null
+                    : new PixelFormat((nint)UnsafeHandle->Next, false);
+            }
         }
     }
 
@@ -540,17 +542,17 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid
 
     private static uint Define(uint type, uint order, uint layout, byte bits, byte bytes)
     {
-        return 1U << 28
-            | type << 24
-            | order << 20
-            | layout << 16
-            | (uint)bits << 8
-            | (uint)bytes << 0;
+        return (1U << 28)
+            | (type << 24)
+            | (order << 20)
+            | (layout << 16)
+            | ((uint)bits << 8)
+            | ((uint)bytes << 0);
     }
 
     public static uint Define(char a, char b, char c, char d)
     {
-        return (uint)((byte)a << 0 | (byte)b << 8 | (byte)c << 16 | (byte)d << 24);
+        return (uint)(((byte)a << 0) | ((byte)b << 8) | ((byte)c << 16) | ((byte)d << 24));
     }
 
     public static uint Define(PixelType type, byte bits, byte bytes)

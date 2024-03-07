@@ -2,7 +2,6 @@
 
 using System.Drawing;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Extensions;
@@ -19,31 +18,17 @@ public static class PointExtensions
 
     public static Rectangle EncloseInRectangle(this Point[] points, ErrorHandler errorHandler)
     {
-        unsafe
         {
-            var sdlPoints = new SdlPointMarshaller.SdlPoint[points.Length];
-            for (int i = 0; i < points.Length; i++)
+            Rectangle result = new();
+            bool isValid = Sdl.EnclosePoints(points, points.Length, Rectangle.Empty, ref result);
+
+            if (isValid)
             {
-                sdlPoints[i] = SdlPointMarshaller.ConvertToUnmanaged(points[i]);
+                return result;
             }
 
-            fixed (SdlPointMarshaller.SdlPoint* sdlPointsHandle = sdlPoints)
-            {
-                bool isValid = Sdl.EnclosePoints(
-                    points,
-                    points.Length,
-                    Rectangle.Empty,
-                    out Rectangle result
-                );
-
-                if (isValid)
-                {
-                    return result;
-                }
-
-                errorHandler(Sdl.GetError());
-                return Rectangle.Empty;
-            }
+            errorHandler(Sdl.GetError());
+            return Rectangle.Empty;
         }
     }
 }

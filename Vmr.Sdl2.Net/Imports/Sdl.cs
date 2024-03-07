@@ -20,6 +20,11 @@ internal static partial class Sdl
         )
     ];
 
+    static Sdl()
+    {
+        NativeLibrary.SetDllImportResolver(typeof(Sdl).Assembly, DllImporter);
+    }
+
     private static string GetOsSpecificName(string libName)
     {
         return OsSpecificNames.FirstOrDefault(valuePair => valuePair.Key).Value ?? libName;
@@ -39,11 +44,6 @@ internal static partial class Sdl
         );
 
         return handle;
-    }
-
-    static Sdl()
-    {
-        NativeLibrary.SetDllImportResolver(typeof(Sdl).Assembly, DllImporter);
     }
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_Init")]

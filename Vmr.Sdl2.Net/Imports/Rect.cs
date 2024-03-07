@@ -8,16 +8,20 @@ using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;
 
-internal static unsafe partial class Sdl
+internal static partial class Sdl
 {
     [LibraryImport(LibraryName, EntryPoint = "SDL_EnclosePoints")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalUsing(typeof(SdlBoolMarshaller))]
     public static partial bool EnclosePoints(
-        [MarshalUsing(typeof(SdlPointArrayMarshaller))] Point[] points,
+        [MarshalUsing(
+            typeof(ArrayMarshaller<Point, SdlPointMarshaller.SdlPoint>),
+            CountElementName = nameof(count)
+        )]
+            Point[] points,
         int count,
         [MarshalUsing(typeof(SdlRectangleMarshaller))] Rectangle clip,
-        [MarshalUsing(typeof(SdlRectangleMarshaller))] out Rectangle result
+        [MarshalUsing(typeof(SdlRectangleMarshaller))] ref Rectangle result
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IntersectRectAndLine")]
@@ -35,10 +39,10 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     [return: MarshalUsing(typeof(SdlBoolMarshaller))]
     public static partial bool EnclosePointFs(
-        [MarshalUsing(typeof(SdlPointFArrayMarshaller))] PointF[] points,
+        [MarshalUsing(CountElementName = nameof(count))] PointF[] points,
         int count,
         [MarshalUsing(typeof(SdlRectangleFMarshaller))] RectangleF clip,
-        [MarshalUsing(typeof(SdlRectangleFMarshaller))] out RectangleF result
+        [MarshalUsing(typeof(SdlRectangleFMarshaller))] ref RectangleF result
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IntersectFRectAndLine")]

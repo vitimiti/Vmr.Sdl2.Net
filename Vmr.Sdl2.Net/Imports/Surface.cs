@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Graphics.Blending;
-using Vmr.Sdl2.Net.Graphics.Pixels;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 
@@ -14,23 +13,6 @@ namespace Vmr.Sdl2.Net.Imports;
 
 internal static unsafe partial class Sdl
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Surface
-    {
-        public SurfaceMasks Flags;
-        public PixelFormat* Format;
-        public int W;
-        public int H;
-        public int Pitch;
-        public void* Pixels;
-        public void* UserData;
-        public int Locked;
-        private void* _listBlitMap;
-        public SdlRectangleMarshaller.SdlRect ClipRect;
-        private nint _blitMap;
-        public int ReferenceCount;
-    }
-
     [LibraryImport(LibraryName, EntryPoint = "SDL_CreateRGBSurface")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial nint CreateRgbSurface(
@@ -320,4 +302,21 @@ internal static unsafe partial class Sdl
         int width,
         int height
     );
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Surface
+    {
+        public SurfaceMasks Flags;
+        public PixelFormat* Format;
+        public int W;
+        public int H;
+        public int Pitch;
+        public void* Pixels;
+        public void* UserData;
+        public int Locked;
+        private readonly void* _listBlitMap;
+        public SdlRectangleMarshaller.SdlRect ClipRect;
+        private readonly nint _blitMap;
+        public int ReferenceCount;
+    }
 }

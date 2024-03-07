@@ -5,7 +5,7 @@ using System.Runtime.InteropServices.Marshalling;
 namespace Vmr.Sdl2.Net.Marshalling;
 
 [CustomMarshaller(typeof(bool), MarshalMode.Default, typeof(IntBoolMarshaller))]
-public static class IntBoolMarshaller
+internal static class IntBoolMarshaller
 {
     public static bool ConvertToManaged(int unmanaged)
     {

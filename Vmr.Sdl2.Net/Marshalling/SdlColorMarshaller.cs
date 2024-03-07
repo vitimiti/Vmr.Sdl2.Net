@@ -9,15 +9,6 @@ namespace Vmr.Sdl2.Net.Marshalling;
 [CustomMarshaller(typeof(Color), MarshalMode.Default, typeof(SdlColorMarshaller))]
 internal static class SdlColorMarshaller
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SdlColor
-    {
-        public byte R;
-        public byte G;
-        public byte B;
-        public byte A;
-    }
-
     public static Color ConvertToManaged(SdlColor unmanaged)
     {
         return Color.FromArgb(unmanaged.A, unmanaged.R, unmanaged.G, unmanaged.B);
@@ -32,5 +23,14 @@ internal static class SdlColorMarshaller
             B = managed.B,
             A = managed.A
         };
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SdlColor
+    {
+        public byte R;
+        public byte G;
+        public byte B;
+        public byte A;
     }
 }

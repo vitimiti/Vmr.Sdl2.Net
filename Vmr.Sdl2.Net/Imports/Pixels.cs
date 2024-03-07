@@ -9,39 +9,6 @@ namespace Vmr.Sdl2.Net.Imports;
 
 internal static unsafe partial class Sdl
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Palette
-    {
-        public int NColors;
-        public SdlColorMarshaller.SdlColor* Colors;
-        public uint Version;
-        public int RefCount;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct PixelFormat
-    {
-        public uint Format;
-        public Palette* Palette;
-        public byte BitsPerPixel;
-        public byte BytesPerPixel;
-        private fixed byte _padding[2];
-        public uint RMask;
-        public uint GMask;
-        public uint BMask;
-        public uint AMask;
-        public byte RLoss;
-        public byte GLoss;
-        public byte BLoss;
-        public byte ALoss;
-        public byte RShift;
-        public byte GShift;
-        public byte BShift;
-        public byte AShift;
-        public int RefCount;
-        public PixelFormat* Next;
-    }
-
     [LibraryImport(
         LibraryName,
         EntryPoint = "SDL_GetPixelFormatName",
@@ -148,4 +115,37 @@ internal static unsafe partial class Sdl
         [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
             ushort[] ramp
     );
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Palette
+    {
+        public int NColors;
+        public SdlColorMarshaller.SdlColor* Colors;
+        public uint Version;
+        public int RefCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PixelFormat
+    {
+        public uint Format;
+        public Palette* Palette;
+        public byte BitsPerPixel;
+        public byte BytesPerPixel;
+        private fixed byte _padding[2];
+        public uint RMask;
+        public uint GMask;
+        public uint BMask;
+        public uint AMask;
+        public byte RLoss;
+        public byte GLoss;
+        public byte BLoss;
+        public byte ALoss;
+        public byte RShift;
+        public byte GShift;
+        public byte BShift;
+        public byte AShift;
+        public int RefCount;
+        public PixelFormat* Next;
+    }
 }

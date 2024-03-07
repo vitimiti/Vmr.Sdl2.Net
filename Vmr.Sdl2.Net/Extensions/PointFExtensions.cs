@@ -2,7 +2,6 @@
 
 using System.Drawing;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Extensions;
@@ -19,12 +18,8 @@ public static class PointFExtensions
 
     public static RectangleF EncloseInRectangleF(this PointF[] points, ErrorHandler errorHandler)
     {
-        bool isValid = Sdl.EnclosePointFs(
-            points,
-            points.Length,
-            RectangleF.Empty,
-            out RectangleF result
-        );
+        RectangleF result = new();
+        bool isValid = Sdl.EnclosePointFs(points, points.Length, RectangleF.Empty, ref result);
 
         if (isValid)
         {

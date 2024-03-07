@@ -18,168 +18,6 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
 {
     private int _userDataSize;
 
-    public static YuvConversionMode YuvConversionMode
-    {
-        get => Sdl.GetYuvConversionMode();
-        set => Sdl.SetYuvConversionMode(value);
-    }
-
-    public SurfaceMasks Flags
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.Surface*)handle)->Flags;
-            }
-        }
-    }
-
-    public PixelFormat? PixelFormat
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.Surface*)handle)->Format is null
-                    ? null
-                    : new PixelFormat((nint)((Sdl.Surface*)handle)->Format, false);
-            }
-        }
-    }
-
-    public Size Size
-    {
-        get
-        {
-            unsafe
-            {
-                return new Size(((Sdl.Surface*)handle)->W, ((Sdl.Surface*)handle)->H);
-            }
-        }
-    }
-
-    public int Pitch
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.Surface*)handle)->Pitch;
-            }
-        }
-    }
-
-    public byte[]? Pixels
-    {
-        get
-        {
-            unsafe
-            {
-                if (((Sdl.Surface*)handle)->Pixels is null)
-                {
-                    return null;
-                }
-
-                int size = ((Sdl.Surface*)handle)->W * ((Sdl.Surface*)handle)->H * sizeof(byte);
-
-                byte* pixelsHandle = (byte*)((Sdl.Surface*)handle)->Pixels;
-                var pixels = new byte[size];
-                for (int i = 0; i < size; i++)
-                {
-                    pixels[i] = pixelsHandle[i];
-                }
-
-                return pixels;
-            }
-        }
-        set
-        {
-            unsafe
-            {
-                fixed (byte* pixelsHandle = value)
-                {
-                    ((Sdl.Surface*)handle)->Pixels = pixelsHandle;
-                }
-            }
-        }
-    }
-
-    public byte[]? UserData
-    {
-        get
-        {
-            unsafe
-            {
-                if (((Sdl.Surface*)handle)->UserData is null)
-                {
-                    return null;
-                }
-
-                if (_userDataSize == 0)
-                {
-                    return Array.Empty<byte>();
-                }
-
-                byte* userDataHandle = (byte*)((Sdl.Surface*)handle)->Pixels;
-                var userData = new byte[_userDataSize];
-                for (int i = 0; i < _userDataSize; i++)
-                {
-                    userData[i] = userDataHandle[i];
-                }
-
-                return userData;
-            }
-        }
-        set
-        {
-            unsafe
-            {
-                fixed (byte* pixelsHandle = value)
-                {
-                    ((Sdl.Surface*)handle)->Pixels = pixelsHandle;
-                    _userDataSize = value?.Length ?? 0;
-                }
-            }
-        }
-    }
-
-    public bool Locked
-    {
-        get
-        {
-            unsafe
-            {
-                return IntBoolMarshaller.ConvertToManaged(((Sdl.Surface*)handle)->Locked);
-            }
-        }
-    }
-
-    public Rectangle ClipRectangle
-    {
-        get
-        {
-            unsafe
-            {
-                return SdlRectangleMarshaller.ConvertToManaged(((Sdl.Surface*)handle)->ClipRect);
-            }
-        }
-    }
-
-    public int ReferenceCount
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.Surface*)handle)->ReferenceCount;
-            }
-        }
-    }
-
-    public bool HasRle => Sdl.HasSurfaceRle(this);
-    public bool HasColorKey => Sdl.HasColorKey(this);
-
     internal Surface(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
     {
@@ -280,6 +118,170 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
             errorHandler(Sdl.GetError());
         }
     }
+
+    private unsafe Sdl.Surface* UnsafeHandle => (Sdl.Surface*)handle;
+
+    public static YuvConversionMode YuvConversionMode
+    {
+        get => Sdl.GetYuvConversionMode();
+        set => Sdl.SetYuvConversionMode(value);
+    }
+
+    public SurfaceMasks Flags
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Flags;
+            }
+        }
+    }
+
+    public PixelFormat? PixelFormat
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Format is null
+                    ? null
+                    : new PixelFormat((nint)UnsafeHandle->Format, false);
+            }
+        }
+    }
+
+    public Size Size
+    {
+        get
+        {
+            unsafe
+            {
+                return new Size(UnsafeHandle->W, UnsafeHandle->H);
+            }
+        }
+    }
+
+    public int Pitch
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Pitch;
+            }
+        }
+    }
+
+    public byte[]? Pixels
+    {
+        get
+        {
+            unsafe
+            {
+                if (UnsafeHandle->Pixels is null)
+                {
+                    return null;
+                }
+
+                int size = UnsafeHandle->W * UnsafeHandle->H * sizeof(byte);
+
+                byte* pixelsHandle = (byte*)UnsafeHandle->Pixels;
+                byte[] pixels = new byte[size];
+                for (int i = 0; i < size; i++)
+                {
+                    pixels[i] = pixelsHandle[i];
+                }
+
+                return pixels;
+            }
+        }
+        set
+        {
+            unsafe
+            {
+                fixed (byte* pixelsHandle = value)
+                {
+                    UnsafeHandle->Pixels = pixelsHandle;
+                }
+            }
+        }
+    }
+
+    public byte[]? UserData
+    {
+        get
+        {
+            unsafe
+            {
+                if (UnsafeHandle->UserData is null)
+                {
+                    return null;
+                }
+
+                if (_userDataSize == 0)
+                {
+                    return Array.Empty<byte>();
+                }
+
+                byte* userDataHandle = (byte*)UnsafeHandle->Pixels;
+                byte[] userData = new byte[_userDataSize];
+                for (int i = 0; i < _userDataSize; i++)
+                {
+                    userData[i] = userDataHandle[i];
+                }
+
+                return userData;
+            }
+        }
+        set
+        {
+            unsafe
+            {
+                fixed (byte* pixelsHandle = value)
+                {
+                    UnsafeHandle->Pixels = pixelsHandle;
+                    _userDataSize = value?.Length ?? 0;
+                }
+            }
+        }
+    }
+
+    public bool Locked
+    {
+        get
+        {
+            unsafe
+            {
+                return IntBoolMarshaller.ConvertToManaged(UnsafeHandle->Locked);
+            }
+        }
+    }
+
+    public Rectangle ClipRectangle
+    {
+        get
+        {
+            unsafe
+            {
+                return SdlRectangleMarshaller.ConvertToManaged(UnsafeHandle->ClipRect);
+            }
+        }
+    }
+
+    public int ReferenceCount
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->ReferenceCount;
+            }
+        }
+    }
+
+    public bool HasRle => Sdl.HasSurfaceRle(this);
+    public bool HasColorKey => Sdl.HasColorKey(this);
 
     protected override bool ReleaseHandle()
     {
@@ -491,7 +493,9 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid
     {
         unsafe
         {
-            var sdlRects = new SdlRectangleMarshaller.SdlRect[rectangles.Length];
+            SdlRectangleMarshaller.SdlRect[] sdlRects = new SdlRectangleMarshaller.SdlRect[
+                rectangles.Length
+            ];
             for (int i = 0; i < rectangles.Length; i++)
             {
                 sdlRects[i] = SdlRectangleMarshaller.ConvertToUnmanaged(rectangles[i]);

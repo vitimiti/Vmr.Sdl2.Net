@@ -41,7 +41,7 @@ public static class SurfaceExtensions
                     return null;
                 }
 
-                var dstResult = new byte[dst.Length];
+                byte[] dstResult = new byte[dst.Length];
                 for (int i = 0; i < dst.Length; i++)
                 {
                     dstResult[i] = dstHandle[i];
@@ -85,7 +85,7 @@ public static class SurfaceExtensions
                     return null;
                 }
 
-                var dstResult = new byte[dst.Length];
+                byte[] dstResult = new byte[dst.Length];
                 for (int i = 0; i < dst.Length; i++)
                 {
                     dstResult[i] = dstHandle[i];

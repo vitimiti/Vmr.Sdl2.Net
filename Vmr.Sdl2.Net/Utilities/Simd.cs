@@ -9,8 +9,6 @@ namespace Vmr.Sdl2.Net.Utilities;
 [NativeMarshalling(typeof(SafeHandleMarshaller<Simd>))]
 public class Simd : SafeHandleZeroOrMinusOneIsInvalid
 {
-    public static ulong Alignment => Sdl.SimdGetAlignment();
-
     public Simd(uint length, ErrorHandler errorHandler, bool ownsHandle = true)
         : base(ownsHandle)
     {
@@ -20,6 +18,8 @@ public class Simd : SafeHandleZeroOrMinusOneIsInvalid
             errorHandler(Sdl.GetError());
         }
     }
+
+    public static ulong Alignment => Sdl.SimdGetAlignment();
 
     protected override bool ReleaseHandle()
     {

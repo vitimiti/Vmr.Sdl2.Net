@@ -80,7 +80,7 @@ public static class PixelExtensions
 
     public static ushort[] CalculateGammaRamp(this float gamma)
     {
-        var ramp = new ushort[256];
+        ushort[] ramp = new ushort[256];
         Sdl.CalculateGammaRamp(float.Clamp(gamma, 0F, 1F), ramp);
         return ramp;
     }

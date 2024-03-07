@@ -9,9 +9,6 @@ public sealed class Application : IDisposable
 {
     private readonly bool _isInitialized;
 
-    public static ApplicationSubsystems InitializedSubsystems =>
-        Sdl.WasInit(ApplicationSubsystems.None);
-
     public Application(
         ApplicationSubsystems subsystems,
         ErrorCodeHandler errorHandler,
@@ -33,6 +30,9 @@ public sealed class Application : IDisposable
             _isInitialized = true;
         }
     }
+
+    public static ApplicationSubsystems InitializedSubsystems =>
+        Sdl.WasInit(ApplicationSubsystems.None);
 
     public void Dispose()
     {

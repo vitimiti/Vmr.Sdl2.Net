@@ -13,57 +13,6 @@ namespace Vmr.Sdl2.Net.Graphics;
 [NativeMarshalling(typeof(SafeHandleMarshaller<Palette>))]
 public class Palette : SafeHandleZeroOrMinusOneIsInvalid
 {
-    public Color[]? Colors
-    {
-        get
-        {
-            unsafe
-            {
-                if (((Sdl.Palette*)handle)->Colors is null)
-                {
-                    return null;
-                }
-
-                if (((Sdl.Palette*)handle)->NColors == 0)
-                {
-                    return Array.Empty<Color>();
-                }
-
-                var colors = new Color[((Sdl.Palette*)handle)->NColors];
-                for (int i = 0; i < ((Sdl.Palette*)handle)->NColors; i++)
-                {
-                    colors[i] = SdlColorMarshaller.ConvertToManaged(
-                        ((Sdl.Palette*)handle)->Colors[i]
-                    );
-                }
-
-                return colors;
-            }
-        }
-    }
-
-    public uint Version
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.Palette*)handle)->Version;
-            }
-        }
-    }
-
-    public int ReferenceCount
-    {
-        get
-        {
-            unsafe
-            {
-                return ((Sdl.Palette*)handle)->RefCount;
-            }
-        }
-    }
-
     internal Palette(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
     {
@@ -77,6 +26,57 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid
         if (handle == nint.Zero)
         {
             errorHandler(Sdl.GetError());
+        }
+    }
+
+    private unsafe Sdl.Palette* UnsafeHandle => (Sdl.Palette*)handle;
+
+    public Color[]? Colors
+    {
+        get
+        {
+            unsafe
+            {
+                if (UnsafeHandle->Colors is null)
+                {
+                    return null;
+                }
+
+                if (UnsafeHandle->NColors == 0)
+                {
+                    return Array.Empty<Color>();
+                }
+
+                Color[] colors = new Color[UnsafeHandle->NColors];
+                for (int i = 0; i < UnsafeHandle->NColors; i++)
+                {
+                    colors[i] = SdlColorMarshaller.ConvertToManaged(UnsafeHandle->Colors[i]);
+                }
+
+                return colors;
+            }
+        }
+    }
+
+    public uint Version
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->Version;
+            }
+        }
+    }
+
+    public int ReferenceCount
+    {
+        get
+        {
+            unsafe
+            {
+                return UnsafeHandle->RefCount;
+            }
         }
     }
 

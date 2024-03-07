@@ -2,7 +2,6 @@
 
 using System.Drawing;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Extensions;
@@ -15,7 +14,8 @@ public static class RectangleExtensions
         ErrorHandler errorHandler
     )
     {
-        bool isValid = Sdl.EnclosePoints(points, points.Length, clip, out Rectangle result);
+        Rectangle result = new();
+        bool isValid = Sdl.EnclosePoints(points, points.Length, clip, ref result);
         if (isValid)
         {
             return result;
@@ -31,20 +31,17 @@ public static class RectangleExtensions
         ErrorHandler errorHandler
     )
     {
-        unsafe
+        int x1 = line.Point1.X;
+        int y1 = line.Point1.Y;
+        int x2 = line.Point2.X;
+        int y2 = line.Point2.Y;
+        bool isValid = Sdl.IntersectRectangleAndLine(rectangle, ref x1, ref y1, ref x2, ref y2);
+        if (isValid)
         {
-            int x1 = line.Point1.X;
-            int y1 = line.Point1.Y;
-            int x2 = line.Point2.X;
-            int y2 = line.Point2.Y;
-            bool isValid = Sdl.IntersectRectangleAndLine(rectangle, ref x1, ref y1, ref x2, ref y2);
-            if (isValid)
-            {
-                return (new Point(x1, y1), new Point(x2, y2));
-            }
-
-            errorHandler(Sdl.GetError());
-            return (Point.Empty, Point.Empty);
+            return (new Point(x1, y1), new Point(x2, y2));
         }
+
+        errorHandler(Sdl.GetError());
+        return (Point.Empty, Point.Empty);
     }
 }

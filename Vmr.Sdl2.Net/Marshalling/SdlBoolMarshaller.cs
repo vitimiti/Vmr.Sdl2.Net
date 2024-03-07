@@ -7,12 +7,6 @@ namespace Vmr.Sdl2.Net.Marshalling;
 [CustomMarshaller(typeof(bool), MarshalMode.Default, typeof(SdlBoolMarshaller))]
 internal static class SdlBoolMarshaller
 {
-    public enum SdlBool
-    {
-        False,
-        True
-    }
-
     public static bool ConvertToManaged(SdlBool unmanaged)
     {
         return unmanaged switch
@@ -25,5 +19,11 @@ internal static class SdlBoolMarshaller
     public static SdlBool ConvertToUnmanaged(bool managed)
     {
         return managed ? SdlBool.True : SdlBool.False;
+    }
+
+    internal enum SdlBool
+    {
+        False,
+        True
     }
 }
