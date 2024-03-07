@@ -15,10 +15,13 @@ public sealed class Application : IDisposable
         VersionMismatchHandler? versionMismatchHandler = null
     )
     {
-        versionMismatchHandler?.Invoke(
-            NativeLibraryInformation.ExpectedVersion,
-            NativeLibraryInformation.Version
-        );
+        if (NativeLibraryInformation.ExpectedVersion != NativeLibraryInformation.Version)
+        {
+            versionMismatchHandler?.Invoke(
+                NativeLibraryInformation.ExpectedVersion,
+                NativeLibraryInformation.Version
+            );
+        }
 
         int code = Sdl.Init(subsystems);
         if (code < 0)
