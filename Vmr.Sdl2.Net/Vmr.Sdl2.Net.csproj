@@ -8,7 +8,23 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>Vmr.Sdl2.Net</RootNamespace>
         <DefineTrace>true</DefineTrace>
+        <RuntimeIdentifiers>win-x86;win-x64;osx-x64;osx-arm64;linux-x64</RuntimeIdentifiers>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>2.30.1</Version>
+        <Title>Vmr.Sdl2.Net</Title>
+        <Authors>Victor Matia</Authors>
+        <Description>A safe dotnet marshaller for SDL2.</Description>
+        <Copyright>Copyright (c) 2024 Victor Matia &lt;vmatir@gmail.com&gt;</Copyright>
+        <PackageProjectUrl>https://www.libsdl.org/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/vitimiti/Vmr.Sdl2.Net</RepositoryUrl>
+        <PackageTags>Marshaller;SDL2</PackageTags>
+        <PackageReleaseNotes>The version is equal to the currently supported SDL2 version.</PackageReleaseNotes>
+        <PackageLicenseFile>docs\LICENSE.md</PackageLicenseFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -27,6 +43,63 @@
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.DisableRuntimeMarshallingAttribute"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\runtimes\win-x86\SDL2.dll">
+            <Link>SDL2.dll</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>runtimes\win-x86</PackagePath>
+        </Content>
+        <Content Include="..\runtimes\win-x64\SDL2.dll">
+            <Link>SDL2.dll</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>runtimes\win-x64</PackagePath>
+        </Content>
+        <Content Include="..\runtimes\osx-x64-arm64\libSDL2.dylib">
+            <Link>libSDL2.dylib</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>runtimes\osx-x64-arm64</PackagePath>
+        </Content>
+        <Content Include="..\runtimes\linux-x64\libSDL2-2.0.so">
+            <Link>libSDL2-2.0.so</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>runtimes\linux-x64</PackagePath>
+        </Content>
+        <Content Include="..\runtimes\linux-x64\libSDL2-2.0.so.0">
+            <Link>libSDL2-2.0.so.0</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>runtimes\linux-x64</PackagePath>
+        </Content>
+        <Content Include="..\runtimes\linux-x64\libSDL2-2.0.so.0.3000.1">
+            <Link>libSDL2-2.0.so.0.3000.1</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>runtimes\linux-x64</PackagePath>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\targets\Vmr.Sdl2.Net.Runtime.targets">
+            <Link>Vmr.Sdl2.Net.Runtime.targets</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>targets</PackagePath>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\LICENSE.md">
+            <Link>LICENSE.md</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>docs</PackagePath>
+        </Content>
     </ItemGroup>
 
 </Project>
