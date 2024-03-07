@@ -10,19 +10,23 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DefineTrace>true</DefineTrace>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <DefineDebug>true</DefineDebug>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <DefineDebug>true</DefineDebug>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>none</DebugType>
         <Optimize>true</Optimize>
     </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.DisableRuntimeMarshallingAttribute"/>
+    </ItemGroup>
 
 </Project>
