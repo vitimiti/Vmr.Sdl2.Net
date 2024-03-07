@@ -14,10 +14,7 @@ internal static partial class Sdl
     [
         new KeyValuePair<bool, string>(OperatingSystem.IsWindows(), "SDL2.dll"),
         new KeyValuePair<bool, string>(OperatingSystem.IsMacOS(), "libSDL2.dylib"),
-        new KeyValuePair<bool, string>(
-            OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD(),
-            "libSDL2-2.0.so.0"
-        )
+        new KeyValuePair<bool, string>(OperatingSystem.IsLinux(), "libSDL2-2.0.so")
     ];
 
     static Sdl()
