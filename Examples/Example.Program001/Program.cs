@@ -25,7 +25,7 @@ try
 
     using Window window =
         new(
-            "SDL Tests",
+            "Example Vmr.Sdl2.Net Program 001",
             new Point(WindowPredefinedPosition.Centered),
             new Size(640, 480),
             WindowOptions.Shown,
