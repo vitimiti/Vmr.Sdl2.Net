@@ -306,7 +306,7 @@ internal static unsafe partial class Sdl
     [StructLayout(LayoutKind.Sequential)]
     internal struct Surface
     {
-        public SurfaceMasks Flags;
+        public SurfaceModes Flags;
         public PixelFormat* Format;
         public int W;
         public int H;

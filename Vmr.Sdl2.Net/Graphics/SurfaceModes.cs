@@ -3,7 +3,7 @@
 namespace Vmr.Sdl2.Net.Graphics;
 
 [Flags]
-public enum SurfaceMasks : uint
+public enum SurfaceModes : uint
 {
     SwSurface = 0U,
     PreAlloc = 1U << 0,

@@ -129,7 +129,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         set => Sdl.SetYuvConversionMode(value);
     }
 
-    public SurfaceMasks Flags
+    public SurfaceModes Flags
     {
         get
         {
