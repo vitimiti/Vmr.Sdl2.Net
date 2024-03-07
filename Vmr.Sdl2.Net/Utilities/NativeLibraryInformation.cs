@@ -8,7 +8,7 @@ public delegate void VersionMismatchHandler(Version expectedVersion, Version ver
 
 public static class NativeLibraryInformation
 {
-    internal static Version ExpectedVersion => new(2, 30, 0);
+    internal static Version ExpectedVersion => new(2, 30, 1);
 
     public static Version Version
     {
