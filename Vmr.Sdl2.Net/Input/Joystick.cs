@@ -180,7 +180,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         nint joystickHandle = Sdl.JoystickFromInstanceId(instanceId);
         if (joystickHandle != nint.Zero)
         {
-            return new Joystick(joystickHandle, false);
+            return new Joystick(joystickHandle, true);
         }
 
         errorHandler(Sdl.GetError());
@@ -192,7 +192,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         nint joystickHandle = Sdl.JoystickFromPlayerIndex(playerIndex);
         if (joystickHandle != nint.Zero)
         {
-            return new Joystick(joystickHandle, false);
+            return new Joystick(joystickHandle, true);
         }
 
         errorHandler(Sdl.GetError());
