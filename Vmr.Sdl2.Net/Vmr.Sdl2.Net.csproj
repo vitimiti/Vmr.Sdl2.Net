@@ -25,6 +25,7 @@
         <PackageTags>Marshaller;SDL2</PackageTags>
         <PackageReleaseNotes>The version is equal to the currently supported SDL2 version.</PackageReleaseNotes>
         <PackageLicenseFile>docs\LICENSE.md</PackageLicenseFile>
+        <PackageReadmeFile>docs\README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -89,25 +90,31 @@
             <PackagePath>docs</PackagePath>
         </Content>
         <Content Include="..\README.md">
-            <Link>LICENSE.md</Link>
+            <Link>README.md</Link>
             <Visible>false</Visible>
             <Pack>true</Pack>
             <PackagePath>docs</PackagePath>
         </Content>
         <Content Include="..\CONTRIBUTING.md">
-            <Link>LICENSE.md</Link>
+            <Link>CONTRIBUTING.md</Link>
             <Visible>false</Visible>
             <Pack>true</Pack>
             <PackagePath>docs</PackagePath>
         </Content>
         <Content Include="..\AUTHORS.md">
-            <Link>LICENSE.md</Link>
+            <Link>AUTHORS.md</Link>
             <Visible>false</Visible>
             <Pack>true</Pack>
             <PackagePath>docs</PackagePath>
         </Content>
         <Content Include="..\CONTRIBUTORS.md">
-            <Link>LICENSE.md</Link>
+            <Link>CONTRIBUTORS.md</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>docs</PackagePath>
+        </Content>
+        <Content Include="..\CODE_OF_CONDUCT.md">
+            <Link>CODE_OF_CONDUCT.md</Link>
             <Visible>false</Visible>
             <Pack>true</Pack>
             <PackagePath>docs</PackagePath>

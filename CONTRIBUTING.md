@@ -10,3 +10,8 @@ respect the `.editorconfig` style.
 You may use plugins for both CSharpier and the `.editorconfig` styles to facilitate your work.
 
 For now, most pull requests may be ignored as the project is still in its early infancy and not actually usable.
+
+## The Code Of Conduct
+
+Any contributor or participant in this project must adhere to
+the [Covenant Contributor Code of Conduct](CODE_OF_CONDUCT.md).

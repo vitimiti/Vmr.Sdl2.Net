@@ -142,6 +142,11 @@ how to better use its systems.
 tightly coupled with one SDL2 version and the user of this library may want to ensure the versions are at the very least
 compatible.
 
+## The Code Of Conduct
+
+Any contributor or participant in this project must adhere to
+the [Covenant Contributor Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## TODO:
 
 - Add public documentation (XML docs)
