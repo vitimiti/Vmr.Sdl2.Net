@@ -88,6 +88,30 @@
             <Pack>true</Pack>
             <PackagePath>docs</PackagePath>
         </Content>
+        <Content Include="..\README.md">
+            <Link>LICENSE.md</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>docs</PackagePath>
+        </Content>
+        <Content Include="..\CONTRIBUTING.md">
+            <Link>LICENSE.md</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>docs</PackagePath>
+        </Content>
+        <Content Include="..\AUTHORS.md">
+            <Link>LICENSE.md</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>docs</PackagePath>
+        </Content>
+        <Content Include="..\CONTRIBUTORS.md">
+            <Link>LICENSE.md</Link>
+            <Visible>false</Visible>
+            <Pack>true</Pack>
+            <PackagePath>docs</PackagePath>
+        </Content>
     </ItemGroup>
 
 </Project>
