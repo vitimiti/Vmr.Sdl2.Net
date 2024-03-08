@@ -602,6 +602,11 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         Sdl.GlSwapWindow(this);
     }
 
+    public void WarpMouse(Point position)
+    {
+        Sdl.WarpMouseInWindow(this, position.X, position.Y);
+    }
+
     protected override bool ReleaseHandle()
     {
         if (handle == nint.Zero)
