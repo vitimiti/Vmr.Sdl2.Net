@@ -226,14 +226,8 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
                     return Array.Empty<byte>();
                 }
 
-                byte* userDataHandle = (byte*)UnsafeHandle->Pixels;
-                byte[] userData = new byte[_userDataSize];
-                for (int i = 0; i < _userDataSize; i++)
-                {
-                    userData[i] = userDataHandle[i];
-                }
-
-                return userData;
+                Span<byte> userData = new(UnsafeHandle->Pixels, _userDataSize);
+                return userData.ToArray();
             }
         }
         set

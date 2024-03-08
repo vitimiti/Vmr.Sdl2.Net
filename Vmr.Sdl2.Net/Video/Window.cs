@@ -293,13 +293,8 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
             }
 
             int length = _dataLengths[name];
-            byte[] result = new byte[length];
-            for (int i = 0; i < length; i++)
-            {
-                result[i] = data[i];
-            }
-
-            return result;
+            Span<byte> result = new(data, length);
+            return result.ToArray();
         }
     }
 
@@ -539,20 +534,16 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
                         {
                             SdlPointMarshaller.UnmanagedToManagedIn marshaller = new();
                             marshaller.FromUnmanaged(sdlPoint);
-                            byte[]? dataBytes = null;
+                            Span<byte> dataBytes = Span<byte>.Empty;
                             if (passedDataPtr is not null)
                             {
-                                dataBytes = new byte[dataLength];
-                                for (int i = 0; i < dataLength; i++)
-                                {
-                                    dataBytes[i] = ((byte*)passedDataPtr)[i];
-                                }
+                                dataBytes = new Span<byte>(passedDataPtr, dataLength);
                             }
 
                             return callback.Invoke(
                                 new Window((nint)windowPtr, false),
                                 marshaller.ToManaged(),
-                                dataBytes
+                                dataBytes.IsEmpty ? null : dataBytes.ToArray()
                             );
                         }
                     ),
