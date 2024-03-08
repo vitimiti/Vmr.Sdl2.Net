@@ -25,8 +25,7 @@ public readonly struct JoystickVersion : IEquatable<JoystickVersion>
 
     public override string ToString()
     {
-        return
-            $"{{Product Version: {Product} (0x{Product:X4}), Firmware Version: {Firmware} (0x{Firmware:X4})}}";
+        return $"{{Product Version: 0x{Product:X4}, Firmware Version: 0x{Firmware:X4}}}";
     }
 
     public static bool operator ==(JoystickVersion left, JoystickVersion right)

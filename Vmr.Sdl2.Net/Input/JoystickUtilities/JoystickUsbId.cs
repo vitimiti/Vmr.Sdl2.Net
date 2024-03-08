@@ -25,8 +25,7 @@ public readonly struct JoystickUsbId : IEquatable<JoystickUsbId>
 
     public override string ToString()
     {
-        return
-            $"{{Vendor ID: {Vendor} (0x{Vendor:X4}), Product ID: {Product} (0x{Product:X4})}}";
+        return $"{{Vendor ID: 0x{Vendor:X4}, Product ID: 0x{Product:X4}}}";
     }
 
     public static bool operator ==(JoystickUsbId left, JoystickUsbId right)
