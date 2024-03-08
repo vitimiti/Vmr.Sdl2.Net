@@ -47,7 +47,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_CaptureMouse")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial int CaptureMouse([MarshalUsing(typeof(CallConvCdecl))] bool captured);
+    public static partial int CaptureMouse([MarshalUsing(typeof(SdlBoolMarshaller))] bool captured);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetRelativeMouseMode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
