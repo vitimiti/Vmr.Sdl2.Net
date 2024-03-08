@@ -12,7 +12,7 @@ public static class PowerInformation
     {
         PowerState result = Sdl.GetPowerInfo(out int seconds, out int percent);
         batteryLife?.Invoke(
-            new BatteryLife { SecondsLeft = seconds, PercentageLeft = percent },
+            new BatteryLife { TimeLeft = TimeSpan.FromSeconds(seconds), PercentageLeft = percent },
             result
         );
 

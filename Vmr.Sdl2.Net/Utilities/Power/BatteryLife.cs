@@ -5,12 +5,12 @@ namespace Vmr.Sdl2.Net.Utilities.Power;
 [Serializable]
 public readonly struct BatteryLife : IEquatable<BatteryLife>
 {
-    public int SecondsLeft { get; internal init; }
+    public TimeSpan TimeLeft { get; internal init; }
     public int PercentageLeft { get; internal init; }
 
     public bool Equals(BatteryLife other)
     {
-        return SecondsLeft == other.SecondsLeft && PercentageLeft == other.PercentageLeft;
+        return TimeLeft == other.TimeLeft && PercentageLeft == other.PercentageLeft;
     }
 
     public override bool Equals(object? obj)
@@ -20,12 +20,12 @@ public readonly struct BatteryLife : IEquatable<BatteryLife>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(SecondsLeft, PercentageLeft);
+        return HashCode.Combine(TimeLeft, PercentageLeft);
     }
 
     public override string ToString()
     {
-        return $"{{Seconds Left: {SecondsLeft}s, Percentage Left: {PercentageLeft}%}}";
+        return $"{{Seconds Left: {TimeLeft.Seconds}s, Percentage Left: {PercentageLeft}%}}";
     }
 
     public static bool operator ==(BatteryLife left, BatteryLife right)
