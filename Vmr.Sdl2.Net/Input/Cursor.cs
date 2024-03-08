@@ -9,6 +9,7 @@ using Microsoft.Win32.SafeHandles;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.CursorUtilities;
+using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Input;
@@ -110,16 +111,6 @@ public class Cursor : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
-    public static bool Shown
-    {
-        get
-        {
-            int result = Sdl.ShowCursor(Sdl.Query);
-            return result == Sdl.Enable;
-        }
-        set => _ = Sdl.ShowCursor(value ? Sdl.Enable : Sdl.Disable);
-    }
-
     protected override bool ReleaseHandle()
     {
         if (handle == nint.Zero)
@@ -154,6 +145,26 @@ public class Cursor : SafeHandleZeroOrMinusOneIsInvalid
 
         errorHandler(Sdl.GetError());
         return null;
+    }
+
+    public static bool IsShown(ErrorCodeHandler errorHandler)
+    {
+        int result = Sdl.ShowCursor(Sdl.Query);
+        if (result < 0)
+        {
+            errorHandler(Sdl.GetError(), result);
+        }
+
+        return IntBoolMarshaller.ConvertToManaged(result);
+    }
+
+    public static void SetIsShown(bool isShown, ErrorCodeHandler errorHandler)
+    {
+        int code = Sdl.ShowCursor(isShown ? Sdl.Enable : Sdl.Disable);
+        if (code < 0)
+        {
+            errorHandler(Sdl.GetError(), code);
+        }
     }
 
     public void SetActive()
