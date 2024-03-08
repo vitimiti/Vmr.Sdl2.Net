@@ -60,6 +60,7 @@ internal static unsafe class SdlMessageBoxDataMarshaller
             SdlMessageBoxButtonData[] sdlButtons = new SdlMessageBoxButtonData[
                 managed.Buttons.Length
             ];
+
             for (int i = 0; i < managed.Buttons.Length; i++)
             {
                 sdlButtons[i] = new SdlMessageBoxButtonData
