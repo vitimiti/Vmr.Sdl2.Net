@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿// Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
+
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -35,7 +37,7 @@ try
     using Surface? screenSurface = window.GetSurface(CriticalError);
     screenSurface?.Fill(
         Rectangle.Empty,
-        screenSurface.PixelFormat?.MapRgb(Color.DarkOrange) ?? 0U,
+        screenSurface.PixelFormat?.MapRgb(Color.Black) ?? 0U,
         CriticalErrorWithCode
     );
 
