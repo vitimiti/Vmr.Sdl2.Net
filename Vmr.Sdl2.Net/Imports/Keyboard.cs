@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
 using Vmr.Sdl2.Net.Input;
+using Vmr.Sdl2.Net.Input.KeyboardUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;

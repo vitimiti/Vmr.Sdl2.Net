@@ -3,6 +3,7 @@
 using System.Drawing;
 
 using Vmr.Sdl2.Net.Imports;
+using Vmr.Sdl2.Net.Input.MouseUtilities;
 using Vmr.Sdl2.Net.Utilities;
 using Vmr.Sdl2.Net.Video;
 

@@ -2,7 +2,7 @@
 
 using System.Drawing;
 
-namespace Vmr.Sdl2.Net.Input;
+namespace Vmr.Sdl2.Net.Input.MouseUtilities;
 
 public readonly struct MouseState
 {

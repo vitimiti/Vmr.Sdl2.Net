@@ -2,7 +2,7 @@
 
 using Vmr.Sdl2.Net.Imports;
 
-namespace Vmr.Sdl2.Net.Input;
+namespace Vmr.Sdl2.Net.Input.KeyboardUtilities;
 
 public static class ScreenKeyboard
 {

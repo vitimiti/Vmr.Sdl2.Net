@@ -2,6 +2,7 @@
 
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input;
+using Vmr.Sdl2.Net.Input.KeyboardUtilities;
 
 namespace Vmr.Sdl2.Net.Extensions;
 

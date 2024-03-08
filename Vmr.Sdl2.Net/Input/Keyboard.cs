@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using Vmr.Sdl2.Net.Imports;
+using Vmr.Sdl2.Net.Input.KeyboardUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
 using Vmr.Sdl2.Net.Video;

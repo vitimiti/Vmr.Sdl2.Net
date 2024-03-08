@@ -8,6 +8,7 @@ using Microsoft.Win32.SafeHandles;
 
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Imports;
+using Vmr.Sdl2.Net.Input.CursorUtilities;
 using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Input;
