@@ -18,7 +18,7 @@ public static class Keyboard
                 // Do not free this pointer, it belongs to SDL2
                 byte* statesPtr = Sdl.GetKeyboardState(out int numKeys);
                 ReadOnlySpan<byte> states = new(statesPtr, numKeys);
-                ScanCode[] scanCodes = new ScanCode[(int)ScanCode.TotalCodes];
+                ScanCode[] scanCodes = new ScanCode[ScanCodeData.TotalCodes];
                 Dictionary<ScanCode, bool> result = new();
                 for (int i = 0; i < scanCodes.Length; i++)
                 {

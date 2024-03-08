@@ -250,6 +250,5 @@ public enum ScanCode
     SoftLeft,
     SoftRight,
     Call,
-    EndCall,
-    TotalCodes = 0x0200
+    EndCall
 }
