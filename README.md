@@ -1,6 +1,6 @@
 # Vmr.Sdl2.Net
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/vitimiti/Vmr.Sdl2.Net/commits/main/) ![Maintainer](https://img.shields.io/badge/maintainer-Victor_Matia-blue)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/vitimiti/Vmr.Sdl2.Net/activity) ![Maintainer](https://img.shields.io/badge/maintainer-Victor_Matia-blue)
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md) [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/Naereen/badges/) [![.NET](https://img.shields.io/badge/--512BD4?logo=.net&logoColor=ffffff)](https://dotnet.microsoft.com/)
 
