@@ -27,7 +27,7 @@ internal static unsafe class SdlGuidMarshaller
 
     public static SdlGuid ConvertToUnmanaged(Guid managed)
     {
-        return Sdl.GuidFromString(managed.ToString());
+        return Sdl.GuidFromString(managed.ToString("N"));
     }
 
     [StructLayout(LayoutKind.Sequential)]
