@@ -40,12 +40,52 @@ public class TouchDevice : IEquatable<TouchDevice>
         return result;
     }
 
+    public static int SaveAllDollarTemplates(RwOps dst, ErrorHandler errorHandler)
+    {
+        int result = Sdl.SaveAllDollarTemplates(dst);
+        if (result == 0)
+        {
+            errorHandler(Sdl.GetError());
+        }
+
+        return result;
+    }
+
     public Finger GetFinger(int fingerIndex, ErrorHandler errorHandler)
     {
         Finger result = Sdl.GetTouchFinger(Id, fingerIndex);
         if (result == default)
         {
             errorHandler(Sdl.GetError());
+        }
+
+        return result;
+    }
+
+    public void RecordGesture(ErrorCodeHandler errorHandler)
+    {
+        int code = Sdl.RecordGesture(Id);
+        if (code < 0)
+        {
+            errorHandler(Sdl.GetError(), code);
+        }
+    }
+
+    public void SaveDollarTemplate(RwOps dst, ErrorHandler errorHandler)
+    {
+        bool isValid = Sdl.SaveDollarTemplate(Id, dst);
+        if (!isValid)
+        {
+            errorHandler(Sdl.GetError());
+        }
+    }
+
+    public int LoadDollarTemplates(RwOps src, ErrorCodeHandler errorHandler)
+    {
+        int result = Sdl.LoadDollarTemplates(Id, src);
+        if (result <= 0)
+        {
+            errorHandler(Sdl.GetError(), result);
         }
 
         return result;
