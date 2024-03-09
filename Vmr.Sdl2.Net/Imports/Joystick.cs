@@ -48,6 +48,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetDeviceGUID")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [return: MarshalUsing(typeof(SdlGuidMarshaller))]
     public static partial Guid JoystickGetDeviceGuid(int deviceIndex);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetDeviceVendor")]
@@ -148,6 +149,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetGUID")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [return: MarshalUsing(typeof(SdlGuidMarshaller))]
     public static partial Guid JoystickGetGuid(Joystick joystick);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetVendor")]
@@ -182,6 +184,7 @@ internal static partial class Sdl
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetJoystickGUIDInfo")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void GetJoystickGuidInfo(
+        [MarshalUsing(typeof(SdlGuidMarshaller))]
         Guid guid,
         out ushort vendor,
         out ushort product,
