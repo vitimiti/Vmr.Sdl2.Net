@@ -16,7 +16,7 @@ namespace Vmr.Sdl2.Net.Input;
 [NativeMarshalling(typeof(SafeHandleMarshaller<Joystick>))]
 public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
 {
-    private Joystick(nint preexistingHandle, bool ownsHandle)
+    internal Joystick(nint preexistingHandle, bool ownsHandle)
         : base(ownsHandle)
     {
         handle = preexistingHandle;
@@ -44,7 +44,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
 
     public static int Count => Sdl.NumJoysticks();
 
-    public int PlayerIndex
+    public virtual int PlayerIndex
     {
         get => Sdl.JoystickGetPlayerIndex(this);
         set => Sdl.JoystickSetPlayerIndex(this, value);
@@ -52,17 +52,17 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
 
     public Guid Guid => Sdl.JoystickGetGuid(this);
 
-    public JoystickUsbId UsbIdInformation =>
+    public virtual JoystickUsbId UsbIdInformation =>
         new() { Vendor = Sdl.JoystickGetVendor(this), Product = Sdl.JoystickGetProduct(this) };
 
-    public JoystickVersion VersionInformation =>
+    public virtual JoystickVersion VersionInformation =>
         new()
         {
             Product = Sdl.JoystickGetProductVersion(this),
             Firmware = Sdl.JoystickGetFirmwareVersion(this)
         };
 
-    public string? Serial => Sdl.JoystickGetSerial(this);
+    public virtual string? Serial => Sdl.JoystickGetSerial(this);
     public JoystickType Type => Sdl.JoystickGetType(this);
 
     public JoystickGuidInfo GuidInfo
@@ -84,9 +84,9 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         }
     }
 
-    public bool HasLed => Sdl.JoystickHasLed(this);
-    public bool HasRumble => Sdl.JoystickHasRumble(this);
-    public bool HasRumbleTriggers => Sdl.JoystickHasRumbleTriggers(this);
+    public virtual bool HasLed => Sdl.JoystickHasLed(this);
+    public virtual bool HasRumble => Sdl.JoystickHasRumble(this);
+    public virtual bool HasRumbleTriggers => Sdl.JoystickHasRumbleTriggers(this);
     public JoystickPowerLevel CurrentPowerLevel => Sdl.JoystickCurrentPowerLevel(this);
 
     public bool Equals(Joystick? other)
@@ -113,37 +113,37 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         Sdl.UnlockJoysticks();
     }
 
-    public static int PlayerIndexForDevice(int deviceIndex)
+    public static int GetPlayerIndexForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDevicePlayerIndex(deviceIndex);
     }
 
-    public static Guid GuidForDevice(int deviceIndex)
+    public static Guid GetGuidForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDeviceGuid(deviceIndex);
     }
 
-    public static ushort VendorForDevice(int deviceIndex)
+    public static ushort GetVendorForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDeviceVendor(deviceIndex);
     }
 
-    public static ushort ProductForDevice(int deviceIndex)
+    public static ushort GetProductForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDeviceProduct(deviceIndex);
     }
 
-    public static ushort ProductVersionForDevice(int deviceIndex)
+    public static ushort GetProductVersionForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDeviceProductVersion(deviceIndex);
     }
 
-    public static JoystickType TypeForDevice(int deviceIndex)
+    public static JoystickType GetTypeForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDeviceType(deviceIndex);
     }
 
-    public static int InstanceIdForDevice(int deviceIndex)
+    public static int GetInstanceIdForDevice(int deviceIndex)
     {
         return Sdl.JoystickGetDeviceInstanceId(deviceIndex);
     }
@@ -224,7 +224,12 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         }
     }
 
-    public string? GetPath(ErrorHandler errorHandler)
+    public static bool DeviceIsGameController(int deviceIndex)
+    {
+        return Sdl.IsGameController(deviceIndex);
+    }
+
+    public virtual string? GetPath(ErrorHandler errorHandler)
     {
         string? result = Sdl.JoystickPath(this);
         if (result is null)
@@ -262,7 +267,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         }
     }
 
-    public string? GetName(ErrorHandler errorHandler)
+    public virtual string? GetName(ErrorHandler errorHandler)
     {
         string? result = Sdl.JoystickName(this);
         if (result is null)
@@ -273,7 +278,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         return result;
     }
 
-    public bool IsAttached(ErrorHandler errorHandler)
+    public virtual bool IsAttached(ErrorHandler errorHandler)
     {
         bool result = Sdl.JoystickGetAttached(this);
         if (result)
@@ -378,7 +383,11 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         return Sdl.JoystickGetButton(this, buttonIndex);
     }
 
-    public void Rumble(RumbleFrequency frequency, TimeSpan time, ErrorCodeHandler errorHandler)
+    public virtual void Rumble(
+        RumbleFrequency frequency,
+        TimeSpan time,
+        ErrorCodeHandler errorHandler
+    )
     {
         int code = Sdl.JoystickRumble(this, frequency.Low, frequency.High, (uint)time.Milliseconds);
         if (code < 0)
@@ -387,7 +396,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         }
     }
 
-    public void RumbleTriggers(
+    public virtual void RumbleTriggers(
         RumbleFrequency frequency,
         TimeSpan time,
         ErrorCodeHandler errorHandler
@@ -406,7 +415,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         }
     }
 
-    public void SetLed(Color color, ErrorCodeHandler errorHandler)
+    public virtual void SetLed(Color color, ErrorCodeHandler errorHandler)
     {
         int code = Sdl.JoystickSetLed(this, color.R, color.G, color.B);
         if (code < 0)
@@ -415,7 +424,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         }
     }
 
-    public void SendEffect(byte[] data, ErrorCodeHandler errorHandler)
+    public virtual void SendEffect(byte[] data, ErrorCodeHandler errorHandler)
     {
         int code = Sdl.JoystickSendEffect(this, data, data.Length);
         if (code < 0)
