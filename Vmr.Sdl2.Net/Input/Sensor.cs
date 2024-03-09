@@ -121,7 +121,7 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
-    public FullState GetFullState(int numberOfValues, ErrorCodeHandler errorHandler)
+    public FullSensorState GetFullState(int numberOfValues, ErrorCodeHandler errorHandler)
     {
         unsafe
         {
@@ -141,7 +141,7 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
                 }
 
                 Span<float> data = new(dataPtr, numberOfValues);
-                return new FullState
+                return new FullSensorState
                 {
                     TimeStamp = TimeSpan.FromMicroseconds(timeStamp),
                     Data = code < 0 ? null : data.ToArray()
