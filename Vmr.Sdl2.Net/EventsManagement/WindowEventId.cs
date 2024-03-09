@@ -2,7 +2,7 @@
 
 namespace Vmr.Sdl2.Net.EventsManagement;
 
-public enum WindowEventId
+public enum WindowEventId : byte
 {
     None,
     Shown,

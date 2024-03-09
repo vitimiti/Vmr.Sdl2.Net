@@ -2,7 +2,7 @@
 
 namespace Vmr.Sdl2.Net.Input.MouseUtilities;
 
-public enum MouseWheelDirection
+public enum MouseWheelDirection : uint
 {
     Normal,
     Flipped

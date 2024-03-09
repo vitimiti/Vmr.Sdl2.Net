@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
 using Vmr.Sdl2.Net.Input;
+using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 

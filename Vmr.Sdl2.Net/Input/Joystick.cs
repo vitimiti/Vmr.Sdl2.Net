@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.Marshalling;
 using Microsoft.Win32.SafeHandles;
 
 using Vmr.Sdl2.Net.Imports;
+using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
@@ -367,7 +368,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
         return Sdl.JoystickGetHat(this, hatIndex);
     }
 
-    public Point GetBallAxisChange(int ballIndex, ErrorCodeHandler errorHandler)
+    public Point GetBallAxisDelta(int ballIndex, ErrorCodeHandler errorHandler)
     {
         int code = Sdl.JoystickGetBall(this, ballIndex, out int dX, out int dY);
         if (code < 0)

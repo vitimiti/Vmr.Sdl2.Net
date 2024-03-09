@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
 using Vmr.Sdl2.Net.Imports;
+using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities.GameControllerButtonBindUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
