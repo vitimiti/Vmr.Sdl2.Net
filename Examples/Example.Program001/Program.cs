@@ -53,6 +53,8 @@ catch (Exception e)
         null,
         (_, _) => Console.Error.WriteLine(e)
     );
+
+    throw;
 }
 
 return;
