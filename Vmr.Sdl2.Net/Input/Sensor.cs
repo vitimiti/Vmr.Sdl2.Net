@@ -143,7 +143,7 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
                 Span<float> data = new(dataPtr, numberOfValues);
                 return new FullState
                 {
-                    TimeStamp = TimeSpan.FromMilliseconds(timeStamp),
+                    TimeStamp = TimeSpan.FromMicroseconds(timeStamp),
                     Data = code < 0 ? null : data.ToArray()
                 };
             }
