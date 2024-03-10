@@ -6,6 +6,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{79
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Program001", "Examples\Example.Program001\Example.Program001.csproj", "{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Program002", "Examples\Example.Program002\Example.Program002.csproj", "{031A19F6-EAE7-4E80-925C-27E601A63D4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +22,13 @@ Global
 		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{031A19F6-EAE7-4E80-925C-27E601A63D4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{031A19F6-EAE7-4E80-925C-27E601A63D4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{031A19F6-EAE7-4E80-925C-27E601A63D4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{031A19F6-EAE7-4E80-925C-27E601A63D4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F36F8C70-F860-4B3B-BB67-F3F6A52223C1} = {795860F4-FD3C-402D-BE7C-993C82E05F83}
+		{031A19F6-EAE7-4E80-925C-27E601A63D4D} = {795860F4-FD3C-402D-BE7C-993C82E05F83}
 	EndGlobalSection
 EndGlobal
