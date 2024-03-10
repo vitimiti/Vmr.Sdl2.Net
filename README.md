@@ -147,10 +147,17 @@ compatible.
 These are a series of projects using the existing libraries to show examples on how you may want to use them, as well as
 showcase similarities and differences with the native library API.
 
-- Example 001:
-    - A rough, simple example on how to create a basic window and handle the quit events.
-- Example 002:
-    - A more refined example on how to load a BMP file and display it into the window's screen surface.
+### Example 001:
+
+A rough, simple example on how to create a basic window and handle the quit events.
+
+### Example 002:
+
+A more refined example on how to load a BMP file and display it into the window's screen surface.
+
+### Example 003:
+
+Practically identical to [Example 002](#example-002), but further adds onto the event system.
 
 ## The Code Of Conduct
 
