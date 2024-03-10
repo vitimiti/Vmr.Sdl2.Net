@@ -14,7 +14,7 @@ try
         new(
             new WindowSettings
             {
-                Title = "Example Vmr.Sdl2.Net Program 002",
+                Title = "Example Vmr.Sdl2.Net Program 003",
                 Position = new Point(WindowPredefinedPosition.Centered),
                 Size = new Size(640, 480),
                 Flags = WindowOptions.Shown
