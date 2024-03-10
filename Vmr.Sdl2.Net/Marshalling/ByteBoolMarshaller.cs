@@ -4,8 +4,8 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(bool), MarshalMode.Default, typeof(SdlByteBoolMarshaller))]
-internal static class SdlByteBoolMarshaller
+[CustomMarshaller(typeof(bool), MarshalMode.Default, typeof(ByteBoolMarshaller))]
+internal static class ByteBoolMarshaller
 {
     public static bool ConvertToManaged(byte unmanaged)
     {

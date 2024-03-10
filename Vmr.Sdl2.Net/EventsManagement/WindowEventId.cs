@@ -21,6 +21,6 @@ public enum WindowEventId : byte
     Close,
     TakeFocus,
     HitTest,
-    IccProfChanged,
+    IccProfileChanged,
     DisplayChanged
 }

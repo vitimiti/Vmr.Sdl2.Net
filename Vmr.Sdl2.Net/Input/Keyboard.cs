@@ -24,7 +24,7 @@ public static class Keyboard
                 for (int i = 0; i < scanCodes.Length; i++)
                 {
                     scanCodes[i] = (ScanCode)i;
-                    result.Add(scanCodes[i], SdlByteBoolMarshaller.ConvertToManaged(states[i]));
+                    result.Add(scanCodes[i], ByteBoolMarshaller.ConvertToManaged(states[i]));
                 }
 
                 return result;

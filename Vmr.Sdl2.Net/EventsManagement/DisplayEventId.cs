@@ -2,7 +2,7 @@
 
 namespace Vmr.Sdl2.Net.EventsManagement;
 
-public enum DisplayEventId
+public enum DisplayEventId : byte
 {
     None,
     Orientation,
