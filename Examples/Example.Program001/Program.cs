@@ -42,7 +42,12 @@ try
     );
 
     window.UpdateSurface(CriticalErrorWithCode);
-    Thread.Sleep(TimeSpan.FromSeconds(3));
+    bool quit = false;
+    MainLoop.OnQuit += (_, _) => quit = true;
+    while (!quit)
+    {
+        MainLoop.PollEvents();
+    }
 }
 catch (Exception e)
 {
