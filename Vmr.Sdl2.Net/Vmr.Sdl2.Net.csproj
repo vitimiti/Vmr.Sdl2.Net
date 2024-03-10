@@ -38,8 +38,8 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <DefineDebug>true</DefineDebug>
-        <DebugSymbols>true</DebugSymbols>
+        <DefineDebug>false</DefineDebug>
+        <DebugSymbols>false</DebugSymbols>
         <DebugType>none</DebugType>
         <Optimize>true</Optimize>
     </PropertyGroup>
