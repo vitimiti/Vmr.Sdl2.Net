@@ -116,7 +116,6 @@ public class Game : IDisposable
     private void Load()
     {
         _xOutFileStream = new FileStream("res/x_out.bmp", FileMode.Open, FileAccess.Read);
-
         _xOutRwOps = new RwOps(_xOutFileStream, CriticalError);
         _xOut = Surface.LoadBmp(_xOutRwOps, CriticalError);
     }
