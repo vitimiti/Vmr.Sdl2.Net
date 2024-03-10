@@ -29,6 +29,7 @@
     <ItemGroup>
         <None Update="res\hello_world.bmp">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
         </None>
     </ItemGroup>
 
