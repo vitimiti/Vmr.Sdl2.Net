@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
-
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Utilities;
 
@@ -50,7 +49,12 @@ public static class Display
             errorHandler(Sdl.GetError(), code);
         }
 
-        return new Dpi { Diagonal = dDpi, Horizontal = hDpi, Vertical = vDpi };
+        return new Dpi
+        {
+            Diagonal = dDpi,
+            Horizontal = hDpi,
+            Vertical = vDpi
+        };
     }
 
     public static DisplayOrientation GetOrientation(int displayIndex)

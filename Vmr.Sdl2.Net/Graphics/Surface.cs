@@ -2,9 +2,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Graphics.Blending;
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Graphics.Pixels;
@@ -260,7 +258,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         {
             unsafe
             {
-                return SdlRectangleMarshaller.ConvertToManaged(UnsafeHandle->ClipRect);
+                return RectangleMarshaller.ConvertToManaged(UnsafeHandle->ClipRect);
             }
         }
     }
@@ -282,13 +280,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
     public bool Equals(Surface? other)
     {
         return other is not null
-               && Flags == other.Flags
-               && PixelFormat == other.PixelFormat
-               && Size == other.Size
-               && Pitch == other.Pitch
-               && Pixels == other.Pixels
-               && HasRle == other.HasRle
-               && HasColorKey == other.HasColorKey;
+            && Flags == other.Flags
+            && PixelFormat == other.PixelFormat
+            && Size == other.Size
+            && Pitch == other.Pitch
+            && Pixels == other.Pixels
+            && HasRle == other.HasRle
+            && HasColorKey == other.HasColorKey;
     }
 
     protected override bool ReleaseHandle()
@@ -504,15 +502,15 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
     {
         unsafe
         {
-            SdlRectangleMarshaller.SdlRect[] sdlRects = new SdlRectangleMarshaller.SdlRect[
+            RectangleMarshaller.Rectangle[] sdlRects = new RectangleMarshaller.Rectangle[
                 rectangles.Length
             ];
             for (int i = 0; i < rectangles.Length; i++)
             {
-                sdlRects[i] = SdlRectangleMarshaller.ConvertToUnmanaged(rectangles[i]);
+                sdlRects[i] = RectangleMarshaller.ConvertToUnmanaged(rectangles[i]);
             }
 
-            fixed (SdlRectangleMarshaller.SdlRect* sdlRectsHandle = sdlRects)
+            fixed (RectangleMarshaller.Rectangle* sdlRectsHandle = sdlRects)
             {
                 int code = Sdl.FillRects(this, sdlRectsHandle, rectangles.Length, color);
                 if (code < 0)
@@ -627,8 +625,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
     public override string ToString()
     {
-        return
-            $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
+        return $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
     }
 
     public static bool operator ==(Surface? left, Surface? right)

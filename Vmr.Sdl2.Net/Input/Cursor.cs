@@ -3,9 +3,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.CursorUtilities;

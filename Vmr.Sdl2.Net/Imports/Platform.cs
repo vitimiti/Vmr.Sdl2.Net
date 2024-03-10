@@ -2,6 +2,7 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;
@@ -12,7 +13,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GetPlatform",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GetPlatform();

@@ -2,7 +2,6 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.EventsManagement;
 using Vmr.Sdl2.Net.EventsManagement.DisplayIdEvents;
 using Vmr.Sdl2.Net.EventsManagement.WindowIdEvents;
@@ -544,7 +543,7 @@ public static class MainLoop
                             ev.Key.WindowId,
                             ev.Key.State,
                             ByteBoolMarshaller.ConvertToManaged(ev.Key.Repeat),
-                            SdlKeySymMarshaller.ConvertToManaged(ev.Key.KeySym)
+                            KeySymbolMarshaller.ConvertToManaged(ev.Key.KeySymbol)
                         )
                     );
 
@@ -558,7 +557,7 @@ public static class MainLoop
                             ev.Key.WindowId,
                             ev.Key.State,
                             ByteBoolMarshaller.ConvertToManaged(ev.Key.Repeat),
-                            SdlKeySymMarshaller.ConvertToManaged(ev.Key.KeySym)
+                            KeySymbolMarshaller.ConvertToManaged(ev.Key.KeySymbol)
                         )
                     );
 
@@ -677,7 +676,8 @@ public static class MainLoop
                             ev.Wheel.Direction,
                             new PreciseScrollAmount
                             {
-                                Horizontal = ev.Wheel.PreciseX, Vertical = ev.Wheel.PreciseY
+                                Horizontal = ev.Wheel.PreciseX,
+                                Vertical = ev.Wheel.PreciseY
                             },
                             new Point(ev.Wheel.MouseX, ev.Wheel.MouseY)
                         )
@@ -1016,7 +1016,8 @@ public static class MainLoop
                             ev.MGesture.TouchId,
                             new MultiGestureDelta
                             {
-                                Theta = ev.MGesture.DTheta, Distance = ev.MGesture.DDist
+                                Theta = ev.MGesture.DTheta,
+                                Distance = ev.MGesture.DDist
                             },
                             new PointF(ev.MGesture.X, ev.MGesture.Y),
                             ev.MGesture.NumFingers

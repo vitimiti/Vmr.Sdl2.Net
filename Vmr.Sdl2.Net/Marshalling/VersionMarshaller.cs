@@ -5,17 +5,17 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(Version), MarshalMode.Default, typeof(SdlVersionMarshaller))]
-internal static class SdlVersionMarshaller
+[CustomMarshaller(typeof(System.Version), MarshalMode.Default, typeof(VersionMarshaller))]
+internal static class VersionMarshaller
 {
-    public static Version ConvertToManaged(SdlVersion unmanaged)
+    public static System.Version ConvertToManaged(Version unmanaged)
     {
-        return new Version(unmanaged.Major, unmanaged.Minor, unmanaged.Patch);
+        return new System.Version(unmanaged.Major, unmanaged.Minor, unmanaged.Patch);
     }
 
-    public static SdlVersion ConvertToUnmanaged(Version managed)
+    public static Version ConvertToUnmanaged(System.Version managed)
     {
-        return new SdlVersion
+        return new Version
         {
             Major = (byte)managed.Major,
             Minor = (byte)managed.Minor,
@@ -24,7 +24,7 @@ internal static class SdlVersionMarshaller
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlVersion
+    internal struct Version
     {
         public byte Major;
         public byte Minor;

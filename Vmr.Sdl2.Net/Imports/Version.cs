@@ -12,14 +12,14 @@ internal static partial class Sdl
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetVersion")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void GetVersion(
-        [MarshalUsing(typeof(SdlVersionMarshaller))] out Version version
+        [MarshalUsing(typeof(VersionMarshaller))] out Version version
     );
 
     [LibraryImport(
         LibraryName,
         EntryPoint = "SDL_GetRevision",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GetRevision();

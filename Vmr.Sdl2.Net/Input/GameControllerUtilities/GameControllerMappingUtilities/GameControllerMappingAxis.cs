@@ -54,7 +54,9 @@ public struct GameControllerMappingAxis : IEquatable<GameControllerMappingAxis>
 
         return new GameControllerMappingAxis
         {
-            Axis = axis, AxisIndex = int.Parse(parts[1][1..]), Deviation = deviation
+            Axis = axis,
+            AxisIndex = int.Parse(parts[1][1..]),
+            Deviation = deviation
         };
     }
 

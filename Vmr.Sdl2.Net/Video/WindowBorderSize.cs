@@ -12,9 +12,9 @@ public readonly struct WindowBorderSize : IEquatable<WindowBorderSize>
     public bool Equals(WindowBorderSize other)
     {
         return Top == other.Top
-               && Left == other.Left
-               && Bottom == other.Bottom
-               && Right == other.Right;
+            && Left == other.Left
+            && Bottom == other.Bottom
+            && Right == other.Right;
     }
 
     public override bool Equals(object? obj)

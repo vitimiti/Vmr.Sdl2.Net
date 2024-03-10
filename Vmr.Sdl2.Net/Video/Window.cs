@@ -3,9 +3,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
@@ -167,20 +165,20 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
     public bool Equals(Window? other)
     {
         return other is not null
-               && Flags == other.Flags
-               && Title == other.Title
-               && Position == other.Position
-               && Size == other.Size
-               && SizeInPixels == other.SizeInPixels
-               && MinimumSize == other.MinimumSize
-               && MaximumSize == other.MaximumSize
-               && HasSurface == other.HasSurface
-               && Grab == other.Grab
-               && KeyboardGrab == other.KeyboardGrab
-               && MouseGrab == other.MouseGrab
-               && Math.Abs(Brightness - other.Brightness) < float.Epsilon
-               && Math.Abs(Opacity - other.Opacity) < float.Epsilon
-               && DrawableSize == other.DrawableSize;
+            && Flags == other.Flags
+            && Title == other.Title
+            && Position == other.Position
+            && Size == other.Size
+            && SizeInPixels == other.SizeInPixels
+            && MinimumSize == other.MinimumSize
+            && MaximumSize == other.MaximumSize
+            && HasSurface == other.HasSurface
+            && Grab == other.Grab
+            && KeyboardGrab == other.KeyboardGrab
+            && MouseGrab == other.MouseGrab
+            && Math.Abs(Brightness - other.Brightness) < float.Epsilon
+            && Math.Abs(Opacity - other.Opacity) < float.Epsilon
+            && DrawableSize == other.DrawableSize;
     }
 
     public static Window? GetGrabbed(ErrorHandler errorHandler)
@@ -310,7 +308,13 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
 
         if (code >= 0)
         {
-            return new WindowBorderSize { Top = top, Left = left, Bottom = bottom, Right = right };
+            return new WindowBorderSize
+            {
+                Top = top,
+                Left = left,
+                Bottom = bottom,
+                Right = right
+            };
         }
 
         errorHandler(Sdl.GetError(), code);
@@ -522,31 +526,31 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
                     this,
                     (delegate* unmanaged[Cdecl]<
                         void*,
-                        SdlPointMarshaller.SdlPoint*,
+                        PointMarshaller.Point*,
                         void*,
                         HitTestResult>)
-                    Marshal.GetFunctionPointerForDelegate(
-                        (
-                            void* windowPtr,
-                            SdlPointMarshaller.SdlPoint* sdlPoint,
-                            void* passedDataPtr
-                        ) =>
-                        {
-                            SdlPointMarshaller.UnmanagedToManagedIn marshaller = new();
-                            marshaller.FromUnmanaged(sdlPoint);
-                            Span<byte> dataBytes = Span<byte>.Empty;
-                            if (passedDataPtr is not null)
+                        Marshal.GetFunctionPointerForDelegate(
+                            (
+                                void* windowPtr,
+                                PointMarshaller.Point* sdlPoint,
+                                void* passedDataPtr
+                            ) =>
                             {
-                                dataBytes = new Span<byte>(passedDataPtr, dataLength);
-                            }
+                                PointMarshaller.UnmanagedToManagedIn marshaller = new();
+                                marshaller.FromUnmanaged(sdlPoint);
+                                Span<byte> dataBytes = Span<byte>.Empty;
+                                if (passedDataPtr is not null)
+                                {
+                                    dataBytes = new Span<byte>(passedDataPtr, dataLength);
+                                }
 
-                            return callback.Invoke(
-                                new Window((nint)windowPtr, false),
-                                marshaller.ToManaged(),
-                                dataBytes.IsEmpty ? null : dataBytes.ToArray()
-                            );
-                        }
-                    ),
+                                return callback.Invoke(
+                                    new Window((nint)windowPtr, false),
+                                    marshaller.ToManaged(),
+                                    dataBytes.IsEmpty ? null : dataBytes.ToArray()
+                                );
+                            }
+                        ),
                     dataPtr
                 );
 
@@ -652,8 +656,7 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
 
     public override string ToString()
     {
-        return
-            $"{{Flags: {Flags}, Title: {Title}, Position: {Position}, Size: {Size}, Size In Pixels: {SizeInPixels}, Minimum Size: {MinimumSize}, Maximum Size: {MaximumSize}, Has Surface: {HasSurface}}}";
+        return $"{{Flags: {Flags}, Title: {Title}, Position: {Position}, Size: {Size}, Size In Pixels: {SizeInPixels}, Minimum Size: {MinimumSize}, Maximum Size: {MaximumSize}, Has Surface: {HasSurface}}}";
     }
 
     public static bool operator ==(Window? left, Window? right)

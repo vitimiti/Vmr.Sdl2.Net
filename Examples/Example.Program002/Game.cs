@@ -3,9 +3,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-
 using Example.Program002.Settings;
-
 using Vmr.Sdl2.Net;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Utilities;
@@ -61,8 +59,7 @@ public class Game : IDisposable
 
     private static string GenerateMismatchInfo(Version expectedVersion, Version version)
     {
-        return
-            $"Expected SDL2 v{expectedVersion}, but SDL2 v{version} was found. Some unexpected behaviors or errors may be encountered, reinstall the game or update your SDL2 version to match v{expectedVersion}";
+        return $"Expected SDL2 v{expectedVersion}, but SDL2 v{version} was found. Some unexpected behaviors or errors may be encountered, reinstall the game or update your SDL2 version to match v{expectedVersion}";
     }
 
     private static void CriticalError(string? message)

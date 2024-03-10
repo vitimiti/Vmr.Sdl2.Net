@@ -13,9 +13,9 @@ public readonly struct JoystickGuidInfo : IEquatable<JoystickGuidInfo>
     public bool Equals(JoystickGuidInfo other)
     {
         return Vendor == other.Vendor
-               && Product == other.Product
-               && Version == other.Version
-               && Crc16 == other.Crc16;
+            && Product == other.Product
+            && Version == other.Version
+            && Crc16 == other.Crc16;
     }
 
     public override bool Equals(object? obj)
@@ -30,8 +30,7 @@ public readonly struct JoystickGuidInfo : IEquatable<JoystickGuidInfo>
 
     public override string ToString()
     {
-        return
-            $"{{Vendor: 0x{Vendor:X4}, Product: 0x{Product:X4}, Version: 0x{Version:X4}, CRC16: 0x{Crc16:X4}}}";
+        return $"{{Vendor: 0x{Vendor:X4}, Product: 0x{Product:X4}, Version: 0x{Version:X4}, CRC16: 0x{Crc16:X4}}}";
     }
 
     public static bool operator ==(JoystickGuidInfo left, JoystickGuidInfo right)

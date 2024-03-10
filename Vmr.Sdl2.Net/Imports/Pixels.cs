@@ -3,7 +3,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;
@@ -14,14 +13,14 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GetPixelFormatName",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GetPixelFormatName(uint format);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_PixelFormatEnumToMasks")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool PixelFormatEnumToMasks(
         uint format,
         out int bpp,
@@ -65,7 +64,7 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetPaletteColors(
         nint palette,
-        SdlColorMarshaller.SdlColor* colors,
+        ColorMarshaller.Color* colors,
         int firstColor,
         int nColors
     );
@@ -113,15 +112,16 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void CalculateGammaRamp(
         float gamma,
-        [Out] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-        ushort[] ramp
+        [Out]
+        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+            ushort[] ramp
     );
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct Palette
     {
         public int NColors;
-        public SdlColorMarshaller.SdlColor* Colors;
+        public ColorMarshaller.Color* Colors;
         public uint Version;
         public int RefCount;
     }

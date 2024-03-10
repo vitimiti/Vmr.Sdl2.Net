@@ -2,9 +2,7 @@
 
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.SensorUtilities;
 using Vmr.Sdl2.Net.Utilities;

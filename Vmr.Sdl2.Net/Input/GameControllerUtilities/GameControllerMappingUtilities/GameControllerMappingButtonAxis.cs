@@ -54,15 +54,17 @@ public struct GameControllerMappingButtonAxis : IEquatable<GameControllerMapping
 
         return new GameControllerMappingButtonAxis
         {
-            Button = axis, AxisIndex = int.Parse(parts[1][1..]), Deviation = deviation
+            Button = axis,
+            AxisIndex = int.Parse(parts[1][1..]),
+            Deviation = deviation
         };
     }
 
     public bool Equals(GameControllerMappingButtonAxis other)
     {
         return Button == other.Button
-               && AxisIndex == other.AxisIndex
-               && Deviation == other.Deviation;
+            && AxisIndex == other.AxisIndex
+            && Deviation == other.Deviation;
     }
 
     public override bool Equals(object? obj)

@@ -1,22 +1,21 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(Color), MarshalMode.Default, typeof(SdlColorMarshaller))]
-internal static class SdlColorMarshaller
+[CustomMarshaller(typeof(System.Drawing.Color), MarshalMode.Default, typeof(ColorMarshaller))]
+internal static class ColorMarshaller
 {
-    public static Color ConvertToManaged(SdlColor unmanaged)
+    public static System.Drawing.Color ConvertToManaged(Color unmanaged)
     {
-        return Color.FromArgb(unmanaged.A, unmanaged.R, unmanaged.G, unmanaged.B);
+        return System.Drawing.Color.FromArgb(unmanaged.A, unmanaged.R, unmanaged.G, unmanaged.B);
     }
 
-    public static SdlColor ConvertToUnmanaged(Color managed)
+    public static Color ConvertToUnmanaged(System.Drawing.Color managed)
     {
-        return new SdlColor
+        return new Color
         {
             R = managed.R,
             G = managed.G,
@@ -26,7 +25,7 @@ internal static class SdlColorMarshaller
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlColor
+    internal struct Color
     {
         public byte R;
         public byte G;

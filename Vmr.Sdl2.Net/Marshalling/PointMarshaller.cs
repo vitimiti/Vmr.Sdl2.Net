@@ -6,83 +6,88 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(RectangleF), MarshalMode.Default, typeof(SdlRectangleFMarshaller))]
+[CustomMarshaller(typeof(System.Drawing.Point), MarshalMode.Default, typeof(PointMarshaller))]
 [CustomMarshaller(
-    typeof(RectangleF),
+    typeof(System.Drawing.Point),
     MarshalMode.ManagedToUnmanagedIn,
     typeof(ManagedToUnmanagedIn)
 )]
 [CustomMarshaller(
-    typeof(RectangleF),
+    typeof(System.Drawing.Point),
     MarshalMode.ManagedToUnmanagedOut,
     typeof(ManagedToUnmanagedOut)
 )]
 [CustomMarshaller(
-    typeof(RectangleF),
+    typeof(System.Drawing.Point),
     MarshalMode.UnmanagedToManagedIn,
     typeof(UnmanagedToManagedIn)
 )]
 [CustomMarshaller(
-    typeof(RectangleF),
+    typeof(System.Drawing.Point),
     MarshalMode.UnmanagedToManagedOut,
     typeof(UnmanagedToManagedOut)
 )]
-internal static unsafe class SdlRectangleFMarshaller
+[CustomMarshaller(typeof(System.Drawing.Point), MarshalMode.ElementIn, typeof(ElementIn))]
+internal static unsafe class PointMarshaller
 {
-    public static SdlRectF ConvertToUnmanaged(RectangleF managed)
+    public static System.Drawing.Point ConvertToManaged(Point unmanaged)
     {
-        return new SdlRectF
-        {
-            X = managed.X,
-            Y = managed.Y,
-            W = managed.Width,
-            H = managed.Height
-        };
+        return new System.Drawing.Point(unmanaged.X, unmanaged.Y);
     }
 
-    public static RectangleF ConvertToManaged(SdlRectF unmanaged)
+    public static Point ConvertToUnmanaged(System.Drawing.Point managed)
     {
-        return new RectangleF(unmanaged.X, unmanaged.Y, unmanaged.W, unmanaged.H);
+        return new Point { X = managed.X, Y = managed.Y };
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlRectF
+    internal struct Point
     {
-        public float X;
-        public float Y;
-        public float W;
-        public float H;
+        public int X;
+        public int Y;
+    }
+
+    public static class ElementIn
+    {
+        public static System.Drawing.Point ConvertToManaged(Point unmanaged)
+        {
+            return new System.Drawing.Point(unmanaged.X, unmanaged.Y);
+        }
+
+        public static Point ConvertToUnmanaged(System.Drawing.Point managed)
+        {
+            return new Point { X = managed.X, Y = managed.Y };
+        }
+
+        public static void Free()
+        {
+            // Nothing to do here
+        }
     }
 
     public ref struct ManagedToUnmanagedIn
     {
-        private SdlRectF* _unmanagedPtr;
-        private SdlRectF _unmanaged;
+        private Point* _unmanagedPtr;
+        private Point _unmanaged;
         private GCHandle _gcHandle;
 
-        public void FromManaged(RectangleF managed)
+        public void FromManaged(System.Drawing.Point managed)
         {
-            if (managed == RectangleF.Empty)
+            if (managed == System.Drawing.Point.Empty)
             {
                 _unmanagedPtr = null;
                 return;
             }
 
-            _unmanaged = new SdlRectF
-            {
-                X = managed.X,
-                Y = managed.Y,
-                W = managed.Width,
-                H = managed.Height
-            };
+            _unmanaged = new Point { X = managed.X, Y = managed.Y };
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
-            fixed (SdlRectF* ptr = &_unmanaged)
+            fixed (Point* ptr = &_unmanaged)
             {
                 _unmanagedPtr = ptr;
             }
         }
 
-        public SdlRectF* ToUnmanaged()
+        public Point* ToUnmanaged()
         {
             return _unmanagedPtr;
         }
@@ -103,22 +108,22 @@ internal static unsafe class SdlRectangleFMarshaller
 
     public ref struct ManagedToUnmanagedOut
     {
-        private RectangleF _managed;
+        private System.Drawing.Point _managed;
         private GCHandle _gcHandle;
 
-        public void FromUnmanaged(SdlRectF* unmanaged)
+        public void FromUnmanaged(Point* unmanaged)
         {
             if (unmanaged is null)
             {
-                _managed = RectangleF.Empty;
+                _managed = System.Drawing.Point.Empty;
                 return;
             }
 
-            _managed = new RectangleF(unmanaged->X, unmanaged->Y, unmanaged->W, unmanaged->H);
+            _managed = new System.Drawing.Point(unmanaged->X, unmanaged->Y);
             _gcHandle = GCHandle.Alloc(_managed, GCHandleType.Pinned);
         }
 
-        public RectangleF ToManaged()
+        public System.Drawing.Point ToManaged()
         {
             return _managed;
         }
@@ -134,22 +139,22 @@ internal static unsafe class SdlRectangleFMarshaller
 
     public ref struct UnmanagedToManagedIn
     {
-        private RectangleF _managed;
+        private System.Drawing.Point _managed;
         private GCHandle _gcHandle;
 
-        public void FromUnmanaged(SdlRectF* unmanaged)
+        public void FromUnmanaged(Point* unmanaged)
         {
             if (unmanaged is null)
             {
-                _managed = RectangleF.Empty;
+                _managed = System.Drawing.Point.Empty;
                 return;
             }
 
-            _managed = new RectangleF(unmanaged->X, unmanaged->Y, unmanaged->W, unmanaged->H);
+            _managed = new System.Drawing.Point(unmanaged->X, unmanaged->Y);
             _gcHandle = GCHandle.Alloc(_managed, GCHandleType.Pinned);
         }
 
-        public RectangleF ToManaged()
+        public System.Drawing.Point ToManaged()
         {
             return _managed;
         }
@@ -165,33 +170,27 @@ internal static unsafe class SdlRectangleFMarshaller
 
     public ref struct UnmanagedToManagedOut
     {
-        private SdlRectF* _unmanagedPtr;
-        private SdlRectF _unmanaged;
+        private Point* _unmanagedPtr;
+        private Point _unmanaged;
         private GCHandle _gcHandle;
 
-        public void FromManaged(RectangleF managed)
+        public void FromManaged(System.Drawing.Point managed)
         {
-            if (managed == RectangleF.Empty)
+            if (managed == System.Drawing.Point.Empty)
             {
                 _unmanagedPtr = null;
                 return;
             }
 
-            _unmanaged = new SdlRectF
-            {
-                X = managed.X,
-                Y = managed.Y,
-                W = managed.Width,
-                H = managed.Height
-            };
+            _unmanaged = new Point { X = managed.X, Y = managed.Y };
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
-            fixed (SdlRectF* ptr = &_unmanaged)
+            fixed (Point* ptr = &_unmanaged)
             {
                 _unmanagedPtr = ptr;
             }
         }
 
-        public SdlRectF* ToUnmanaged()
+        public Point* ToUnmanaged()
         {
             return _unmanagedPtr;
         }

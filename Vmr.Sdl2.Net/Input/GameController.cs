@@ -3,7 +3,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
@@ -20,14 +19,10 @@ namespace Vmr.Sdl2.Net.Input;
 public class GameController : Joystick, IEquatable<GameController>
 {
     private GameController(nint preexistingHandle, bool ownsHandle)
-        : base(preexistingHandle, ownsHandle)
-    {
-    }
+        : base(preexistingHandle, ownsHandle) { }
 
     public GameController(int deviceIndex, ErrorHandler errorHandler)
-        : base(InitializeBaseFromDevice(deviceIndex, errorHandler), true)
-    {
-    }
+        : base(InitializeBaseFromDevice(deviceIndex, errorHandler), true) { }
 
     public new GameControllerType Type => Sdl.GameControllerGetType(this);
 
@@ -60,15 +55,15 @@ public class GameController : Joystick, IEquatable<GameController>
     public bool Equals(GameController? other)
     {
         return other is not null
-               && Type == other.Type
-               && UsbIdInformation == other.UsbIdInformation
-               && VersionInformation == other.VersionInformation
-               && Serial == other.Serial
-               && CountTouchpads == other.CountTouchpads
-               && HasLed == other.HasLed
-               && HasRumble == other.HasRumble
-               && HasRumbleTriggers == other.HasRumbleTriggers
-               && base.Equals(other);
+            && Type == other.Type
+            && UsbIdInformation == other.UsbIdInformation
+            && VersionInformation == other.VersionInformation
+            && Serial == other.Serial
+            && CountTouchpads == other.CountTouchpads
+            && HasLed == other.HasLed
+            && HasRumble == other.HasRumble
+            && HasRumbleTriggers == other.HasRumbleTriggers
+            && base.Equals(other);
     }
 
     private static nint InitializeBaseFromDevice(int deviceIndex, ErrorHandler errorHandler)
@@ -301,10 +296,7 @@ public class GameController : Joystick, IEquatable<GameController>
             BindType = native.BindType,
             Value = new GameControllerButtonBindUnion
             {
-                Hat = new GameControllerButtonBindHat
-                {
-                    Hat = native.Val0, HatMask = native.Val1
-                }
+                Hat = new GameControllerButtonBindHat { Hat = native.Val0, HatMask = native.Val1 }
             }
         };
     }
@@ -333,10 +325,7 @@ public class GameController : Joystick, IEquatable<GameController>
             BindType = native.BindType,
             Value = new GameControllerButtonBindUnion
             {
-                Hat = new GameControllerButtonBindHat
-                {
-                    Hat = native.Val0, HatMask = native.Val1
-                }
+                Hat = new GameControllerButtonBindHat { Hat = native.Val0, HatMask = native.Val1 }
             }
         };
     }
@@ -382,7 +371,9 @@ public class GameController : Joystick, IEquatable<GameController>
         {
             return new TouchpadFingerState
             {
-                State = state, Position = new PointF(x, y), Pressure = pressure
+                State = state,
+                Position = new PointF(x, y),
+                Pressure = pressure
             };
         }
 
@@ -620,8 +611,7 @@ public class GameController : Joystick, IEquatable<GameController>
 
     public override string ToString()
     {
-        return
-            $"{{Type: {Type}, Player Index: {PlayerIndex}, USB ID Information: {UsbIdInformation}, Version Information: {VersionInformation}, Serial: {Serial}, Touchpads Count: {CountTouchpads}, Has LED: {HasLed}, Has Rumble: {HasRumble}, Has Rumble Triggers: {HasRumbleTriggers}}}";
+        return $"{{Type: {Type}, Player Index: {PlayerIndex}, USB ID Information: {UsbIdInformation}, Version Information: {VersionInformation}, Serial: {Serial}, Touchpads Count: {CountTouchpads}, Has LED: {HasLed}, Has Rumble: {HasRumble}, Has Rumble Triggers: {HasRumbleTriggers}}}";
     }
 
     public static bool operator ==(GameController? left, GameController? right)

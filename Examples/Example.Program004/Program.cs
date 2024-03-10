@@ -1,10 +1,8 @@
 ﻿// Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
-
 using Example.Program002.Settings;
 using Example.Program004;
-
 using Vmr.Sdl2.Net.Video;
 using Vmr.Sdl2.Net.Video.Messages;
 

@@ -1,9 +1,7 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Imports;
 
 namespace Vmr.Sdl2.Net.Utilities;

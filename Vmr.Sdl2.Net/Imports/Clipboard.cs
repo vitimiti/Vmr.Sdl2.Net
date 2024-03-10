@@ -27,6 +27,6 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_HasClipboardText")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool HasClipboardText();
 }

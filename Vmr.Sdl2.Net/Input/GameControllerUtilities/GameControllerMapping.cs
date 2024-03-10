@@ -3,7 +3,6 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
-
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities.GameControllerMappingUtilities;
 using Vmr.Sdl2.Net.Marshalling;
@@ -158,10 +157,10 @@ public struct GameControllerMapping : IEquatable<GameControllerMapping>
             .FirstOrDefault(part => part.Contains("platform:"))
             ?.Split(':')[1];
 
-        SdlGuidMarshaller.SdlGuid nativeGuid = Sdl.GuidFromString(parts[0]);
+        GuidMarshaller.Guid nativeGuid = Sdl.GuidFromString(parts[0]);
         return new GameControllerMapping
         {
-            Guid = SdlGuidMarshaller.ConvertToManaged(nativeGuid),
+            Guid = GuidMarshaller.ConvertToManaged(nativeGuid),
             Name = parts[1] == "*" ? null : parts[1],
             Buttons = buttons.Count == 0 ? null : buttons.ToArray(),
             ButtonAxes = buttonAxes.Count == 0 ? null : buttonAxes.ToArray(),
@@ -176,14 +175,14 @@ public struct GameControllerMapping : IEquatable<GameControllerMapping>
     public bool Equals(GameControllerMapping other)
     {
         return Guid.Equals(other.Guid)
-               && Name == other.Name
-               && Equals(Buttons, other.Buttons)
-               && Equals(ButtonAxes, other.ButtonAxes)
-               && Equals(Axes, other.Axes)
-               && Equals(AxisButtons, other.AxisButtons)
-               && Equals(AxisHats, other.AxisHats)
-               && Equals(Hats, other.Hats)
-               && Platform.Equals(other.Platform);
+            && Name == other.Name
+            && Equals(Buttons, other.Buttons)
+            && Equals(ButtonAxes, other.ButtonAxes)
+            && Equals(Axes, other.Axes)
+            && Equals(AxisButtons, other.AxisButtons)
+            && Equals(AxisHats, other.AxisHats)
+            && Equals(Hats, other.Hats)
+            && Platform.Equals(other.Platform);
     }
 
     public override bool Equals(object? obj)
@@ -198,8 +197,7 @@ public struct GameControllerMapping : IEquatable<GameControllerMapping>
 
     public override string ToString()
     {
-        return
-            $"{{Guid: {Guid}, Name: {Name}, Buttons: [{(Buttons is null ? string.Empty : string.Join(", ", Buttons))}], Button Axes: [{(ButtonAxes is null ? string.Empty : string.Join(", ", ButtonAxes))}], Axes: [{(Axes is null ? string.Empty : string.Join(", ", Axes))}], Axis Buttons: [{(AxisButtons is null ? string.Empty : string.Join(", ", AxisButtons))}], Axis Hats: [{(AxisHats is null ? string.Empty : string.Join(", ", AxisHats))}], Hats: [{(Hats is null ? string.Empty : string.Join(", ", Hats))}], Platform: {Platform}";
+        return $"{{Guid: {Guid}, Name: {Name}, Buttons: [{(Buttons is null ? string.Empty : string.Join(", ", Buttons))}], Button Axes: [{(ButtonAxes is null ? string.Empty : string.Join(", ", ButtonAxes))}], Axes: [{(Axes is null ? string.Empty : string.Join(", ", Axes))}], Axis Buttons: [{(AxisButtons is null ? string.Empty : string.Join(", ", AxisButtons))}], Axis Hats: [{(AxisHats is null ? string.Empty : string.Join(", ", AxisHats))}], Hats: [{(Hats is null ? string.Empty : string.Join(", ", Hats))}], Platform: {Platform}";
     }
 
     public static bool operator ==(GameControllerMapping left, GameControllerMapping right)

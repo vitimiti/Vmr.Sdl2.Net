@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
-using Vmr.Sdl2.Net.Input;
 using Vmr.Sdl2.Net.Input.KeyboardUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 
@@ -45,7 +43,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GetScancodeName",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string GetScanCodeName(ScanCode scanCode);
@@ -62,7 +60,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GetKeyName",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string GetKeyName(KeyCode key);
@@ -81,7 +79,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IsTextInputActive")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool IsTextInputActive();
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_StopTextInput")]
@@ -94,7 +92,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IsTextInputShown")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool IsTextInputShown();
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetTextInputRect")]
@@ -103,11 +101,11 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_HasScreenKeyboardSupport")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool HasScreenKeyboardSupport();
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IsScreenKeyboardShown")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool IsScreenKeyboardShown();
 }

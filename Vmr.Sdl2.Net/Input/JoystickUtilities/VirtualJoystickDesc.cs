@@ -2,7 +2,6 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
@@ -38,7 +37,7 @@ public delegate int VirtualJoystickSendEffect(
 );
 
 [Serializable]
-[NativeMarshalling(typeof(SdlVirtualJoystickDescMarshaller))]
+[NativeMarshalling(typeof(VirtualJoystickDescMarshaller))]
 public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
 {
     public required ushort Version { get; set; }
@@ -66,15 +65,15 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
     public bool Equals(VirtualJoystickDesc other)
     {
         return Version == other.Version
-               && Type == other.Type
-               && NumberOfAxes == other.NumberOfAxes
-               && NumberOfButtons == other.NumberOfButtons
-               && NumberOfHats == other.NumberOfHats
-               && VendorId == other.VendorId
-               && ProductId == other.ProductId
-               && ButtonMask == other.ButtonMask
-               && AxisMask == other.AxisMask
-               && Name == other.Name;
+            && Type == other.Type
+            && NumberOfAxes == other.NumberOfAxes
+            && NumberOfButtons == other.NumberOfButtons
+            && NumberOfHats == other.NumberOfHats
+            && VendorId == other.VendorId
+            && ProductId == other.ProductId
+            && ButtonMask == other.ButtonMask
+            && AxisMask == other.AxisMask
+            && Name == other.Name;
     }
 
     public override bool Equals(object? obj)
@@ -111,8 +110,7 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
 
     public override string ToString()
     {
-        return
-            $"{{Version: {Version}, Type: {Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
+        return $"{{Version: {Version}, Type: {Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
     }
 
     public static bool operator ==(VirtualJoystickDesc left, VirtualJoystickDesc right)

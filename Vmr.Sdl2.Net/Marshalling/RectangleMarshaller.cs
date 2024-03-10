@@ -6,42 +6,52 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(Rectangle), MarshalMode.Default, typeof(SdlRectangleMarshaller))]
 [CustomMarshaller(
-    typeof(Rectangle),
+    typeof(System.Drawing.Rectangle),
+    MarshalMode.Default,
+    typeof(RectangleMarshaller)
+)]
+[CustomMarshaller(
+    typeof(System.Drawing.Rectangle),
     MarshalMode.ManagedToUnmanagedIn,
     typeof(ManagedToUnmanagedIn)
 )]
 [CustomMarshaller(
-    typeof(Rectangle),
+    typeof(System.Drawing.Rectangle),
     MarshalMode.ManagedToUnmanagedOut,
     typeof(ManagedToUnmanagedOut)
 )]
 [CustomMarshaller(
-    typeof(Rectangle),
+    typeof(System.Drawing.Rectangle),
     MarshalMode.UnmanagedToManagedIn,
     typeof(UnmanagedToManagedIn)
 )]
 [CustomMarshaller(
-    typeof(Rectangle),
+    typeof(System.Drawing.Rectangle),
     MarshalMode.UnmanagedToManagedOut,
     typeof(UnmanagedToManagedOut)
 )]
-[CustomMarshaller(typeof(Rectangle), MarshalMode.ElementIn, typeof(ElementIn))]
-internal static unsafe class SdlRectangleMarshaller
+[CustomMarshaller(typeof(System.Drawing.Rectangle), MarshalMode.ElementIn, typeof(ElementIn))]
+internal static unsafe class RectangleMarshaller
 {
-    public static SdlRect ConvertToUnmanaged(Rectangle managed)
+    public static Rectangle ConvertToUnmanaged(System.Drawing.Rectangle managed)
     {
-        return new SdlRect { X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height };
+        return new Rectangle
+        {
+            X = managed.X,
+            Y = managed.Y,
+            W = managed.Width,
+            H = managed.Height
+        };
     }
 
-    public static Rectangle ConvertToManaged(SdlRect unmanaged)
+    public static System.Drawing.Rectangle ConvertToManaged(Rectangle unmanaged)
     {
-        return new Rectangle(unmanaged.X, unmanaged.Y, unmanaged.W, unmanaged.H);
+        return new System.Drawing.Rectangle(unmanaged.X, unmanaged.Y, unmanaged.W, unmanaged.H);
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlRect
+    internal struct Rectangle
     {
         public int X;
         public int Y;
@@ -51,17 +61,20 @@ internal static unsafe class SdlRectangleMarshaller
 
     public static class ElementIn
     {
-        public static SdlRect ConvertToUnmanaged(Rectangle managed)
+        public static Rectangle ConvertToUnmanaged(System.Drawing.Rectangle managed)
         {
-            return new SdlRect
+            return new Rectangle
             {
-                X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height
+                X = managed.X,
+                Y = managed.Y,
+                W = managed.Width,
+                H = managed.Height
             };
         }
 
-        public static Rectangle ConvertToManaged(SdlRect unmanaged)
+        public static System.Drawing.Rectangle ConvertToManaged(Rectangle unmanaged)
         {
-            return new Rectangle(unmanaged.X, unmanaged.Y, unmanaged.W, unmanaged.H);
+            return new System.Drawing.Rectangle(unmanaged.X, unmanaged.Y, unmanaged.W, unmanaged.H);
         }
 
         public static void Free()
@@ -72,30 +85,33 @@ internal static unsafe class SdlRectangleMarshaller
 
     public ref struct ManagedToUnmanagedIn
     {
-        private SdlRect* _unmanagedPtr;
-        private SdlRect _unmanaged;
+        private Rectangle* _unmanagedPtr;
+        private Rectangle _unmanaged;
         private GCHandle _gcHandle;
 
-        public void FromManaged(Rectangle managed)
+        public void FromManaged(System.Drawing.Rectangle managed)
         {
-            if (managed == Rectangle.Empty)
+            if (managed == System.Drawing.Rectangle.Empty)
             {
                 _unmanagedPtr = null;
                 return;
             }
 
-            _unmanaged = new SdlRect
+            _unmanaged = new Rectangle
             {
-                X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height
+                X = managed.X,
+                Y = managed.Y,
+                W = managed.Width,
+                H = managed.Height
             };
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
-            fixed (SdlRect* ptr = &_unmanaged)
+            fixed (Rectangle* ptr = &_unmanaged)
             {
                 _unmanagedPtr = ptr;
             }
         }
 
-        public SdlRect* ToUnmanaged()
+        public Rectangle* ToUnmanaged()
         {
             return _unmanagedPtr;
         }
@@ -116,22 +132,27 @@ internal static unsafe class SdlRectangleMarshaller
 
     public ref struct ManagedToUnmanagedOut
     {
-        private Rectangle _managed;
+        private System.Drawing.Rectangle _managed;
         private GCHandle _gcHandle;
 
-        public void FromUnmanaged(SdlRect* unmanaged)
+        public void FromUnmanaged(Rectangle* unmanaged)
         {
             if (unmanaged is null)
             {
-                _managed = Rectangle.Empty;
+                _managed = System.Drawing.Rectangle.Empty;
                 return;
             }
 
-            _managed = new Rectangle(unmanaged->X, unmanaged->Y, unmanaged->W, unmanaged->H);
+            _managed = new System.Drawing.Rectangle(
+                unmanaged->X,
+                unmanaged->Y,
+                unmanaged->W,
+                unmanaged->H
+            );
             _gcHandle = GCHandle.Alloc(_managed, GCHandleType.Pinned);
         }
 
-        public Rectangle ToManaged()
+        public System.Drawing.Rectangle ToManaged()
         {
             return _managed;
         }
@@ -147,22 +168,27 @@ internal static unsafe class SdlRectangleMarshaller
 
     public ref struct UnmanagedToManagedIn
     {
-        private Rectangle _managed;
+        private System.Drawing.Rectangle _managed;
         private GCHandle _gcHandle;
 
-        public void FromUnmanaged(SdlRect* unmanaged)
+        public void FromUnmanaged(Rectangle* unmanaged)
         {
             if (unmanaged is null)
             {
-                _managed = Rectangle.Empty;
+                _managed = System.Drawing.Rectangle.Empty;
                 return;
             }
 
-            _managed = new Rectangle(unmanaged->X, unmanaged->Y, unmanaged->W, unmanaged->H);
+            _managed = new System.Drawing.Rectangle(
+                unmanaged->X,
+                unmanaged->Y,
+                unmanaged->W,
+                unmanaged->H
+            );
             _gcHandle = GCHandle.Alloc(_managed, GCHandleType.Pinned);
         }
 
-        public Rectangle ToManaged()
+        public System.Drawing.Rectangle ToManaged()
         {
             return _managed;
         }
@@ -178,30 +204,33 @@ internal static unsafe class SdlRectangleMarshaller
 
     public ref struct UnmanagedToManagedOut
     {
-        private SdlRect* _unmanagedPtr;
-        private SdlRect _unmanaged;
+        private Rectangle* _unmanagedPtr;
+        private Rectangle _unmanaged;
         private GCHandle _gcHandle;
 
-        public void FromManaged(Rectangle managed)
+        public void FromManaged(System.Drawing.Rectangle managed)
         {
-            if (managed == Rectangle.Empty)
+            if (managed == System.Drawing.Rectangle.Empty)
             {
                 _unmanagedPtr = null;
                 return;
             }
 
-            _unmanaged = new SdlRect
+            _unmanaged = new Rectangle
             {
-                X = managed.X, Y = managed.Y, W = managed.Width, H = managed.Height
+                X = managed.X,
+                Y = managed.Y,
+                W = managed.Width,
+                H = managed.Height
             };
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
-            fixed (SdlRect* ptr = &_unmanaged)
+            fixed (Rectangle* ptr = &_unmanaged)
             {
                 _unmanagedPtr = ptr;
             }
         }
 
-        public SdlRect* ToUnmanaged()
+        public Rectangle* ToUnmanaged()
         {
             return _unmanagedPtr;
         }

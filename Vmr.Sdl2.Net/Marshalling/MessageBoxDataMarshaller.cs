@@ -2,20 +2,19 @@
 
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Video.Messages;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
 [CustomMarshaller(
-    typeof(MessageBoxData),
+    typeof(Video.Messages.MessageBoxData),
     MarshalMode.ManagedToUnmanagedIn,
     typeof(ManagedToUnmanagedIn)
 )]
-internal static unsafe class SdlMessageBoxDataMarshaller
+internal static unsafe class MessageBoxDataMarshaller
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlMessageBoxButtonData
+    internal struct MessageBoxButtonData
     {
         public MessageBoxButtonOptions Flags;
         public int ButtonId;
@@ -23,7 +22,7 @@ internal static unsafe class SdlMessageBoxDataMarshaller
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlMessageBoxColor
+    private struct MessageBoxColor
     {
         public byte R;
         public byte G;
@@ -31,39 +30,37 @@ internal static unsafe class SdlMessageBoxDataMarshaller
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlMessageBoxColorScheme
+    internal struct MessageBoxColorScheme
     {
         public nint Colors;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlMessageBoxData
+    internal struct MessageBoxData
     {
         public MessageBoxOptions Flags;
         public nint Window;
         public byte* Title;
         public byte* Message;
         public int NumButtons;
-        public SdlMessageBoxButtonData* Buttons;
-        public SdlMessageBoxColorScheme* colorScheme;
+        public MessageBoxButtonData* Buttons;
+        public MessageBoxColorScheme* colorScheme;
     }
 
     public ref struct ManagedToUnmanagedIn
     {
-        private SdlMessageBoxData* _unmanagedPtr;
-        private SdlMessageBoxData _unmanaged;
+        private MessageBoxData* _unmanagedPtr;
+        private MessageBoxData _unmanaged;
         private GCHandle _gcHandle;
         private GCHandle _internalGcHandle;
 
-        public void FromManaged(MessageBoxData managed)
+        public void FromManaged(Video.Messages.MessageBoxData managed)
         {
-            SdlMessageBoxButtonData[] sdlButtons = new SdlMessageBoxButtonData[
-                managed.Buttons.Length
-            ];
+            MessageBoxButtonData[] sdlButtons = new MessageBoxButtonData[managed.Buttons.Length];
 
             for (int i = 0; i < managed.Buttons.Length; i++)
             {
-                sdlButtons[i] = new SdlMessageBoxButtonData
+                sdlButtons[i] = new MessageBoxButtonData
                 {
                     Flags = managed.Buttons[i].Flags,
                     ButtonId = managed.Buttons[i].ButtonId,
@@ -71,48 +68,48 @@ internal static unsafe class SdlMessageBoxDataMarshaller
                 };
             }
 
-            SdlMessageBoxColor[] colors = new SdlMessageBoxColor[5];
-            colors[0] = new SdlMessageBoxColor
+            MessageBoxColor[] colors = new MessageBoxColor[5];
+            colors[0] = new MessageBoxColor
             {
                 R = managed.ColorScheme.Background.R,
                 G = managed.ColorScheme.Background.G,
                 B = managed.ColorScheme.Background.B
             };
 
-            colors[1] = new SdlMessageBoxColor
+            colors[1] = new MessageBoxColor
             {
                 R = managed.ColorScheme.Text.R,
                 G = managed.ColorScheme.Text.G,
                 B = managed.ColorScheme.Text.B
             };
 
-            colors[2] = new SdlMessageBoxColor
+            colors[2] = new MessageBoxColor
             {
                 R = managed.ColorScheme.ButtonBorder.R,
                 G = managed.ColorScheme.ButtonBorder.G,
                 B = managed.ColorScheme.ButtonBorder.B
             };
 
-            colors[3] = new SdlMessageBoxColor
+            colors[3] = new MessageBoxColor
             {
                 R = managed.ColorScheme.ButtonBackground.R,
                 G = managed.ColorScheme.ButtonBackground.G,
                 B = managed.ColorScheme.ButtonBackground.B
             };
 
-            colors[4] = new SdlMessageBoxColor
+            colors[4] = new MessageBoxColor
             {
                 R = managed.ColorScheme.ButtonSelected.R,
                 G = managed.ColorScheme.ButtonSelected.G,
                 B = managed.ColorScheme.ButtonSelected.B
             };
 
-            fixed (SdlMessageBoxColor* colorsPtr = colors)
-            fixed (SdlMessageBoxButtonData* sdlButtonsPtr = sdlButtons)
+            fixed (MessageBoxColor* colorsPtr = colors)
+            fixed (MessageBoxButtonData* sdlButtonsPtr = sdlButtons)
             {
-                SdlMessageBoxColorScheme sdlColorScheme = new() { Colors = (nint)colorsPtr };
-                _internalGcHandle = GCHandle.Alloc(sdlColorScheme, GCHandleType.Pinned);
-                _unmanaged = new SdlMessageBoxData
+                MessageBoxColorScheme colorScheme = new() { Colors = (nint)colorsPtr };
+                _internalGcHandle = GCHandle.Alloc(colorScheme, GCHandleType.Pinned);
+                _unmanaged = new MessageBoxData
                 {
                     Flags = managed.Flags,
                     Window = managed.Parent?.DangerousGetHandle() ?? nint.Zero,
@@ -120,18 +117,18 @@ internal static unsafe class SdlMessageBoxDataMarshaller
                     Message = Utf8StringMarshaller.ConvertToUnmanaged(managed.Message),
                     NumButtons = managed.Buttons.Length,
                     Buttons = sdlButtonsPtr,
-                    colorScheme = &sdlColorScheme
+                    colorScheme = &colorScheme
                 };
             }
 
             _gcHandle = GCHandle.Alloc(_unmanaged, GCHandleType.Pinned);
-            fixed (SdlMessageBoxData* ptr = &_unmanaged)
+            fixed (MessageBoxData* ptr = &_unmanaged)
             {
                 _unmanagedPtr = ptr;
             }
         }
 
-        public SdlMessageBoxData* ToUnmanaged()
+        public MessageBoxData* ToUnmanaged()
         {
             return _unmanagedPtr;
         }

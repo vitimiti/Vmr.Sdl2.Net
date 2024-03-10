@@ -2,7 +2,6 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Imports;
@@ -11,11 +10,7 @@ internal static unsafe partial class Sdl
 {
     [LibraryImport(LibraryName, EntryPoint = "SDL_GUIDToString")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial void GuidToString(
-        SdlGuidMarshaller.SdlGuid guid,
-        byte* pszGuid,
-        int cbGuid
-    );
+    public static partial void GuidToString(GuidMarshaller.Guid guid, byte* pszGuid, int cbGuid);
 
     [LibraryImport(
         LibraryName,
@@ -23,5 +18,5 @@ internal static unsafe partial class Sdl
         StringMarshalling = StringMarshalling.Utf8
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial SdlGuidMarshaller.SdlGuid GuidFromString(string pchGuid);
+    public static partial GuidMarshaller.Guid GuidFromString(string pchGuid);
 }

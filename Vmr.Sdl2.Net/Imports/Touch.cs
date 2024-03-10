@@ -2,7 +2,6 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
 using Vmr.Sdl2.Net.Input;
 using Vmr.Sdl2.Net.Input.TouchUtilities;
 using Vmr.Sdl2.Net.Marshalling;
@@ -23,7 +22,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GetTouchName",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GetTouchName(int index);

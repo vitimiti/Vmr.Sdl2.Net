@@ -2,6 +2,7 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
 using Vmr.Sdl2.Net.Utilities.Power;
 
 namespace Vmr.Sdl2.Net.Imports;

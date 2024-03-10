@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
 
 namespace Vmr.Sdl2.Net.Input.GameControllerUtilities;

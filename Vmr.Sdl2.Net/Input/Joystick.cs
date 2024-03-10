@@ -2,9 +2,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
@@ -80,7 +78,10 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
 
             return new JoystickGuidInfo
             {
-                Vendor = vendor, Product = product, Version = version, Crc16 = crc16
+                Vendor = vendor,
+                Product = product,
+                Version = version,
+                Crc16 = crc16
             };
         }
     }
@@ -93,15 +94,15 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
     public bool Equals(Joystick? other)
     {
         return other is not null
-               && Guid == other.Guid
-               && UsbIdInformation == other.UsbIdInformation
-               && VersionInformation == other.VersionInformation
-               && Serial == other.Serial
-               && Type == other.Type
-               && GuidInfo == other.GuidInfo
-               && HasLed == other.HasLed
-               && HasRumble == other.HasRumble
-               && HasRumbleTriggers == other.HasRumbleTriggers;
+            && Guid == other.Guid
+            && UsbIdInformation == other.UsbIdInformation
+            && VersionInformation == other.VersionInformation
+            && Serial == other.Serial
+            && Type == other.Type
+            && GuidInfo == other.GuidInfo
+            && HasLed == other.HasLed
+            && HasRumble == other.HasRumble
+            && HasRumbleTriggers == other.HasRumbleTriggers;
     }
 
     public static void LockAll()
@@ -484,8 +485,7 @@ public class Joystick : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Joystick>
 
     public override string ToString()
     {
-        return
-            $"{{Player Index: {PlayerIndex}, Guid: {Guid}, USB ID Information: {UsbIdInformation}, Version Information: {VersionInformation}, Serial: {Serial}, Type: {Type}, GUID Info: {GuidInfo}, Has LED: {HasLed}, Has Rumble: {HasRumble}, Has Rumble Triggers: {HasRumbleTriggers}, Current Power Level: {CurrentPowerLevel}}}";
+        return $"{{Player Index: {PlayerIndex}, Guid: {Guid}, USB ID Information: {UsbIdInformation}, Version Information: {VersionInformation}, Serial: {Serial}, Type: {Type}, GUID Info: {GuidInfo}, Has LED: {HasLed}, Has Rumble: {HasRumble}, Has Rumble Triggers: {HasRumbleTriggers}, Current Power Level: {CurrentPowerLevel}}}";
     }
 
     public static bool operator ==(Joystick? left, Joystick? right)

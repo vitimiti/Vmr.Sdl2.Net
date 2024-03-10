@@ -1,7 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
-
 using Vmr.Sdl2.Net.Imports;
 
 namespace Vmr.Sdl2.Net.Input.KeyboardUtilities;

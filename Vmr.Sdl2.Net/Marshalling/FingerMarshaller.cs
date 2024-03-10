@@ -3,23 +3,26 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Input;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(Finger), MarshalMode.Default, typeof(SdlFingerMarshaller))]
-[CustomMarshaller(typeof(Finger), MarshalMode.ManagedToUnmanagedOut, typeof(ManagedToUnmanagedOut))]
-internal static unsafe class SdlFingerMarshaller
+[CustomMarshaller(typeof(Input.Finger), MarshalMode.Default, typeof(FingerMarshaller))]
+[CustomMarshaller(
+    typeof(Input.Finger),
+    MarshalMode.ManagedToUnmanagedOut,
+    typeof(ManagedToUnmanagedOut)
+)]
+internal static unsafe class FingerMarshaller
 {
-    public static Finger ConvertToManaged(SdlFinger* unmanaged)
+    public static Input.Finger ConvertToManaged(Finger* unmanaged)
     {
         if (unmanaged is null)
         {
             return default;
         }
 
-        return new Finger
+        return new Input.Finger
         {
             Id = unmanaged->Id,
             Position = new PointF(unmanaged->X, unmanaged->Y),
@@ -27,14 +30,14 @@ internal static unsafe class SdlFingerMarshaller
         };
     }
 
-    public static SdlFinger* ConvertToUnmanaged(Finger managed)
+    public static Finger* ConvertToUnmanaged(Input.Finger managed)
     {
         if (managed == default)
         {
             return null;
         }
 
-        SdlFinger unmanaged =
+        Finger unmanaged =
             new()
             {
                 Id = managed.Id,
@@ -47,7 +50,7 @@ internal static unsafe class SdlFingerMarshaller
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlFinger
+    internal struct Finger
     {
         public long Id;
         public float X;
@@ -57,10 +60,10 @@ internal static unsafe class SdlFingerMarshaller
 
     public ref struct ManagedToUnmanagedOut
     {
-        private Finger _managed;
+        private Input.Finger _managed;
         private GCHandle _gcHandle;
 
-        public void FromUnmanaged(SdlFinger* unmanaged)
+        public void FromUnmanaged(Finger* unmanaged)
         {
             if (unmanaged is null)
             {
@@ -72,7 +75,7 @@ internal static unsafe class SdlFingerMarshaller
             _gcHandle = GCHandle.Alloc(_managed, GCHandleType.Pinned);
         }
 
-        public Finger ToManaged()
+        public Input.Finger ToManaged()
         {
             return _managed;
         }

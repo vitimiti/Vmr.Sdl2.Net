@@ -3,7 +3,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Input;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
@@ -29,7 +28,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_JoystickNameForIndex",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? JoystickNameForIndex(int deviceIndex);
@@ -38,7 +37,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_JoystickPathForIndex",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? JoystickPathForIndex(int deviceIndex);
@@ -49,7 +48,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetDeviceGUID")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlGuidMarshaller))]
+    [return: MarshalUsing(typeof(GuidMarshaller))]
     public static partial Guid JoystickGetDeviceGuid(int deviceIndex);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetDeviceVendor")]
@@ -103,7 +102,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickIsVirtual")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool JoystickIsVirtual(int deviceIndex);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickSetVirtualAxis")]
@@ -126,7 +125,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_JoystickName",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? JoystickName(Joystick joystick);
@@ -135,7 +134,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_JoystickPath",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? JoystickPath(Joystick joystick);
@@ -150,7 +149,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetGUID")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlGuidMarshaller))]
+    [return: MarshalUsing(typeof(GuidMarshaller))]
     public static partial Guid JoystickGetGuid(Joystick joystick);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetVendor")]
@@ -173,7 +172,7 @@ internal static partial class Sdl
         LibraryName,
         EntryPoint = "SDL_JoystickGetSerial",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? JoystickGetSerial(Joystick joystick);
@@ -185,8 +184,7 @@ internal static partial class Sdl
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetJoystickGUIDInfo")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void GetJoystickGuidInfo(
-        [MarshalUsing(typeof(SdlGuidMarshaller))]
-        Guid guid,
+        [MarshalUsing(typeof(GuidMarshaller))] Guid guid,
         out ushort vendor,
         out ushort product,
         out ushort version,
@@ -195,7 +193,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetAttached")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool JoystickGetAttached(Joystick joystick);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickInstanceID")]
@@ -232,7 +230,7 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickGetAxisInitialState")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool JoystickGetAxisInitialState(
         Joystick joystick,
         int axis,
@@ -271,17 +269,17 @@ internal static partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickHasLED")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool JoystickHasLed(Joystick joystick);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickHasRumble")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool JoystickHasRumble(Joystick joystick);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickHasRumbleTriggers")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool JoystickHasRumbleTriggers(Joystick joystick);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_JoystickSetLED")]
@@ -293,7 +291,7 @@ internal static partial class Sdl
     public static partial int JoystickSendEffect(
         Joystick joystick,
         [MarshalUsing(typeof(ArrayMarshaller<byte, byte>), CountElementName = nameof(size))]
-        byte[] data,
+            byte[] data,
         int size
     );
 

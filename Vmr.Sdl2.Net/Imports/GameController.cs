@@ -3,7 +3,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Input;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
@@ -20,8 +19,7 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GameControllerAddMappingsFromRw(
         RwOps rw,
-        [MarshalUsing(typeof(IntBoolMarshaller))]
-        bool freeRw
+        [MarshalUsing(typeof(IntBoolMarshaller))] bool freeRw
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerAddMapping")]
@@ -39,8 +37,7 @@ internal static unsafe partial class Sdl
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerMappingForGUID")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial GameControllerMapping GameControllerMappingForGuid(
-        [MarshalUsing(typeof(SdlGuidMarshaller))]
-        Guid guid
+        [MarshalUsing(typeof(GuidMarshaller))] Guid guid
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerMapping")]
@@ -51,14 +48,14 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_IsGameController")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool IsGameController(int joystickIndex);
 
     [LibraryImport(
         LibraryName,
         EntryPoint = "SDL_GameControllerNameForIndex",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerNameForIndex(int joystickIndex);
@@ -67,7 +64,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerPathForIndex",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerPathForIndex(int joystickIndex);
@@ -98,7 +95,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerName",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerName(GameController gameController);
@@ -107,7 +104,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerPath",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerPath(GameController gameController);
@@ -147,7 +144,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerGetSerial",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerGetSerial(GameController gameController);
@@ -158,7 +155,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerGetAttached")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerGetAttached(GameController gameController);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerGetJoystick")]
@@ -185,7 +182,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerGetStringForAxis",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerGetStringForAxis(GameControllerAxis axis);
@@ -199,7 +196,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerHasAxis")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerHasAxis(
         GameController gameController,
         GameControllerAxis axis
@@ -224,7 +221,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerGetStringForButton",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerGetStringForButton(GameControllerButton button);
@@ -238,7 +235,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerHasButton")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerHasButton(
         GameController gameController,
         GameControllerButton button
@@ -276,7 +273,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerHasSensor")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerHasSensor(
         GameController gameController,
         SensorType type
@@ -287,13 +284,12 @@ internal static unsafe partial class Sdl
     public static partial int GameControllerSetSensorEnabled(
         GameController gameController,
         SensorType type,
-        [MarshalUsing(typeof(SdlBoolMarshaller))]
-        bool enabled
+        [MarshalUsing(typeof(BoolEnumMarshaller))] bool enabled
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerIsSensorEnabled")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerIsSensorEnabled(
         GameController gameController,
         SensorType type
@@ -345,17 +341,17 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerHasLED")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerHasLed(GameController gameController);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerHasRumble")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerHasRumble(GameController gameController);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerHasRumbleTriggers")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    [return: MarshalUsing(typeof(SdlBoolMarshaller))]
+    [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool GameControllerHasRumbleTriggers(GameController gameController);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerSetLED")]
@@ -372,7 +368,7 @@ internal static unsafe partial class Sdl
     public static partial int GameControllerSendEffect(
         GameController gameController,
         [MarshalUsing(typeof(ArrayMarshaller<byte, byte>), CountElementName = nameof(size))]
-        byte[] data,
+            byte[] data,
         int size
     );
 
@@ -384,7 +380,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerGetAppleSFSymbolsNameForButton",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? GameControllerGetAppleSfSymbolsNameForButton(
@@ -396,7 +392,7 @@ internal static unsafe partial class Sdl
         LibraryName,
         EntryPoint = "SDL_GameControllerGetAppleSFSymbolsNameForAxis",
         StringMarshalling = StringMarshalling.Custom,
-        StringMarshallingCustomType = typeof(SdlOwnedUtf8StringMarshaller)
+        StringMarshallingCustomType = typeof(OwnedUtf8StringMarshaller)
     )]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial string? SDL_GameControllerGetAppleSfSymbolsNameForAxis(

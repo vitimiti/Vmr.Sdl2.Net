@@ -4,8 +4,8 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
-[CustomMarshaller(typeof(string), MarshalMode.Default, typeof(SdlOwnedUtf8StringMarshaller))]
-internal static unsafe class SdlOwnedUtf8StringMarshaller
+[CustomMarshaller(typeof(string), MarshalMode.Default, typeof(OwnedUtf8StringMarshaller))]
+internal static unsafe class OwnedUtf8StringMarshaller
 {
     public static string? ConvertToManaged(byte* unmanaged)
     {

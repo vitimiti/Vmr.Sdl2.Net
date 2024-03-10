@@ -2,9 +2,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
@@ -52,7 +50,7 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
                 Color[] colors = new Color[UnsafeHandle->NColors];
                 for (int i = 0; i < UnsafeHandle->NColors; i++)
                 {
-                    colors[i] = SdlColorMarshaller.ConvertToManaged(UnsafeHandle->Colors[i]);
+                    colors[i] = ColorMarshaller.ConvertToManaged(UnsafeHandle->Colors[i]);
                 }
 
                 return colors;
@@ -108,17 +106,17 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
     {
         unsafe
         {
-            SdlColorMarshaller.SdlColor[]? sdlColors = null;
+            ColorMarshaller.Color[]? sdlColors = null;
             if (colors is not null)
             {
-                sdlColors = new SdlColorMarshaller.SdlColor[colors.Length];
+                sdlColors = new ColorMarshaller.Color[colors.Length];
                 for (int i = 0; i < colors.Length; i++)
                 {
-                    sdlColors[i] = SdlColorMarshaller.ConvertToUnmanaged(colors[i]);
+                    sdlColors[i] = ColorMarshaller.ConvertToUnmanaged(colors[i]);
                 }
             }
 
-            fixed (SdlColorMarshaller.SdlColor* colorsHandle = sdlColors)
+            fixed (ColorMarshaller.Color* colorsHandle = sdlColors)
             {
                 int code = Sdl.SetPaletteColors(handle, colorsHandle, firstColor, numberOfColors);
                 if (code < 0)
@@ -156,8 +154,7 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
 
     public override string ToString()
     {
-        return
-            $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
+        return $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
     }
 
     public static bool operator ==(Palette? left, Palette? right)

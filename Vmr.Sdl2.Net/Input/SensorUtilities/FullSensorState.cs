@@ -25,8 +25,7 @@ public readonly struct FullSensorState : IEquatable<FullSensorState>
 
     public override string ToString()
     {
-        return
-            $"{{Time Stamp: {TimeStamp.Microseconds}μs, Data: [{(Data is not null ? string.Join(", ", Data) : string.Empty)}]}}";
+        return $"{{Time Stamp: {TimeStamp.Microseconds}μs, Data: [{(Data is not null ? string.Join(", ", Data) : string.Empty)}]}}";
     }
 
     public static bool operator ==(FullSensorState left, FullSensorState right)

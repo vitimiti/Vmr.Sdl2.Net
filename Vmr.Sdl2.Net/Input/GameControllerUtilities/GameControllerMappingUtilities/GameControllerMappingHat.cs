@@ -43,8 +43,8 @@ public struct GameControllerMappingHat : IEquatable<GameControllerMappingHat>
     public bool Equals(GameControllerMappingHat other)
     {
         return Button == other.Button
-               && HatIndex == other.HatIndex
-               && HatValue.Equals(other.HatValue);
+            && HatIndex == other.HatIndex
+            && HatValue.Equals(other.HatValue);
     }
 
     public override bool Equals(object? obj)

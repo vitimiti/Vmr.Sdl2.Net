@@ -7,7 +7,12 @@ namespace Vmr.Sdl2.Net.Input.GameControllerUtilities.GameControllerButtonBindUti
 [StructLayout(LayoutKind.Explicit)]
 public struct GameControllerButtonBindUnion
 {
-    [FieldOffset(0)] public int Button;
-    [FieldOffset(0)] public int Axis;
-    [FieldOffset(0)] public GameControllerButtonBindHat Hat;
+    [FieldOffset(0)]
+    public int Button;
+
+    [FieldOffset(0)]
+    public int Axis;
+
+    [FieldOffset(0)]
+    public GameControllerButtonBindHat Hat;
 }

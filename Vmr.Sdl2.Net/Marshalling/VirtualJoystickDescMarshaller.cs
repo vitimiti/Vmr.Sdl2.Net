@@ -3,21 +3,20 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
 
 namespace Vmr.Sdl2.Net.Marshalling;
 
 [CustomMarshaller(
-    typeof(VirtualJoystickDesc),
+    typeof(Input.JoystickUtilities.VirtualJoystickDesc),
     MarshalMode.ManagedToUnmanagedIn,
     typeof(ManagedToUnmanagedIn)
 )]
-internal static unsafe class SdlVirtualJoystickDescMarshaller
+internal static unsafe class VirtualJoystickDescMarshaller
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SdlVirtualJoystickDesc
+    internal struct VirtualJoystickDesc
     {
         public ushort Version;
         public JoystickType Type;
@@ -41,15 +40,15 @@ internal static unsafe class SdlVirtualJoystickDescMarshaller
 
     public ref struct ManagedToUnmanagedIn
     {
-        private SdlVirtualJoystickDesc* _unmanaged;
+        private VirtualJoystickDesc* _unmanaged;
         private GCHandle _gcHandle;
         private GCHandle _descHandle;
 
-        public void FromManaged(VirtualJoystickDesc managed)
+        public void FromManaged(Input.JoystickUtilities.VirtualJoystickDesc managed)
         {
             fixed (byte* userDataPtr = managed.UserData)
             {
-                SdlVirtualJoystickDesc native =
+                VirtualJoystickDesc native =
                     new()
                     {
                         Version = managed.Version,
@@ -115,7 +114,8 @@ internal static unsafe class SdlVirtualJoystickDescMarshaller
                                         managedUserData.IsEmpty ? null : managedUserData.ToArray(),
                                         new RumbleFrequency
                                         {
-                                            Low = lowFrequencyRumble, High = highFrequencyRumble
+                                            Low = lowFrequencyRumble,
+                                            High = highFrequencyRumble
                                         },
                                         managed.RumbleErrorHandler
                                     );
@@ -140,7 +140,8 @@ internal static unsafe class SdlVirtualJoystickDescMarshaller
                                         managedUserData.IsEmpty ? null : managedUserData.ToArray(),
                                         new RumbleFrequency
                                         {
-                                            Low = lowFrequencyRumble, High = highFrequencyRumble
+                                            Low = lowFrequencyRumble,
+                                            High = highFrequencyRumble
                                         },
                                         managed.RumbleTriggersErrorHandler
                                     );
@@ -191,7 +192,7 @@ internal static unsafe class SdlVirtualJoystickDescMarshaller
             }
         }
 
-        public SdlVirtualJoystickDesc* ToUnmanaged()
+        public VirtualJoystickDesc* ToUnmanaged()
         {
             return _unmanaged;
         }

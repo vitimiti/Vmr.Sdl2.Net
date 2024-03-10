@@ -2,13 +2,12 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Vmr.Sdl2.Net.Marshalling;
 
 namespace Vmr.Sdl2.Net.Input;
 
 [Serializable]
-[NativeMarshalling(typeof(SdlFingerMarshaller))]
+[NativeMarshalling(typeof(FingerMarshaller))]
 public struct Finger : IEquatable<Finger>
 {
     public long Id { get; internal init; }

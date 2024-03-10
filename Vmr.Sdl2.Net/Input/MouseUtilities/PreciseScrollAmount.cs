@@ -11,7 +11,7 @@ public readonly struct PreciseScrollAmount : IEquatable<PreciseScrollAmount>
     public bool Equals(PreciseScrollAmount other)
     {
         return Math.Abs(Horizontal - other.Horizontal) < float.Epsilon
-               && Math.Abs(Vertical - other.Vertical) < float.Epsilon;
+            && Math.Abs(Vertical - other.Vertical) < float.Epsilon;
     }
 
     public override bool Equals(object? obj)

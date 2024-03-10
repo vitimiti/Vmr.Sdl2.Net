@@ -12,8 +12,8 @@ public struct CustomBlendModeData : IEquatable<CustomBlendModeData>
     public bool Equals(CustomBlendModeData other)
     {
         return SrcFactor == other.SrcFactor
-            && DstFactor == other.DstFactor
-            && Operation == other.Operation;
+               && DstFactor == other.DstFactor
+               && Operation == other.Operation;
     }
 
     public override bool Equals(object? obj)

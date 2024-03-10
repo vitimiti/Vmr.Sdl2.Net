@@ -3,9 +3,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Imports;
 
 namespace Vmr.Sdl2.Net.Video;
@@ -131,9 +129,9 @@ public class DisplayMode : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Display
     public bool Equals(DisplayMode? other)
     {
         return other is not null
-               && Format == other.Format
-               && Size == other.Size
-               && RefreshRate == other.RefreshRate;
+            && Format == other.Format
+            && Size == other.Size
+            && RefreshRate == other.RefreshRate;
     }
 
     protected override bool ReleaseHandle()
@@ -174,8 +172,7 @@ public class DisplayMode : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Display
 
     public override string ToString()
     {
-        return
-            $"{{Format: {Format}, Size: {Size}, Refresh Rate: {RefreshRate}, Driver Data: [{string.Join(", ", DriverData ?? Array.Empty<byte>())}]}}";
+        return $"{{Format: {Format}, Size: {Size}, Refresh Rate: {RefreshRate}, Driver Data: [{string.Join(", ", DriverData ?? Array.Empty<byte>())}]}}";
     }
 
     public static bool operator ==(DisplayMode? left, DisplayMode? right)

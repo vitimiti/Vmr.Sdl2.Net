@@ -2,9 +2,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
-
 using Microsoft.Win32.SafeHandles;
-
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Utilities;
@@ -147,12 +145,12 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<PixelFo
     public bool Equals(PixelFormat? other)
     {
         return other is not null
-               && Format == other.Format
-               && Palette == other.Palette
-               && BytesPerPixel == other.BytesPerPixel
-               && ColorMasks == other.ColorMasks
-               && ColorLoss == other.ColorLoss
-               && ColorShift == other.ColorShift;
+            && Format == other.Format
+            && Palette == other.Palette
+            && BytesPerPixel == other.BytesPerPixel
+            && ColorMasks == other.ColorMasks
+            && ColorLoss == other.ColorLoss
+            && ColorShift == other.ColorShift;
     }
 
     protected override bool ReleaseHandle()
@@ -556,11 +554,11 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<PixelFo
     private static uint Define(uint type, uint order, uint layout, byte bits, byte bytes)
     {
         return (1U << 28)
-               | (type << 24)
-               | (order << 20)
-               | (layout << 16)
-               | ((uint)bits << 8)
-               | ((uint)bytes << 0);
+            | (type << 24)
+            | (order << 20)
+            | (layout << 16)
+            | ((uint)bits << 8)
+            | ((uint)bytes << 0);
     }
 
     public static uint Define(char a, char b, char c, char d)
@@ -684,8 +682,7 @@ public class PixelFormat : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<PixelFo
 
     public override string ToString()
     {
-        return
-            $"{{Format: {Format}, Palette: {Palette}, Bytes Per Pixel: {BytesPerPixel}, Color Masks: {ColorMasks}, Color Loss: {ColorLoss}, Color Shift: {ColorShift}, Reference Count: {ReferenceCount}, Next: {Next}}}";
+        return $"{{Format: {Format}, Palette: {Palette}, Bytes Per Pixel: {BytesPerPixel}, Color Masks: {ColorMasks}, Color Loss: {ColorLoss}, Color Shift: {ColorShift}, Reference Count: {ReferenceCount}, Next: {Next}}}";
     }
 
     public static bool operator ==(PixelFormat? left, PixelFormat? right)

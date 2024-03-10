@@ -12,8 +12,8 @@ public readonly struct KeySymbol : IEquatable<KeySymbol>
     public bool Equals(KeySymbol other)
     {
         return ScanCode == other.ScanCode
-               && KeyCode == other.KeyCode
-               && Modifiers == other.Modifiers;
+            && KeyCode == other.KeyCode
+            && Modifiers == other.Modifiers;
     }
 
     public override bool Equals(object? obj)
