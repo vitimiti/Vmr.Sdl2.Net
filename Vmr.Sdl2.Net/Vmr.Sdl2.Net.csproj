@@ -40,7 +40,7 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <DefineDebug>false</DefineDebug>
         <DebugSymbols>false</DebugSymbols>
-        <DebugType>none</DebugType>
+        <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
     </PropertyGroup>
 
