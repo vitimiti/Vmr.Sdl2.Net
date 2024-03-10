@@ -142,6 +142,16 @@ how to better use its systems.
 tightly coupled with one SDL2 version and the user of this library may want to ensure the versions are at the very least
 compatible.
 
+## Examples
+
+These are a series of projects using the existing libraries to show examples on how you may want to use them, as well as
+showcase similarities and differences with the native library API.
+
+- Example 001:
+    - A rough, simple example on how to create a basic window and handle the quit events.
+- Example 002:
+    - A more refined example on how to load a BMP file and display it into the window's screen surface.
+
 ## The Code Of Conduct
 
 Any contributor or participant in this project must adhere to
