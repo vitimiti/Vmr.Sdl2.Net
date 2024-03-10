@@ -147,6 +147,10 @@ compatible.
 These are a series of projects using the existing libraries to show examples on how you may want to use them, as well as
 showcase similarities and differences with the native library API.
 
+These examples somewhat lack error checking and assume the usage of the critical error to stop errors from propagating
+and crashing the program on any error instead. You may want to take a different approach depending on your project's
+needs.
+
 ### Example 001:
 
 A rough, simple example on how to create a basic window and handle the quit events.
@@ -158,6 +162,11 @@ A more refined example on how to load a BMP file and display it into the window'
 ### Example 003:
 
 Practically identical to [Example 002](#example-002), but further adds onto the event system.
+
+### Example 004:
+
+Similar to [Example 003](#example-003), this project shows how to use events, but also how to load multiple textures and
+dispose them safely.
 
 ## The Code Of Conduct
 
