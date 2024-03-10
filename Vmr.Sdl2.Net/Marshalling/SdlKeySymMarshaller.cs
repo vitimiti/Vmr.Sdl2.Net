@@ -8,20 +8,22 @@ namespace Vmr.Sdl2.Net.Marshalling;
 
 internal static class SdlKeySymMarshaller
 {
-    public static KeySym ConvertToManaged(SdlKeySym unmanaged)
+    public static KeySymbol ConvertToManaged(SdlKeySym unmanaged)
     {
-        return new KeySym
+        return new KeySymbol
         {
-            ScanCode = unmanaged.ScanCode, Sym = unmanaged.Sym, Modifiers = unmanaged.Modifiers
+            ScanCode = unmanaged.ScanCode,
+            KeyCode = unmanaged.Sym,
+            Modifiers = unmanaged.Modifiers
         };
     }
 
-    public static SdlKeySym ConvertToUnmanaged(KeySym managed)
+    public static SdlKeySym ConvertToUnmanaged(KeySymbol managed)
     {
         return new SdlKeySym
         {
             ScanCode = managed.ScanCode,
-            Sym = managed.Sym,
+            Sym = managed.KeyCode,
             Modifiers = managed.Modifiers,
             Unused = 0
         };

@@ -10,7 +10,7 @@ public class KeyboardEventArgs(
     uint windowId,
     KeyState state,
     bool isKeyRepeat,
-    KeySym keySym
+    KeySymbol keySymbol
 ) : EventArgs
 {
     public EventType Type { get; private set; } = type;
@@ -18,5 +18,5 @@ public class KeyboardEventArgs(
     public uint WindowId { get; private set; } = windowId;
     public KeyState State { get; private set; } = state;
     public bool IsKeyRepeat { get; private set; } = isKeyRepeat;
-    public KeySym KeySym { get; private set; } = keySym;
+    public KeySymbol KeySymbol { get; private set; } = keySymbol;
 }
