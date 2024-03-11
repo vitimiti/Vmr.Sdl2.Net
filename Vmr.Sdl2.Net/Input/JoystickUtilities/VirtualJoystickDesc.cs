@@ -61,8 +61,8 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
 
     public bool Equals(VirtualJoystickDesc other)
     {
-        return System.Version == other.Version
-               && System.Type == other.Type
+        return Version == other.Version
+               && Type == other.Type
                && NumberOfAxes == other.NumberOfAxes
                && NumberOfButtons == other.NumberOfButtons
                && NumberOfHats == other.NumberOfHats
@@ -81,8 +81,8 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
     public override int GetHashCode()
     {
         HashCode hashCode = new();
-        hashCode.Add(System.Version);
-        hashCode.Add((int)System.Type);
+        hashCode.Add(Version);
+        hashCode.Add((int)Type);
         hashCode.Add(NumberOfAxes);
         hashCode.Add(NumberOfButtons);
         hashCode.Add(NumberOfHats);
@@ -104,7 +104,7 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
     public override string ToString()
     {
         return
-            $"{{Version: {System.Version}, Type: {System.Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
+            $"{{Version: {Version}, Type: {Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
     }
 
     public static bool operator ==(VirtualJoystickDesc left, VirtualJoystickDesc right)
