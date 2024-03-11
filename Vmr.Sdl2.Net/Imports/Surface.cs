@@ -1,9 +1,23 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
+//
+// This file is part of Vmr.Sdl2.Net.
+//
+// Vmr.Sdl2.Net is free software:you can redistribute it and/or modify it under the terms of the
+// GNU General Public License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Vmr.Sdl2.Net is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without
+// even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net.If
+// not, see <https://www.gnu.org/licenses/>.
 
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Graphics.Blending;
 using Vmr.Sdl2.Net.Marshalling;
@@ -85,7 +99,8 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial nint LoadBmpRw(
         RwOps src,
-        [MarshalUsing(typeof(IntBoolMarshaller))] bool freeSrc
+        [MarshalUsing(typeof(IntBoolMarshaller))]
+        bool freeSrc
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SaveBMP_RW")]
@@ -93,14 +108,16 @@ internal static unsafe partial class Sdl
     public static partial int SaveBmpRw(
         Graphics.Surface surface,
         RwOps dst,
-        [MarshalUsing(typeof(IntBoolMarshaller))] bool freeDst
+        [MarshalUsing(typeof(IntBoolMarshaller))]
+        bool freeDst
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetSurfaceRLE")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetSurfaceRle(
         Graphics.Surface surface,
-        [MarshalUsing(typeof(IntBoolMarshaller))] bool flag
+        [MarshalUsing(typeof(IntBoolMarshaller))]
+        bool flag
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_HasSurfaceRLE")]
@@ -112,7 +129,8 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetColorKey(
         Graphics.Surface surface,
-        [MarshalUsing(typeof(IntBoolMarshaller))] bool enabled,
+        [MarshalUsing(typeof(IntBoolMarshaller))]
+        bool enabled,
         uint key
     );
 
@@ -162,14 +180,16 @@ internal static unsafe partial class Sdl
     [return: MarshalUsing(typeof(BoolEnumMarshaller))]
     public static partial bool SetClipRect(
         Graphics.Surface surface,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle rect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle rect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetClipRect")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void GetClipRect(
         Graphics.Surface surface,
-        [MarshalUsing(typeof(RectangleMarshaller))] out Rectangle rect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        out Rectangle rect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_DuplicateSurface")]
@@ -222,7 +242,8 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int FillRect(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle rect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle rect,
         uint color
     );
 
@@ -239,54 +260,66 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int UpperBlit(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle srcRect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle srcRect,
         Graphics.Surface dst,
-        [MarshalUsing(typeof(RectangleMarshaller))] ref Rectangle dstRect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        ref Rectangle dstRect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_LowerBlit")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int LowerBlit(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] ref Rectangle srcRect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        ref Rectangle srcRect,
         Graphics.Surface dst,
-        [MarshalUsing(typeof(RectangleMarshaller))] ref Rectangle dstRect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        ref Rectangle dstRect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SoftStretch")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SoftStretch(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle srcRect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle srcRect,
         Graphics.Surface dst,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle dstRet
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle dstRet
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SoftStretchLinear")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SoftStretchLinear(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle srcRect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle srcRect,
         Graphics.Surface dst,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle dstRet
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle dstRet
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_UpperBlitScaled")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int UpperBlitScaled(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle srcRect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle srcRect,
         Graphics.Surface dst,
-        [MarshalUsing(typeof(RectangleMarshaller))] ref Rectangle dstRect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        ref Rectangle dstRect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_LowerBlitScaled")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int LowerBlitScaled(
         Graphics.Surface src,
-        [MarshalUsing(typeof(RectangleMarshaller))] ref Rectangle srcRect,
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        ref Rectangle srcRect,
         Graphics.Surface dst,
-        [MarshalUsing(typeof(RectangleMarshaller))] ref Rectangle dstRect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        ref Rectangle dstRect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetYUVConversionMode")]

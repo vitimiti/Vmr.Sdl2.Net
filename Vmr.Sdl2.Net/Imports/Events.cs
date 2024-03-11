@@ -1,7 +1,21 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
+//
+// This file is part of Vmr.Sdl2.Net.
+//
+// Vmr.Sdl2.Net is free software:you can redistribute it and/or modify it under the terms of the
+// GNU General Public License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Vmr.Sdl2.Net is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without
+// even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net.If
+// not, see <https://www.gnu.org/licenses/>.
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
 using Vmr.Sdl2.Net.EventsManagement;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
@@ -374,100 +388,68 @@ internal static unsafe partial class Sdl
     [StructLayout(LayoutKind.Explicit)]
     public struct SdlEvent
     {
-        [FieldOffset(0)]
-        public EventType Type;
+        [FieldOffset(0)] public EventType Type;
 
-        [FieldOffset(0)]
-        public SdlCommonEvent Common;
+        [FieldOffset(0)] public SdlCommonEvent Common;
 
-        [FieldOffset(0)]
-        public SdlDisplayEvent Display;
+        [FieldOffset(0)] public SdlDisplayEvent Display;
 
-        [FieldOffset(0)]
-        public SdlWindowEvent Window;
+        [FieldOffset(0)] public SdlWindowEvent Window;
 
-        [FieldOffset(0)]
-        public SdlKeyboardEvent Key;
+        [FieldOffset(0)] public SdlKeyboardEvent Key;
 
-        [FieldOffset(0)]
-        public SdlTextEditingEvent Edit;
+        [FieldOffset(0)] public SdlTextEditingEvent Edit;
 
-        [FieldOffset(0)]
-        public SdlTextEditingExtEvent EditExt;
+        [FieldOffset(0)] public SdlTextEditingExtEvent EditExt;
 
-        [FieldOffset(0)]
-        public SdlTextInputEvent Text;
+        [FieldOffset(0)] public SdlTextInputEvent Text;
 
-        [FieldOffset(0)]
-        public SdlMouseMotionEvent Motion;
+        [FieldOffset(0)] public SdlMouseMotionEvent Motion;
 
-        [FieldOffset(0)]
-        public SdlMouseButtonEvent Button;
+        [FieldOffset(0)] public SdlMouseButtonEvent Button;
 
-        [FieldOffset(0)]
-        public SdlMouseWheelEvent Wheel;
+        [FieldOffset(0)] public SdlMouseWheelEvent Wheel;
 
-        [FieldOffset(0)]
-        public SdlJoystickAxisEvent JAxis;
+        [FieldOffset(0)] public SdlJoystickAxisEvent JAxis;
 
-        [FieldOffset(0)]
-        public SdlJoystickBallEvent JBall;
+        [FieldOffset(0)] public SdlJoystickBallEvent JBall;
 
-        [FieldOffset(0)]
-        public SdlJoystickHatEvent JHat;
+        [FieldOffset(0)] public SdlJoystickHatEvent JHat;
 
-        [FieldOffset(0)]
-        public SdlJoystickButtonEvent JButton;
+        [FieldOffset(0)] public SdlJoystickButtonEvent JButton;
 
-        [FieldOffset(0)]
-        public SdlJoystickDeviceEvent JDevice;
+        [FieldOffset(0)] public SdlJoystickDeviceEvent JDevice;
 
-        [FieldOffset(0)]
-        public SdlJoystickBatteryEvent JBattery;
+        [FieldOffset(0)] public SdlJoystickBatteryEvent JBattery;
 
-        [FieldOffset(0)]
-        public SdlGameControllerAxisEvent CAxis;
+        [FieldOffset(0)] public SdlGameControllerAxisEvent CAxis;
 
-        [FieldOffset(0)]
-        public SdlGameControllerButtonEvent CButton;
+        [FieldOffset(0)] public SdlGameControllerButtonEvent CButton;
 
-        [FieldOffset(0)]
-        public SdlGameControllerDeviceEvent CDevice;
+        [FieldOffset(0)] public SdlGameControllerDeviceEvent CDevice;
 
-        [FieldOffset(0)]
-        public SdlGameControllerTouchpadEvent CTouchpad;
+        [FieldOffset(0)] public SdlGameControllerTouchpadEvent CTouchpad;
 
-        [FieldOffset(0)]
-        public SdlGameControllerSensorEvent CSensor;
+        [FieldOffset(0)] public SdlGameControllerSensorEvent CSensor;
 
-        [FieldOffset(0)]
-        public SdlAudioDeviceEvent ADevice;
+        [FieldOffset(0)] public SdlAudioDeviceEvent ADevice;
 
-        [FieldOffset(0)]
-        public SdlSensorEvent Sensor;
+        [FieldOffset(0)] public SdlSensorEvent Sensor;
 
-        [FieldOffset(0)]
-        public SdlQuitEvent QuitEvent;
+        [FieldOffset(0)] public SdlQuitEvent QuitEvent;
 
-        [FieldOffset(0)]
-        public SdlUserEvent User;
+        [FieldOffset(0)] public SdlUserEvent User;
 
-        [FieldOffset(0)]
-        public SdlSysWmEvent SysWm;
+        [FieldOffset(0)] public SdlSysWmEvent SysWm;
 
-        [FieldOffset(0)]
-        public SdlTouchFingerEvent TFinger;
+        [FieldOffset(0)] public SdlTouchFingerEvent TFinger;
 
-        [FieldOffset(0)]
-        public SdlMultiGestureEvent MGesture;
+        [FieldOffset(0)] public SdlMultiGestureEvent MGesture;
 
-        [FieldOffset(0)]
-        public SdlDollarGestureEvent DGesture;
+        [FieldOffset(0)] public SdlDollarGestureEvent DGesture;
 
-        [FieldOffset(0)]
-        public SdlDropEvent Drop;
+        [FieldOffset(0)] public SdlDropEvent Drop;
 
-        [FieldOffset(0)]
-        private fixed byte _padding[56];
+        [FieldOffset(0)] private fixed byte _padding[56];
     }
 }

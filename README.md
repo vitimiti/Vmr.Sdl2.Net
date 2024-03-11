@@ -2,7 +2,9 @@
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/vitimiti/Vmr.Sdl2.Net/activity) ![Maintainer](https://img.shields.io/badge/maintainer-Victor_Matia-blue)
 
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md) [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/Naereen/badges/) [![.NET](https://img.shields.io/badge/--512BD4?logo=.net&logoColor=ffffff)](https://dotnet.microsoft.com/)
+[![LGPLv3 license](https://img.shields.io/badge/License-LGPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html) [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/Naereen/badges/) [![.NET](https://img.shields.io/badge/--512BD4?logo=.net&logoColor=ffffff)](https://dotnet.microsoft.com/)
+
+![LGPLv3](https://www.gnu.org/graphics/lgplv3-with-text-154x68.png)
 
 ---
 

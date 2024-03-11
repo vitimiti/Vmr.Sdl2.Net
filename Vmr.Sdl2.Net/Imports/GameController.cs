@@ -1,8 +1,22 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
+//
+// This file is part of Vmr.Sdl2.Net.
+//
+// Vmr.Sdl2.Net is free software:you can redistribute it and/or modify it under the terms of the
+// GNU General Public License as published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Vmr.Sdl2.Net is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without
+// even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net.If
+// not, see <https://www.gnu.org/licenses/>.
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Input;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
@@ -19,7 +33,8 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GameControllerAddMappingsFromRw(
         RwOps rw,
-        [MarshalUsing(typeof(IntBoolMarshaller))] bool freeRw
+        [MarshalUsing(typeof(IntBoolMarshaller))]
+        bool freeRw
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerAddMapping")]
@@ -284,7 +299,8 @@ internal static unsafe partial class Sdl
     public static partial int GameControllerSetSensorEnabled(
         GameController gameController,
         SensorType type,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool enabled
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool enabled
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GameControllerIsSensorEnabled")]
@@ -368,7 +384,7 @@ internal static unsafe partial class Sdl
     public static partial int GameControllerSendEffect(
         GameController gameController,
         [MarshalUsing(typeof(ArrayMarshaller<byte, byte>), CountElementName = nameof(size))]
-            byte[] data,
+        byte[] data,
         int size
     );
 
