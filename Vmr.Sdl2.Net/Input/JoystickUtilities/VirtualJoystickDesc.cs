@@ -1,3 +1,4 @@
+// The Vmr.Sdl2.Net library implements SDL2 in dotnet with .NET conventions and safety features.
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 //
 // This file is part of Vmr.Sdl2.Net.
@@ -10,7 +11,7 @@
 // even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net.If
+// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net. If
 // not, see <https://www.gnu.org/licenses/>.
 
 using System.Drawing;
@@ -60,8 +61,8 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
 
     public bool Equals(VirtualJoystickDesc other)
     {
-        return Version == other.Version
-               && Type == other.Type
+        return System.Version == other.Version
+               && System.Type == other.Type
                && NumberOfAxes == other.NumberOfAxes
                && NumberOfButtons == other.NumberOfButtons
                && NumberOfHats == other.NumberOfHats
@@ -80,8 +81,8 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
     public override int GetHashCode()
     {
         HashCode hashCode = new();
-        hashCode.Add(Version);
-        hashCode.Add((int)Type);
+        hashCode.Add(System.Version);
+        hashCode.Add((int)System.Type);
         hashCode.Add(NumberOfAxes);
         hashCode.Add(NumberOfButtons);
         hashCode.Add(NumberOfHats);
@@ -103,7 +104,7 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
     public override string ToString()
     {
         return
-            $"{{Version: {Version}, Type: {Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
+            $"{{Version: {System.Version}, Type: {System.Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
     }
 
     public static bool operator ==(VirtualJoystickDesc left, VirtualJoystickDesc right)

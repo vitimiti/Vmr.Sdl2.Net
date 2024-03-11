@@ -1,3 +1,4 @@
+// The Vmr.Sdl2.Net library implements SDL2 in dotnet with .NET conventions and safety features.
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 //
 // This file is part of Vmr.Sdl2.Net.
@@ -10,7 +11,7 @@
 // even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net.If
+// You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net. If
 // not, see <https://www.gnu.org/licenses/>.
 
 using Vmr.Sdl2.Net.Input.CommonUtilities;
