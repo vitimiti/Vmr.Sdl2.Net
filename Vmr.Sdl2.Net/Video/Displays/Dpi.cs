@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
-namespace Vmr.Sdl2.Net.Video;
+namespace Vmr.Sdl2.Net.Video.Displays;
 
 [Serializable]
 public readonly struct Dpi : IEquatable<Dpi>
@@ -12,8 +12,8 @@ public readonly struct Dpi : IEquatable<Dpi>
     public bool Equals(Dpi other)
     {
         return Diagonal.Equals(other.Diagonal)
-            && Horizontal.Equals(other.Horizontal)
-            && Vertical.Equals(other.Vertical);
+               && Horizontal.Equals(other.Horizontal)
+               && Vertical.Equals(other.Vertical);
     }
 
     public override bool Equals(object? obj)

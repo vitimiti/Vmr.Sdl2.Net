@@ -1,7 +1,9 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Marshalling;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Video.Messages;
 

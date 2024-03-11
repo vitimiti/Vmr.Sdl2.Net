@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
-using Vmr.Sdl2.Net.Video;
+using Vmr.Sdl2.Net.Video.Displays;
 
 namespace Vmr.Sdl2.Net.EventsManagement.DisplayIdEvents;
 

@@ -1,10 +1,11 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.MouseUtilities;
 using Vmr.Sdl2.Net.Utilities;
-using Vmr.Sdl2.Net.Video;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Input;
 

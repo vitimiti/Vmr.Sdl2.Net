@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
-namespace Vmr.Sdl2.Net.Video;
+namespace Vmr.Sdl2.Net.Video.Windowing;
 
 [Flags]
 public enum WindowOptions : uint

@@ -2,8 +2,9 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Vmr.Sdl2.Net.Video;
+
 using Vmr.Sdl2.Net.Video.Messages;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Imports;
 

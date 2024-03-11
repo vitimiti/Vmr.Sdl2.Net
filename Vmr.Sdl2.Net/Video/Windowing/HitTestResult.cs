@@ -2,7 +2,7 @@
 
 using System.Drawing;
 
-namespace Vmr.Sdl2.Net.Video;
+namespace Vmr.Sdl2.Net.Video.Windowing;
 
 public delegate HitTestResult HitTestFunction(Window window, Point area, byte[]? data);
 

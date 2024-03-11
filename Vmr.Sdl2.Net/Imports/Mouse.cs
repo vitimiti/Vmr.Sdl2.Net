@@ -3,11 +3,12 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Input;
 using Vmr.Sdl2.Net.Input.CursorUtilities;
 using Vmr.Sdl2.Net.Input.MouseUtilities;
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Video;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Imports;
 
@@ -40,13 +41,15 @@ internal static unsafe partial class Sdl
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetRelativeMouseMode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetRelativeMouseMode(
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool enabled
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool enabled
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_CaptureMouse")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int CaptureMouse(
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool captured
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool captured
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetRelativeMouseMode")]

@@ -4,7 +4,7 @@ using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.KeyboardUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
-using Vmr.Sdl2.Net.Video;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Input;
 

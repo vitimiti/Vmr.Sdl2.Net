@@ -2,6 +2,7 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.EventsManagement;
 using Vmr.Sdl2.Net.EventsManagement.DisplayIdEvents;
 using Vmr.Sdl2.Net.EventsManagement.WindowIdEvents;
@@ -12,7 +13,7 @@ using Vmr.Sdl2.Net.Input.MouseUtilities;
 using Vmr.Sdl2.Net.Input.MultiGestureUtilities;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Utilities;
-using Vmr.Sdl2.Net.Video;
+using Vmr.Sdl2.Net.Video.Displays;
 
 namespace Vmr.Sdl2.Net;
 
@@ -676,8 +677,7 @@ public static class MainLoop
                             ev.Wheel.Direction,
                             new PreciseScrollAmount
                             {
-                                Horizontal = ev.Wheel.PreciseX,
-                                Vertical = ev.Wheel.PreciseY
+                                Horizontal = ev.Wheel.PreciseX, Vertical = ev.Wheel.PreciseY
                             },
                             new Point(ev.Wheel.MouseX, ev.Wheel.MouseY)
                         )
@@ -1016,8 +1016,7 @@ public static class MainLoop
                             ev.MGesture.TouchId,
                             new MultiGestureDelta
                             {
-                                Theta = ev.MGesture.DTheta,
-                                Distance = ev.MGesture.DDist
+                                Theta = ev.MGesture.DTheta, Distance = ev.MGesture.DDist
                             },
                             new PointF(ev.MGesture.X, ev.MGesture.Y),
                             ev.MGesture.NumFingers

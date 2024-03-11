@@ -2,6 +2,7 @@
 
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Utilities;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Video.Messages;
 

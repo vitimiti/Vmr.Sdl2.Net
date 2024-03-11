@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Video;
+using Vmr.Sdl2.Net.Video.Displays;
 using Vmr.Sdl2.Net.Video.OpenGl;
+using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Imports;
 
@@ -50,14 +52,16 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GetDisplayBounds(
         int displayIndex,
-        [MarshalUsing(typeof(RectangleMarshaller))] out Rectangle rect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        out Rectangle rect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetDisplayUsableBounds")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GetDisplayUsableBounds(
         int displayIndex,
-        [MarshalUsing(typeof(RectangleMarshaller))] out Rectangle rect
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        out Rectangle rect
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetDisplayDPI")]
@@ -93,20 +97,22 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial nint GetClosestDisplayMode(
         int displayIndex,
-        Video.DisplayMode mode,
+        Video.Displays.DisplayMode mode,
         DisplayMode* closest
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetPointDisplayIndex")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GetPointDisplayIndex(
-        [MarshalUsing(typeof(PointMarshaller))] Point point
+        [MarshalUsing(typeof(PointMarshaller))]
+        Point point
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetRectDisplayIndex")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GetRectDisplayIndex(
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle rectangle
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle rectangle
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetWindowDisplayIndex")]
@@ -115,7 +121,7 @@ internal static unsafe partial class Sdl
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetWindowDisplayMode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    public static partial int SetWindowDisplayMode(Window window, Video.DisplayMode? mode);
+    public static partial int SetWindowDisplayMode(Window window, Video.Displays.DisplayMode? mode);
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetWindowDisplayMode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
@@ -248,21 +254,24 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void SetWindowBordered(
         Window window,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool bordered
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool bordered
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetWindowResizable")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void SetWindowResizable(
         Window window,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool bordered
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool bordered
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetWindowAlwaysOnTop")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void SetWindowAlwaysOnTop(
         Window window,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool bordered
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool bordered
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_ShowWindow")]
@@ -314,7 +323,7 @@ internal static unsafe partial class Sdl
             typeof(ArrayMarshaller<Rectangle, RectangleMarshaller.Rectangle>),
             CountElementName = nameof(numRects)
         )]
-            Rectangle[] rects,
+        Rectangle[] rects,
         int numRects
     );
 
@@ -326,21 +335,24 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void SetWindowGrab(
         Window window,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool grabbed
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool grabbed
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetWindowKeyboardGrab")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void SetWindowKeyboardGrab(
         Window window,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool grabbed
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool grabbed
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetWindowMouseGrab")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial void SetWindowMouseGrab(
         Window window,
-        [MarshalUsing(typeof(BoolEnumMarshaller))] bool grabbed
+        [MarshalUsing(typeof(BoolEnumMarshaller))]
+        bool grabbed
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetWindowGrab")]
@@ -366,7 +378,8 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetWindowMouseRect(
         Window window,
-        [MarshalUsing(typeof(RectangleMarshaller))] Rectangle rectangle
+        [MarshalUsing(typeof(RectangleMarshaller))]
+        Rectangle rectangle
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetWindowMouseRect")]
@@ -402,30 +415,24 @@ internal static unsafe partial class Sdl
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int SetWindowGammaRamp(
         Window window,
-        [In]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] red,
-        [In]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] green,
-        [In]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] blue
+        [In] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] red,
+        [In] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] green,
+        [In] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] blue
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_GetWindowGammaRamp")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     public static partial int GetWindowGammaRamp(
         Window window,
-        [Out]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] red,
-        [Out]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] green,
-        [Out]
-        [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
-            ushort[] blue
+        [Out] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] red,
+        [Out] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] green,
+        [Out] [MarshalUsing(typeof(ArrayMarshaller<ushort, ushort>), ConstantElementCount = 256)]
+        ushort[] blue
     );
 
     [LibraryImport(LibraryName, EntryPoint = "SDL_SetWindowHitTest")]
