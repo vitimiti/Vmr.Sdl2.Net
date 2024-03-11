@@ -1,14 +1,14 @@
-// The Vmr.Sdl2.Net library implements SDL2 in dotnet with .NET conventions and safety features.
+// The Vmr.Sdl2.Net library implements SDL2 in dotnet with dotnet conventions and safety features.
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 //
 // This file is part of Vmr.Sdl2.Net.
 //
-// Vmr.Sdl2.Net is free software:you can redistribute it and/or modify it under the terms of the
+// Vmr.Sdl2.Net is free software: you can redistribute it and/or modify it under the terms of the
 // GNU General Public License as published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
 //
 // Vmr.Sdl2.Net is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without
-// even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the GNU
+// even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License along with Vmr.Sdl2.Net.
@@ -26,6 +26,7 @@ using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
 using Vmr.Sdl2.Net.Video.Displays;
 using Vmr.Sdl2.Net.Video.OpenGl;
+using Vmr.Sdl2.Net.Video.Windowing.Shape;
 
 namespace Vmr.Sdl2.Net.Video.Windowing;
 
@@ -47,10 +48,26 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         handle = preexistingHandle;
     }
 
-    public Window(string title, Point position, Size size, WindowOptions flags)
+    public Window(
+        string title,
+        Point position,
+        Size size,
+        WindowOptions flags,
+        bool isShaped = false
+    )
         : base(true)
     {
-        handle = Sdl.CreateWindow(title, position.X, position.Y, size.Width, size.Height, flags);
+        handle = isShaped
+            ? Sdl.CreateShapedWindow(
+                title,
+                (uint)position.X,
+                (uint)position.Y,
+                (uint)size.Width,
+                (uint)size.Height,
+                flags
+            )
+            : Sdl.CreateWindow(title, position.X, position.Y, size.Width, size.Height, flags);
+
         if (handle == nint.Zero)
         {
             throw new WindowException("Unable to create a new window");
@@ -173,6 +190,8 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         }
     }
 
+    public bool IsShaped => Sdl.IsShapedWindow(this);
+
     public bool Equals(Window? other)
     {
         return other is not null
@@ -189,7 +208,8 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
                && MouseGrab == other.MouseGrab
                && Math.Abs(Brightness - other.Brightness) < float.Epsilon
                && Math.Abs(Opacity - other.Opacity) < float.Epsilon
-               && DrawableSize == other.DrawableSize;
+               && DrawableSize == other.DrawableSize
+               && IsShaped == other.IsShaped;
     }
 
     public static Window GetGrabbed()
@@ -616,6 +636,30 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         Sdl.WarpMouseInWindow(this, position.X, position.Y);
     }
 
+    public void SetShape(Surface shape, WindowShapeMode shapeMode)
+    {
+        int code = Sdl.SetWindowShape(this, shape, shapeMode);
+        if (code < 0)
+        {
+            throw new ShapeException(
+                $"Unable to set the window shape {shape} with mode {shapeMode}",
+                code
+            );
+        }
+    }
+
+    public WindowShapeMode GetShapeMode()
+    {
+        WindowShapeMode mode = new();
+        int code = Sdl.GetShapedWindowMode(this, ref mode);
+        if (code < 0)
+        {
+            throw new ShapeException("Unable to get the window shape mode", code);
+        }
+
+        return mode;
+    }
+
     protected override bool ReleaseHandle()
     {
         if (handle == nint.Zero)
@@ -665,6 +709,7 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         code.Add(Brightness);
         code.Add(Opacity);
         code.Add(DrawableSize);
+        code.Add(IsShaped);
         return code.ToHashCode();
     }
 
