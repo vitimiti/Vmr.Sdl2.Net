@@ -3,6 +3,8 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.CommonUtilities;
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
@@ -19,10 +21,14 @@ namespace Vmr.Sdl2.Net.Input;
 public class GameController : Joystick, IEquatable<GameController>
 {
     private GameController(nint preexistingHandle, bool ownsHandle)
-        : base(preexistingHandle, ownsHandle) { }
+        : base(preexistingHandle, ownsHandle)
+    {
+    }
 
-    public GameController(int deviceIndex, ErrorHandler errorHandler)
-        : base(InitializeBaseFromDevice(deviceIndex, errorHandler), true) { }
+    public GameController(int deviceIndex)
+        : base(InitializeBaseFromDevice(deviceIndex), true)
+    {
+    }
 
     public new GameControllerType Type => Sdl.GameControllerGetType(this);
 
@@ -51,95 +57,100 @@ public class GameController : Joystick, IEquatable<GameController>
     public override bool HasLed => Sdl.GameControllerHasLed(this);
     public override bool HasRumble => Sdl.GameControllerHasRumble(this);
     public override bool HasRumbleTriggers => Sdl.GameControllerHasRumbleTriggers(this);
+    public override bool IsAttached => Sdl.GameControllerGetAttached(this);
 
     public bool Equals(GameController? other)
     {
         return other is not null
-            && Type == other.Type
-            && UsbIdInformation == other.UsbIdInformation
-            && VersionInformation == other.VersionInformation
-            && Serial == other.Serial
-            && CountTouchpads == other.CountTouchpads
-            && HasLed == other.HasLed
-            && HasRumble == other.HasRumble
-            && HasRumbleTriggers == other.HasRumbleTriggers
-            && base.Equals(other);
+               && Type == other.Type
+               && UsbIdInformation == other.UsbIdInformation
+               && VersionInformation == other.VersionInformation
+               && Serial == other.Serial
+               && CountTouchpads == other.CountTouchpads
+               && HasLed == other.HasLed
+               && HasRumble == other.HasRumble
+               && HasRumbleTriggers == other.HasRumbleTriggers
+               && base.Equals(other);
     }
 
-    private static nint InitializeBaseFromDevice(int deviceIndex, ErrorHandler errorHandler)
+    private static nint InitializeBaseFromDevice(int deviceIndex)
     {
         nint deviceHandle = Sdl.GameControllerOpen(deviceIndex);
         if (deviceHandle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to open game controller at index {deviceIndex}"
+            );
         }
 
         return deviceHandle;
     }
 
-    public static void AddMappings(RwOps rwOps, ErrorCodeHandler errorHandler)
+    public static void AddMappings(RwOps rwOps)
     {
         int code = Sdl.GameControllerAddMappingsFromRw(rwOps, false);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException("Unable to add the given mappings", code);
         }
     }
 
-    public static void AddMapping(GameControllerMapping mapping, ErrorCodeHandler errorHandler)
+    public static void AddMapping(GameControllerMapping mapping)
     {
         int code = Sdl.GameControllerAddMapping(mapping);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException($"Unable to add the mapping {mapping}", code);
         }
     }
 
-    public static GameControllerMapping GetMappingForIndex(
-        int mappingIndex,
-        ErrorHandler errorHandler
-    )
+    public static GameControllerMapping GetMappingForIndex(int mappingIndex)
     {
         GameControllerMapping result = Sdl.GameControllerMappingForIndex(mappingIndex);
         if (result == default)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the mapping for the index {mappingIndex}"
+            );
         }
 
         return result;
     }
 
-    public static GameControllerMapping GetMappingForDevice(
-        Guid deviceGuid,
-        ErrorHandler errorHandler
-    )
+    public static GameControllerMapping GetMappingForDevice(Guid deviceGuid)
     {
         GameControllerMapping result = Sdl.GameControllerMappingForGuid(deviceGuid);
         if (result == default)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the mapping for the device with GUID {deviceGuid}"
+            );
         }
 
         return result;
     }
 
-    public static new string? GetNameForDevice(int deviceIndex, ErrorHandler errorHandler)
+    public static new string GetNameForDevice(int deviceIndex)
     {
         string? result = Sdl.GameControllerNameForIndex(deviceIndex);
         if (result is null)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller name for device index {deviceIndex}"
+            );
         }
 
         return result;
     }
 
-    public static new string? GetPathForDevice(int deviceIndex, ErrorHandler errorHandler)
+    public static new string GetPathForDevice(int deviceIndex)
     {
         string? result = Sdl.GameControllerPathForIndex(deviceIndex);
         if (result is null)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller path for device index {deviceIndex}"
+            );
         }
 
         return result;
@@ -150,61 +161,64 @@ public class GameController : Joystick, IEquatable<GameController>
         return Sdl.GameControllerTypeForIndex(deviceIndex);
     }
 
-    public static GameControllerMapping GetMappingForDevice(
-        int deviceIndex,
-        ErrorHandler errorHandler
-    )
+    public static GameControllerMapping GetMappingForDevice(int deviceIndex)
     {
         GameControllerMapping result = Sdl.GameControllerMappingForIndex(deviceIndex);
         if (result == default)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller mapping for device index {deviceIndex}"
+            );
         }
 
         return result;
     }
 
-    public static new GameController? FromInstanceId(int instanceId, ErrorHandler errorHandler)
+    public static new GameController FromInstanceId(int instanceId)
     {
         nint gameControllerHandle = Sdl.GameControllerFromInstanceId(instanceId);
-        if (gameControllerHandle != nint.Zero)
+        if (gameControllerHandle == nint.Zero)
         {
-            return new GameController(gameControllerHandle, true);
+            throw new GameControllerException(
+                $"Unable to get the game controller from instance ID {instanceId}"
+            );
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new GameController(gameControllerHandle, true);
     }
 
-    public static new GameController? FromPlayerIndex(int playerIndex, ErrorHandler errorHandler)
+    public static new GameController FromPlayerIndex(int playerIndex)
     {
         nint joystickHandle = Sdl.GameControllerFromPlayerIndex(playerIndex);
-        if (joystickHandle != nint.Zero)
+        if (joystickHandle == nint.Zero)
         {
-            return new GameController(joystickHandle, true);
+            throw new GameControllerException(
+                $"Unable to get the game controller from player index {playerIndex}"
+            );
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new GameController(joystickHandle, true);
     }
 
-    public static new bool QueryIfEventIsEnabled(ErrorCodeHandler errorHandler)
+    public static new bool QueryIfEventIsEnabled()
     {
         int result = Sdl.GameControllerEventState(Sdl.Query);
         if (result < 0)
         {
-            errorHandler(Sdl.GetError(), result);
+            throw new GameControllerException("Unable to query game controller event state");
         }
 
         return IntBoolMarshaller.ConvertToManaged(result);
     }
 
-    public static new void EnableEvent(bool enabled, ErrorCodeHandler errorHandler)
+    public static new void EnableEvent(bool enabled)
     {
         int code = Sdl.GameControllerEventState(enabled ? Sdl.Enable : Sdl.Disable);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException(
+                $"Unable to set the game controller event state to {(enabled ? "enabled" : "disabled")}"
+            );
         }
     }
 
@@ -213,48 +227,45 @@ public class GameController : Joystick, IEquatable<GameController>
         Sdl.GameControllerUpdate();
     }
 
-    public GameControllerMapping GetMapping(ErrorHandler errorHandler)
+    public GameControllerMapping GetMapping()
     {
         GameControllerMapping result = Sdl.GameControllerMapping(this);
         if (result == default)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException("Unable to get the game controller mapping");
         }
 
         return result;
     }
 
-    public override string? GetName(ErrorHandler errorHandler)
+    public override string GetName()
     {
         string? result = Sdl.GameControllerName(this);
-        if (result is not null)
+        if (result is null)
         {
-            return result;
+            throw new GameControllerException("Unable to get the game controller name");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return result;
     }
 
-    public override string? GetPath(ErrorHandler errorHandler)
+    public override string GetPath()
     {
         string? result = Sdl.GameControllerPath(this);
-        if (result is not null)
+        if (result is null)
         {
-            return result;
+            throw new GameControllerException("Unable to get the game controller path");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return result;
     }
 
-    public SteamSafeHandle? GetSteamHandle(ErrorHandler errorHandler)
+    public SteamSafeHandle GetSteamHandle()
     {
         nuint steamHandle = new(Sdl.GameControllerGetSteamHandle(this));
         if (steamHandle == nuint.Zero)
         {
-            errorHandler(Sdl.GetError());
-            return null;
+            throw new GameControllerException("Unable to get the steam handle");
         }
 
         unsafe
@@ -264,28 +275,17 @@ public class GameController : Joystick, IEquatable<GameController>
         }
     }
 
-    public override bool IsAttached(ErrorHandler errorHandler)
-    {
-        bool result = Sdl.GameControllerGetAttached(this);
-        if (result)
-        {
-            return result;
-        }
-
-        errorHandler(Sdl.GetError());
-        return result;
-    }
-
-    public Joystick? GetJoystick(ErrorHandler errorHandler)
+    public Joystick GetJoystick()
     {
         nint joystickHandle = Sdl.GameControllerGetJoystick(this);
-        if (joystickHandle != nint.Zero)
+        if (joystickHandle == nint.Zero)
         {
-            return new Joystick(joystickHandle, true);
+            throw new GameControllerException(
+                "Unable to get the game controller joystick base class"
+            );
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Joystick(joystickHandle, true);
     }
 
     public GameControllerButtonBind GetBindForAxis(GameControllerAxis axis)
@@ -296,7 +296,10 @@ public class GameController : Joystick, IEquatable<GameController>
             BindType = native.BindType,
             Value = new GameControllerButtonBindUnion
             {
-                Hat = new GameControllerButtonBindHat { Hat = native.Val0, HatMask = native.Val1 }
+                Hat = new GameControllerButtonBindHat
+                {
+                    Hat = native.Val0, HatMask = native.Val1
+                }
             }
         };
     }
@@ -306,12 +309,14 @@ public class GameController : Joystick, IEquatable<GameController>
         return Sdl.GameControllerHasAxis(this, axis);
     }
 
-    public short GetAxisValue(GameControllerAxis axis, ErrorHandler errorHandler)
+    public short GetAxisValue(GameControllerAxis axis)
     {
         short result = Sdl.GameControllerGetAxis(this, axis);
-        if (result == 0)
+        if (result == 0 && Sdl.GetError() is not null)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller axis {axis} value"
+            );
         }
 
         return result;
@@ -325,7 +330,10 @@ public class GameController : Joystick, IEquatable<GameController>
             BindType = native.BindType,
             Value = new GameControllerButtonBindUnion
             {
-                Hat = new GameControllerButtonBindHat { Hat = native.Val0, HatMask = native.Val1 }
+                Hat = new GameControllerButtonBindHat
+                {
+                    Hat = native.Val0, HatMask = native.Val1
+                }
             }
         };
     }
@@ -335,12 +343,14 @@ public class GameController : Joystick, IEquatable<GameController>
         return Sdl.GameControllerHasButton(this, button);
     }
 
-    public ButtonState GetButtonState(GameControllerButton button, ErrorHandler errorHandler)
+    public ButtonState GetButtonState(GameControllerButton button)
     {
         ButtonState result = Sdl.GameControllerGetButton(this, button);
-        if (result == ButtonState.Released)
+        if (result == ButtonState.Released && Sdl.GetError() is not null)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller button {button} state"
+            );
         }
 
         return result;
@@ -351,11 +361,7 @@ public class GameController : Joystick, IEquatable<GameController>
         return Sdl.GameControllerGetNumTouchpadFingers(this, touchpadIndex);
     }
 
-    public TouchpadFingerState GetTouchpadFingerState(
-        int touchpadIndex,
-        int fingerIndex,
-        ErrorCodeHandler errorHandler
-    )
+    public TouchpadFingerState GetTouchpadFingerState(int touchpadIndex, int fingerIndex)
     {
         int code = Sdl.GameControllerGetTouchpadFinger(
             this,
@@ -367,18 +373,18 @@ public class GameController : Joystick, IEquatable<GameController>
             out float pressure
         );
 
-        if (code >= 0)
+        if (code < 0)
         {
-            return new TouchpadFingerState
-            {
-                State = state,
-                Position = new PointF(x, y),
-                Pressure = pressure
-            };
+            throw new GameControllerException(
+                $"Unable to get the touchpad {touchpadIndex} finger {fingerIndex} state",
+                code
+            );
         }
 
-        errorHandler(Sdl.GetError(), code);
-        return default;
+        return new TouchpadFingerState
+        {
+            State = state, Position = new PointF(x, y), Pressure = pressure
+        };
     }
 
     public bool HasSensor(SensorType type)
@@ -386,12 +392,15 @@ public class GameController : Joystick, IEquatable<GameController>
         return Sdl.GameControllerHasSensor(this, type);
     }
 
-    public void SetSensorEnabled(SensorType type, bool enabled, ErrorCodeHandler errorHandler)
+    public void SetSensorEnabled(SensorType type, bool enabled)
     {
         int code = Sdl.GameControllerSetSensorEnabled(this, type, enabled);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException(
+                $"Unable to set the game controller sensor {type} as {(enabled ? "enabled" : "disabled")}",
+                code
+            );
         }
     }
 
@@ -400,22 +409,20 @@ public class GameController : Joystick, IEquatable<GameController>
         return Sdl.GameControllerIsSensorEnabled(this, type);
     }
 
-    public float GetSensorDataRate(SensorType type, ErrorHandler errorHandler)
+    public float GetSensorDataRate(SensorType type)
     {
         float result = Sdl.GameControllerGetSensorDataRate(this, type);
         if (result <= 0F)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller sensor {type} data rate"
+            );
         }
 
         return result;
     }
 
-    public float[]? GetSensorData(
-        SensorType type,
-        int numberOfDataItems,
-        ErrorCodeHandler errorHandler
-    )
+    public float[] GetSensorData(SensorType type, int numberOfDataItems)
     {
         unsafe
         {
@@ -423,14 +430,16 @@ public class GameController : Joystick, IEquatable<GameController>
             try
             {
                 int code = Sdl.GameControllerGetSensorData(this, type, dataPtr, numberOfDataItems);
-                if (code >= 0)
+                if (code < 0)
                 {
-                    Span<float> data = new(dataPtr, numberOfDataItems);
-                    return data.ToArray();
+                    throw new GameControllerException(
+                        $"Unable to get the game controller sensor {type} data",
+                        code
+                    );
                 }
 
-                errorHandler(Sdl.GetError(), code);
-                return null;
+                Span<float> data = new(dataPtr, numberOfDataItems);
+                return data.ToArray();
             }
             finally
             {
@@ -439,11 +448,7 @@ public class GameController : Joystick, IEquatable<GameController>
         }
     }
 
-    public FullSensorData GetFullSensorData(
-        SensorType type,
-        int numberOfDataItems,
-        ErrorCodeHandler errorHandler
-    )
+    public FullSensorData GetFullSensorData(SensorType type, int numberOfDataItems)
     {
         unsafe
         {
@@ -466,12 +471,15 @@ public class GameController : Joystick, IEquatable<GameController>
                         TimeStamp = TimeSpan.FromMicroseconds(timeStamp),
                         Data = data.IsEmpty ? null : data.ToArray()
                     };
-                if (code >= 0)
+
+                if (code < 0)
                 {
-                    return result;
+                    throw new GameControllerException(
+                        $"Unable to get the game controller sensor {type} full data",
+                        code
+                    );
                 }
 
-                errorHandler(Sdl.GetError(), code);
                 return result;
             }
             finally
@@ -481,11 +489,7 @@ public class GameController : Joystick, IEquatable<GameController>
         }
     }
 
-    public override void Rumble(
-        RumbleFrequency frequency,
-        TimeSpan time,
-        ErrorCodeHandler errorHandler
-    )
+    public override void Rumble(RumbleFrequency frequency, TimeSpan time)
     {
         int code = Sdl.GameControllerRumble(
             this,
@@ -496,15 +500,14 @@ public class GameController : Joystick, IEquatable<GameController>
 
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException(
+                $"Unable to rumble the game controller with frequency {frequency} for {time.Milliseconds}ms",
+                code
+            );
         }
     }
 
-    public override void RumbleTriggers(
-        RumbleFrequency frequency,
-        TimeSpan time,
-        ErrorCodeHandler errorHandler
-    )
+    public override void RumbleTriggers(RumbleFrequency frequency, TimeSpan time)
     {
         int code = Sdl.GameControllerRumbleTriggers(
             this,
@@ -515,48 +518,58 @@ public class GameController : Joystick, IEquatable<GameController>
 
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException(
+                $"Unable to rumble the game controller triggers with frequency {frequency} for {time.Milliseconds}ms",
+                code
+            );
         }
     }
 
-    public override void SetLed(Color color, ErrorCodeHandler errorHandler)
+    public override void SetLed(Color color)
     {
         int code = Sdl.GameControllerSetLed(this, color.R, color.G, color.B);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException(
+                $"Unable to set the game controller LED color to {color}",
+                code
+            );
         }
     }
 
-    public override void SendEffect(byte[] data, ErrorCodeHandler errorHandler)
+    public override void SendEffect(byte[] data)
     {
         int code = Sdl.GameControllerSendEffect(this, data, data.Length);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new GameControllerException(
+                "Unable to send the given effect data to the game controller",
+                code
+            );
         }
     }
 
-    public string? GetAppleSfSymbolsNameForButton(
-        GameControllerButton button,
-        ErrorHandler errorHandler
-    )
+    public string GetAppleSfSymbolsNameForButton(GameControllerButton button)
     {
         string? result = Sdl.GameControllerGetAppleSfSymbolsNameForButton(this, button);
         if (result is null)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller Apple SF symbols name for button {button}"
+            );
         }
 
         return result;
     }
 
-    public string? GetAppleSfSymbolsNameForAxis(GameControllerAxis axis, ErrorHandler errorHandler)
+    public string GetAppleSfSymbolsNameForAxis(GameControllerAxis axis)
     {
         string? result = Sdl.SDL_GameControllerGetAppleSfSymbolsNameForAxis(this, axis);
         if (result is null)
         {
-            errorHandler(Sdl.GetError());
+            throw new GameControllerException(
+                $"Unable to get the game controller Apple SF symbols name for axis {axis}"
+            );
         }
 
         return result;
@@ -611,7 +624,8 @@ public class GameController : Joystick, IEquatable<GameController>
 
     public override string ToString()
     {
-        return $"{{Type: {Type}, Player Index: {PlayerIndex}, USB ID Information: {UsbIdInformation}, Version Information: {VersionInformation}, Serial: {Serial}, Touchpads Count: {CountTouchpads}, Has LED: {HasLed}, Has Rumble: {HasRumble}, Has Rumble Triggers: {HasRumbleTriggers}}}";
+        return
+            $"{{Type: {Type}, Player Index: {PlayerIndex}, USB ID Information: {UsbIdInformation}, Version Information: {VersionInformation}, Serial: {Serial}, Touchpads Count: {CountTouchpads}, Has LED: {HasLed}, Has Rumble: {HasRumble}, Has Rumble Triggers: {HasRumbleTriggers}}}";
     }
 
     public static bool operator ==(GameController? left, GameController? right)

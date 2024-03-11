@@ -1,10 +1,11 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Graphics.Pixels;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Extensions;
 
@@ -40,7 +41,7 @@ public static class PixelExtensions
         return Sdl.GetPixelFormatName(format);
     }
 
-    public static ColorMasks PixelFormatToMasks(this uint format, ErrorHandler errorHandler)
+    public static ColorMasks PixelFormatToMasks(this uint format)
     {
         bool isValid = Sdl.PixelFormatEnumToMasks(
             format,
@@ -53,7 +54,9 @@ public static class PixelExtensions
 
         if (!isValid)
         {
-            errorHandler(Sdl.GetError());
+            throw new PixelFormatException(
+                $"Unable to transform the format {format:X8} to color masks"
+            );
         }
 
         return new ColorMasks

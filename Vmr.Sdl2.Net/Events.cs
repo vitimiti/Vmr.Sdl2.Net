@@ -103,7 +103,7 @@ public delegate void DropEventHandler(object? sender, DropEventArgs eventArgs);
 
 public delegate void SensorEventHandler(object? sender, SensorEventArgs eventArgs);
 
-public static class MainLoop
+public static class Events
 {
     public static event QuitEventHandler? OnQuit;
     public static event EventHandler? OnAppTerminating;
@@ -185,7 +185,7 @@ public static class MainLoop
     public static event EventHandler? OnRenderDeviceReset;
     public static event EventHandler? OnPollSentinel;
 
-    public static void PollEvents()
+    internal static void Poll()
     {
         while (Sdl.PollEvent(out Sdl.SdlEvent ev) != 0)
         {

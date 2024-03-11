@@ -2,8 +2,8 @@
 
 using System.Drawing;
 
-using Example.Program002.Settings;
 using Example.Program004;
+using Example.Program004.Settings;
 
 using Vmr.Sdl2.Net.Video.Messages;
 using Vmr.Sdl2.Net.Video.Windowing;
@@ -16,8 +16,7 @@ try
             {
                 Title = "Example Vmr.Sdl2.Net Program 004",
                 Position = new Point(WindowPredefinedPosition.Centered),
-                Size = new Size(640, 480),
-                Flags = WindowOptions.Shown
+                Size = new Size(640, 480)
             }
         );
 
@@ -25,13 +24,6 @@ try
 }
 catch (Exception e)
 {
-    MessageBox.Show(
-        MessageBoxOptions.Error,
-        "Unmanaged Exception",
-        e.ToString(),
-        null,
-        (_, _) => Console.Error.WriteLine(e)
-    );
-
+    MessageBox.Show(MessageBoxOptions.Error, "Unmanaged Exception", e.ToString(), null);
     throw;
 }

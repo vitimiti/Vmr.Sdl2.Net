@@ -2,9 +2,9 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Input.JoystickUtilities;
 
@@ -12,29 +12,16 @@ public delegate void VirtualJoystickUpdateFunc(byte[]? userData);
 
 public delegate void VirtualJoystickSetPlayerIndexFunc(byte[]? userData, int playerIndex);
 
-public delegate int VirtualJoystickRumbleFunc(
-    byte[]? userData,
-    RumbleFrequency rumbleFrequency,
-    ErrorCodeHandler errorHandler
-);
+public delegate int VirtualJoystickRumbleFunc(byte[]? userData, RumbleFrequency rumbleFrequency);
 
 public delegate int VirtualJoystickRumbleTriggersFunc(
     byte[]? userData,
-    RumbleFrequency rumbleFrequency,
-    ErrorCodeHandler errorHandler
+    RumbleFrequency rumbleFrequency
 );
 
-public delegate int VirtualJoystickSetLedFunc(
-    byte[]? userData,
-    Color color,
-    ErrorCodeHandler errorHandler
-);
+public delegate int VirtualJoystickSetLedFunc(byte[]? userData, Color color);
 
-public delegate int VirtualJoystickSendEffect(
-    byte[]? userData,
-    byte[] data,
-    ErrorCodeHandler errorHandler
-);
+public delegate int VirtualJoystickSendEffect(byte[]? userData, byte[] data);
 
 [Serializable]
 [NativeMarshalling(typeof(VirtualJoystickDescMarshaller))]
@@ -57,23 +44,19 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
     public required VirtualJoystickRumbleTriggersFunc RumbleTriggers { get; set; }
     public required VirtualJoystickSetLedFunc SetLed { get; set; }
     public required VirtualJoystickSendEffect SendEffect { get; set; }
-    public required ErrorCodeHandler RumbleErrorHandler { get; set; }
-    public required ErrorCodeHandler RumbleTriggersErrorHandler { get; set; }
-    public required ErrorCodeHandler SetLedErrorHandler { get; set; }
-    public required ErrorCodeHandler SendEffectErrorHandler { get; set; }
 
     public bool Equals(VirtualJoystickDesc other)
     {
         return Version == other.Version
-            && Type == other.Type
-            && NumberOfAxes == other.NumberOfAxes
-            && NumberOfButtons == other.NumberOfButtons
-            && NumberOfHats == other.NumberOfHats
-            && VendorId == other.VendorId
-            && ProductId == other.ProductId
-            && ButtonMask == other.ButtonMask
-            && AxisMask == other.AxisMask
-            && Name == other.Name;
+               && Type == other.Type
+               && NumberOfAxes == other.NumberOfAxes
+               && NumberOfButtons == other.NumberOfButtons
+               && NumberOfHats == other.NumberOfHats
+               && VendorId == other.VendorId
+               && ProductId == other.ProductId
+               && ButtonMask == other.ButtonMask
+               && AxisMask == other.AxisMask
+               && Name == other.Name;
     }
 
     public override bool Equals(object? obj)
@@ -101,16 +84,13 @@ public struct VirtualJoystickDesc : IEquatable<VirtualJoystickDesc>
         hashCode.Add(RumbleTriggers);
         hashCode.Add(SetLed);
         hashCode.Add(SendEffect);
-        hashCode.Add(RumbleErrorHandler);
-        hashCode.Add(RumbleTriggersErrorHandler);
-        hashCode.Add(SetLedErrorHandler);
-        hashCode.Add(SendEffectErrorHandler);
         return hashCode.ToHashCode();
     }
 
     public override string ToString()
     {
-        return $"{{Version: {Version}, Type: {Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
+        return
+            $"{{Version: {Version}, Type: {Type}, Number of Axes: {NumberOfAxes}, Number of Buttons: {NumberOfButtons}, Number of Hats: {NumberOfHats}, Vendor ID: {VendorId}, Product ID: {ProductId}, Button Mask: [{ButtonMask}], Axis Mask: [{AxisMask}], Name: {Name}";
     }
 
     public static bool operator ==(VirtualJoystickDesc left, VirtualJoystickDesc right)

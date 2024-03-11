@@ -4,8 +4,8 @@ using System.Runtime.InteropServices.Marshalling;
 
 using Microsoft.Win32.SafeHandles;
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Utilities;
 using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Video.OpenGl;
@@ -21,36 +21,34 @@ public class Context : SafeHandleZeroOrMinusOneIsInvalid
 
     public static SwapInterval SwapInterval => Sdl.GlGetSwapInterval();
 
-    public static Window? GetCurrentWindow(ErrorHandler errorHandler)
+    public static Window GetCurrentWindow()
     {
         nint result = Sdl.GlGetCurrentWindow();
-        if (result != nint.Zero)
+        if (result == nint.Zero)
         {
-            return new Window(result, false);
+            throw new ContextException("Unable to get the window with the current context");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Window(result, false);
     }
 
-    public static Context? GetCurrent(ErrorHandler errorHandler)
+    public static Context GetCurrent()
     {
         nint result = Sdl.GlGetCurrentContext();
-        if (result != nint.Zero)
+        if (result == nint.Zero)
         {
-            return new Context(result, false);
+            throw new ContextException("Unable to get the current context");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Context(result, false);
     }
 
-    public static void SetSwapInterval(SwapInterval interval, ErrorCodeHandler errorHandler)
+    public static void SetSwapInterval(SwapInterval interval)
     {
         int code = Sdl.GlSetSwapInterval(interval);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new ContextException($"Unable to set the swap interval to {interval}", code);
         }
     }
 

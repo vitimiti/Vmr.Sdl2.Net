@@ -2,7 +2,10 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Graphics.Blending;
 using Vmr.Sdl2.Net.Graphics.Colors;
 using Vmr.Sdl2.Net.Graphics.Pixels;
@@ -24,7 +27,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         handle = preexistingHandle;
     }
 
-    public Surface(Size size, int depth, ColorMasks masks, ErrorHandler errorHandler)
+    public Surface(Size size, int depth, ColorMasks masks)
         : base(true)
     {
         handle = Sdl.CreateRgbSurface(
@@ -40,28 +43,23 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SurfaceException("Unable to create a new surface from the given RGB data");
         }
     }
 
-    public Surface(Size size, int depth, uint format, ErrorHandler errorHandler)
+    public Surface(Size size, int depth, uint format)
         : base(true)
     {
         handle = Sdl.CreateRgbSurfaceWithFormat(0, size.Width, size.Height, depth, format);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SurfaceException(
+                "Unable to create a surface from the given RGB data with format"
+            );
         }
     }
 
-    public Surface(
-        byte[] pixels,
-        Size size,
-        int depth,
-        int pitch,
-        ColorMasks masks,
-        ErrorHandler errorHandler
-    )
+    public Surface(byte[] pixels, Size size, int depth, int pitch, ColorMasks masks)
         : base(true)
     {
         unsafe
@@ -84,18 +82,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SurfaceException(
+                "Unable to create a surface from the given RGB surface data"
+            );
         }
     }
 
-    public Surface(
-        byte[] pixels,
-        Size size,
-        int depth,
-        int pitch,
-        uint format,
-        ErrorHandler errorHandler
-    )
+    public Surface(byte[] pixels, Size size, int depth, int pitch, uint format)
         : base(true)
     {
         unsafe
@@ -115,7 +108,9 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SurfaceException(
+                "Unable to create a surface from the given RGB data with format"
+            );
         }
     }
 
@@ -280,13 +275,13 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
     public bool Equals(Surface? other)
     {
         return other is not null
-            && Flags == other.Flags
-            && PixelFormat == other.PixelFormat
-            && Size == other.Size
-            && Pitch == other.Pitch
-            && Pixels == other.Pixels
-            && HasRle == other.HasRle
-            && HasColorKey == other.HasColorKey;
+               && Flags == other.Flags
+               && PixelFormat == other.PixelFormat
+               && Size == other.Size
+               && Pitch == other.Pitch
+               && Pixels == other.Pixels
+               && HasRle == other.HasRle
+               && HasColorKey == other.HasColorKey;
     }
 
     protected override bool ReleaseHandle()
@@ -301,16 +296,15 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         return true;
     }
 
-    public static Surface? LoadBmp(RwOps src, ErrorHandler errorHandler)
+    public static Surface LoadBmp(RwOps src)
     {
         nint surfaceHandle = Sdl.LoadBmpRw(src, false);
-        if (surfaceHandle != nint.Zero)
+        if (surfaceHandle == nint.Zero)
         {
-            return new Surface(surfaceHandle, true);
+            throw new SurfaceException("Unable to load the given BMP");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Surface(surfaceHandle, true);
     }
 
     public static YuvConversionMode GetYuvConversionModeForResolution(Size resolution)
@@ -318,7 +312,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         return Sdl.GetYuvConversionModeForResolution(resolution.Width, resolution.Height);
     }
 
-    public void SetPalette(Palette? palette, ErrorCodeHandler errorHandler)
+    public void SetPalette(Palette? palette)
     {
         int code = palette is null
             ? Sdl.SetSurfacePalette(this, nint.Zero)
@@ -326,16 +320,16 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException("Unable to set the surface palette", code);
         }
     }
 
-    public void Lock(ErrorCodeHandler errorHandler)
+    public void Lock()
     {
         int code = Sdl.LockSurface(this);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException("Unable to lock the surface", code);
         }
     }
 
@@ -344,106 +338,111 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         Sdl.UnlockSurface(this);
     }
 
-    public void SaveBmp(RwOps dst, ErrorCodeHandler errorHandler)
+    public void SaveBmp(RwOps dst)
     {
         int code = Sdl.SaveBmpRw(this, dst, false);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException("Unable to save the surface to the given BMP file", code);
         }
     }
 
-    public void SetRleEnabled(bool enabled, ErrorCodeHandler errorHandler)
+    public void SetRleEnabled(bool enabled)
     {
         int code = Sdl.SetSurfaceRle(this, enabled);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException($"Unable to set the RLE enabled state to {enabled}", code);
         }
     }
 
-    public void SetColorKey(bool enabled, uint key, ErrorCodeHandler errorHandler)
+    public void SetColorKey(bool enabled, uint key)
     {
         int code = Sdl.SetColorKey(this, enabled, key);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException(
+                $"Unable to set the color key as: {{Is Enabled: {enabled}, Key: {key}}}",
+                code
+            );
         }
     }
 
-    public uint GetColorKey(ErrorCodeHandler errorHandler)
+    public uint GetColorKey()
     {
         int code = Sdl.GetColorKey(this, out uint key);
-        if (code >= 0)
+        if (code < 0)
         {
-            return key;
+            throw new SurfaceException("Unable to get the color key", code);
         }
 
-        errorHandler(Sdl.GetError(), code);
-        return 0;
+        return key;
     }
 
-    public void SetColorMod(Color color, ErrorCodeHandler errorHandler)
+    public void SetColorModifier(Color color)
     {
         int code = Sdl.SetSurfaceColorMod(this, color.R, color.G, color.B);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException(
+                $"Unable to set the color modifier with the color {color}",
+                code
+            );
         }
 
         code = Sdl.SetSurfaceAlphaMod(this, color.A);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException(
+                $"Unable to set the alpha modifier with the color {color}",
+                code
+            );
         }
     }
 
-    public Color GetColorMod(ErrorCodeHandler errorHandler)
+    public Color GetColorMod()
     {
         int code = Sdl.GetSurfaceColorMod(this, out byte r, out byte g, out byte b);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
-            return Color.Black;
+            throw new SurfaceException("Unable to get the color modifier", code);
         }
 
         code = Sdl.GetSurfaceAlphaMod(this, out byte a);
-        if (code >= 0)
+        if (code < 0)
         {
-            return Color.FromArgb(a, r, g, b);
+            throw new SurfaceException("Unable to get the alpha modifier", code);
         }
 
-        errorHandler(Sdl.GetError(), code);
-        return Color.Black;
+        return Color.FromArgb(a, r, g, b);
     }
 
-    public void SetBlendMode(BlendMode blendMode, ErrorCodeHandler errorHandler)
+    public void SetBlendMode(BlendMode blendMode)
     {
         int code = Sdl.SetSurfaceBlendMode(this, blendMode);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException($"Unable to set the blend mode to {blendMode}", code);
         }
     }
 
-    public BlendMode GetBlendMode(ErrorCodeHandler errorHandler)
+    public BlendMode GetBlendMode()
     {
         int code = Sdl.GetSurfaceBlendMode(this, out BlendMode blendMode);
-        if (code >= 0)
+        if (code < 0)
         {
-            return blendMode;
+            throw new SurfaceException("Unable to get the blend mode", code);
         }
 
-        errorHandler(Sdl.GetError(), code);
-        return BlendMode.Invalid;
+        return blendMode;
     }
 
-    public void SetClipRectangle(Rectangle clip, ErrorHandler errorHandler)
+    public void SetClipRectangle(Rectangle clip)
     {
         bool isValid = Sdl.SetClipRect(this, clip);
         if (!isValid)
         {
-            errorHandler(Sdl.GetError());
+            throw new SurfaceException($"Unable to set the clip rectangle to {clip}");
         }
     }
 
@@ -453,52 +452,54 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         return result;
     }
 
-    public Surface? Duplicate(ErrorHandler errorHandler)
+    public Surface Duplicate()
     {
         nint surfaceHandle = Sdl.DuplicateSurface(this);
-        if (surfaceHandle != nint.Zero)
+        if (surfaceHandle == nint.Zero)
         {
-            return new Surface(surfaceHandle, true);
+            throw new SurfaceException("Unable to duplicate the surface");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Surface(surfaceHandle, true);
     }
 
-    public Surface? Convert(PixelFormat format, ErrorHandler errorHandler)
+    public Surface Convert(PixelFormat format)
     {
         nint surfaceHandle = Sdl.ConvertSurface(this, format, 0);
-        if (surfaceHandle != nint.Zero)
+        if (surfaceHandle == nint.Zero)
         {
-            return new Surface(surfaceHandle, true);
+            throw new SurfaceException($"Unable to convert the surface to the format {format}");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Surface(surfaceHandle, true);
     }
 
-    public Surface? Convert(uint pixelFormat, ErrorHandler errorHandler)
+    public Surface Convert(uint pixelFormat)
     {
         nint surfaceHandle = Sdl.ConvertSurfaceFormat(this, pixelFormat, 0);
-        if (surfaceHandle != nint.Zero)
+        if (surfaceHandle == nint.Zero)
         {
-            return new Surface(surfaceHandle, true);
+            throw new SurfaceException(
+                $"Unable to convert the surface to the pixel format {pixelFormat:X8}"
+            );
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Surface(surfaceHandle, true);
     }
 
-    public void Fill(Rectangle rectangle, uint color, ErrorCodeHandler errorHandler)
+    public void Fill(Rectangle rectangle, uint color)
     {
         int code = Sdl.FillRect(this, rectangle, color);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException(
+                $"Unable to fill the rectangle {rectangle} with the color {color:X8}",
+                code
+            );
         }
     }
 
-    public void Fill(Rectangle[] rectangles, uint color, ErrorCodeHandler errorHandler)
+    public void Fill(Rectangle[] rectangles, uint color)
     {
         unsafe
         {
@@ -515,30 +516,21 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
                 int code = Sdl.FillRects(this, sdlRectsHandle, rectangles.Length, color);
                 if (code < 0)
                 {
-                    errorHandler(Sdl.GetError(), code);
+                    throw new SurfaceException(
+                        $"Unable to fill {rectangles.Length} rectangles with the color {color:X8}",
+                        code
+                    );
                 }
             }
         }
     }
 
-    public void Blit(
-        Rectangle srcRect,
-        Surface dst,
-        ref Rectangle dstRect,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
+    public void Blit(Rectangle srcRect, Surface dst, ref Rectangle dstRect, bool doScaledBlit)
     {
-        UpperBlit(srcRect, dst, ref dstRect, doScaledBlit, errorHandler);
+        UpperBlit(srcRect, dst, ref dstRect, doScaledBlit);
     }
 
-    public void UpperBlit(
-        Rectangle srcRect,
-        Surface dst,
-        ref Rectangle dstRect,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
-    )
+    public void UpperBlit(Rectangle srcRect, Surface dst, ref Rectangle dstRect, bool doScaledBlit)
     {
         int code = doScaledBlit
             ? Sdl.UpperBlitScaled(this, srcRect, dst, ref dstRect)
@@ -546,7 +538,10 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException(
+                $"Unable to perform {(doScaledBlit ? "a scaled" : "an")} upper blit on the surface",
+                code
+            );
         }
     }
 
@@ -554,8 +549,7 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
         ref Rectangle srcRect,
         Surface dst,
         ref Rectangle dstRect,
-        bool doScaledBlit,
-        ErrorCodeHandler errorHandler
+        bool doScaledBlit
     )
     {
         int code = doScaledBlit
@@ -564,17 +558,14 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new SurfaceException(
+                $"Unable to perform {(doScaledBlit ? "a scaled" : "an")} lower blit on the surface",
+                code
+            );
         }
     }
 
-    public void SoftStretch(
-        Rectangle srcRect,
-        Surface dst,
-        Rectangle dstRect,
-        bool doLinearStretch,
-        ErrorCodeHandler errorHandler
-    )
+    public void SoftStretch(Rectangle srcRect, Surface dst, Rectangle dstRect, bool doLinearStretch)
     {
         int code = doLinearStretch
             ? Sdl.SoftStretchLinear(this, srcRect, dst, dstRect)
@@ -582,7 +573,10 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), 0);
+            throw new SurfaceException(
+                $"Unable to perform {(doLinearStretch ? "a linear" : "a")} soft stretch blit on the surface",
+                0
+            );
         }
     }
 
@@ -625,7 +619,8 @@ public class Surface : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Surface>
 
     public override string ToString()
     {
-        return $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
+        return
+            $"{{Flags: [{Flags}], Pixel Format: {PixelFormat}, Size: {Size}, Pitch: {Pitch}, Pixels: [{string.Join(", ", Pixels ?? Array.Empty<byte>())}], User Data: [{string.Join(", ", UserData ?? Array.Empty<byte>())}], Locked: {Locked}, Clip Rectangle: {ClipRectangle}, Reference Count: {ReferenceCount}, Has RLE: {HasRle}, Has Color Key: {HasColorKey}}}";
     }
 
     public static bool operator ==(Surface? left, Surface? right)

@@ -3,12 +3,14 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.CursorUtilities;
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Input;
 
@@ -21,12 +23,7 @@ public class Cursor : SafeHandleZeroOrMinusOneIsInvalid
         handle = preexistingHandle;
     }
 
-    public Cursor(
-        CursorPixelColor[] pixelColors,
-        Size size,
-        Point hotPosition,
-        ErrorHandler errorHandler
-    )
+    public Cursor(CursorPixelColor[] pixelColors, Size size, Point hotPosition)
         : base(true)
     {
         if (size.Width % 8 != 0)
@@ -85,27 +82,27 @@ public class Cursor : SafeHandleZeroOrMinusOneIsInvalid
 
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new CursorException("Unable to create a new cursor");
         }
     }
 
-    public Cursor(Surface surface, Point hotPosition, ErrorHandler errorHandler)
+    public Cursor(Surface surface, Point hotPosition)
         : base(true)
     {
         handle = Sdl.CreateColorCursor(surface, hotPosition.X, hotPosition.Y);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new CursorException("Unable to create a new surface cursor");
         }
     }
 
-    public Cursor(SystemCursor id, ErrorHandler errorHandler)
+    public Cursor(SystemCursor id)
         : base(true)
     {
         handle = Sdl.CreateSystemCursor(id);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new CursorException($"Unable to create a new system cursor {id}");
         }
     }
 
@@ -121,47 +118,47 @@ public class Cursor : SafeHandleZeroOrMinusOneIsInvalid
         return true;
     }
 
-    public static Cursor? GetActive(ErrorHandler errorHandler)
+    public static Cursor? GetActive()
     {
         nint cursorHandle = Sdl.GetCursor();
-        if (cursorHandle != nint.Zero)
+        if (cursorHandle == nint.Zero)
         {
-            return new Cursor(cursorHandle, false);
+            throw new CursorException("Unable to get the active cursor");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Cursor(cursorHandle, false);
     }
 
-    public static Cursor? GetDefault(ErrorHandler errorHandler)
+    public static Cursor? GetDefault()
     {
         nint cursorHandle = Sdl.GetDefaultCursor();
-        if (cursorHandle != nint.Zero)
+        if (cursorHandle == nint.Zero)
         {
-            return new Cursor(cursorHandle, false);
+            throw new CursorException("Unable to get the default cursor");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Cursor(cursorHandle, false);
     }
 
-    public static bool IsShown(ErrorCodeHandler errorHandler)
+    public static bool IsShown()
     {
         int result = Sdl.ShowCursor(Sdl.Query);
         if (result < 0)
         {
-            errorHandler(Sdl.GetError(), result);
+            throw new CursorException("Unable to access cursor visibility state", result);
         }
 
         return IntBoolMarshaller.ConvertToManaged(result);
     }
 
-    public static void SetIsShown(bool isShown, ErrorCodeHandler errorHandler)
+    public static void SetIsShown(bool isShown)
     {
         int code = Sdl.ShowCursor(isShown ? Sdl.Enable : Sdl.Disable);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new CursorException(
+                $"Unable to set the cursor visibility to {(isShown ? "visible" : "invisible")}"
+            );
         }
     }
 

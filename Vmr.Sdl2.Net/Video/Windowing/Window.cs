@@ -6,10 +6,10 @@ using System.Runtime.InteropServices.Marshalling;
 
 using Microsoft.Win32.SafeHandles;
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Utilities;
 using Vmr.Sdl2.Net.Video.Displays;
 using Vmr.Sdl2.Net.Video.OpenGl;
 
@@ -33,23 +33,17 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         handle = preexistingHandle;
     }
 
-    public Window(
-        string title,
-        Point position,
-        Size size,
-        WindowOptions flags,
-        ErrorHandler errorHandler
-    )
+    public Window(string title, Point position, Size size, WindowOptions flags)
         : base(true)
     {
         handle = Sdl.CreateWindow(title, position.X, position.Y, size.Width, size.Height, flags);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException("Unable to create a new window");
         }
     }
 
-    public Window(byte[] data, ErrorHandler errorHandler)
+    public Window(byte[] data)
         : base(true)
     {
         unsafe
@@ -62,17 +56,17 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
 
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException("Unable to create a new window from the given data");
         }
     }
 
-    public Window(uint id, ErrorHandler errorHandler)
+    public Window(uint id)
         : base(true)
     {
         handle = Sdl.GetWindowFromId(id);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException($"Unable to create a new window from the id {id}");
         }
     }
 
@@ -184,82 +178,83 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
                && DrawableSize == other.DrawableSize;
     }
 
-    public static Window? GetGrabbed(ErrorHandler errorHandler)
+    public static Window GetGrabbed()
     {
         nint result = Sdl.GetGrabbedWindow();
-        if (result != nint.Zero)
+        if (result == nint.Zero)
         {
-            return new Window(result, false);
+            throw new WindowException("Unable to get the grabbed window");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Window(result, false);
     }
 
-    public int GetDisplayIndex(ErrorCodeHandler errorHandler)
+    public int GetDisplayIndex()
     {
         int result = Sdl.GetWindowDisplayIndex(this);
         if (result < 0)
         {
-            errorHandler(Sdl.GetError(), result);
+            throw new WindowException("Unable to get the window display index", result);
         }
 
         return result;
     }
 
-    public void SetDisplayMode(DisplayMode? mode, ErrorCodeHandler errorHandler)
+    public void SetDisplayMode(DisplayMode? mode)
     {
         int code = Sdl.SetWindowDisplayMode(this, mode);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException(
+                $"Unable to set the window display mode to mode {mode}",
+                code
+            );
         }
     }
 
-    public DisplayMode? GetDisplayMode(ErrorCodeHandler errorHandler)
+    public DisplayMode GetDisplayMode()
     {
         unsafe
         {
             Sdl.DisplayMode mode = new();
             int code = Sdl.GetWindowDisplayMode(this, &mode);
-            if (code >= 0)
+            if (code < 0)
             {
-                return new DisplayMode(mode);
+                throw new WindowException("Unable to get the window display mode");
             }
 
-            errorHandler(Sdl.GetError(), code);
-            return null;
+            return new DisplayMode(mode);
         }
     }
 
-    public byte[]? GetIccProfile(ErrorHandler errorHandler)
+    public byte[] GetIccProfile()
     {
         byte[]? result = Sdl.GetWindowIccProfile(this, out _);
         if (result is null)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException("Unable to get the window ICC profile data");
         }
 
         return result;
     }
 
-    public uint GetPixelFormat(ErrorHandler errorHandler)
+    public uint GetPixelFormat()
     {
         uint result = Sdl.GetWindowPixelFormat(this);
         if (result == 0)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException("Unable to get the window pixel format");
         }
 
         return result;
     }
 
-    public uint GetId(ErrorHandler errorHandler)
+    public uint GetId()
     {
         uint result = Sdl.GetWindowId(this);
         if (result == 0)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException("Unable to get the window ID");
         }
 
         return result;
@@ -299,7 +294,7 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         }
     }
 
-    public WindowBorderSize GetBorderSize(ErrorCodeHandler errorHandler)
+    public WindowBorderSize GetBorderSize()
     {
         int code = Sdl.GetWindowBordersSize(
             this,
@@ -309,13 +304,12 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
             out int right
         );
 
-        if (code >= 0)
+        if (code < 0)
         {
-            return new WindowBorderSize { Top = top, Left = left, Bottom = bottom, Right = right };
+            throw new WindowException("Unable to get the window border size", code);
         }
 
-        errorHandler(Sdl.GetError(), code);
-        return new WindowBorderSize();
+        return new WindowBorderSize { Top = top, Left = left, Bottom = bottom, Right = right };
     }
 
     public void SetBordered(bool isBordered)
@@ -363,7 +357,7 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         Sdl.RestoreWindow(this);
     }
 
-    public void SetFullScreen(bool isFullScreen, ErrorCodeHandler errorHandler)
+    public void SetFullScreen(bool isFullScreen)
     {
         WindowOptions options = WindowOptions.None;
         if (isFullScreen)
@@ -374,11 +368,14 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         int code = Sdl.SetWindowFullscreen(this, options);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException(
+                $"Unable to set the full screen mode to {isFullScreen}",
+                code
+            );
         }
     }
 
-    public void SetDesktopFullScreen(bool isFullScreen, ErrorCodeHandler errorHandler)
+    public void SetDesktopFullScreen(bool isFullScreen)
     {
         WindowOptions options = WindowOptions.None;
         if (isFullScreen)
@@ -389,130 +386,137 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
         int code = Sdl.SetWindowFullscreen(this, options);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException(
+                $"Unable to set the desktop full screen mode to {isFullScreen}",
+                code
+            );
         }
     }
 
-    public Surface? GetSurface(ErrorHandler errorHandler)
+    public Surface GetSurface()
     {
         nint result = Sdl.GetWindowSurface(this);
-        if (result != nint.Zero)
+        if (result == nint.Zero)
         {
-            return new Surface(result, false);
+            throw new WindowException("Unable to get the window surface");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Surface(result, false);
     }
 
-    public void UpdateSurface(ErrorCodeHandler errorHandler)
+    public void UpdateSurface()
     {
         int code = Sdl.UpdateWindowSurface(this);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException("Unable to update the window surface", code);
         }
     }
 
-    public void UpdateSurface(Rectangle[] rectangles, ErrorCodeHandler errorHandler)
+    public void UpdateSurface(Rectangle[] rectangles)
     {
         int code = Sdl.UpdateWindowSurfaceRects(this, rectangles, rectangles.Length);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException(
+                $"Unable to update the window surface with {rectangles.Length} rectangles",
+                code
+            );
         }
     }
 
-    public void DestroySurface(ErrorCodeHandler errorHandler)
+    public void DestroySurface()
     {
         int code = Sdl.DestroyWindowSurface(this);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException("Unable to destroy the window surface", code);
         }
     }
 
-    public void SetMouseRectangle(Rectangle rectangle, ErrorCodeHandler errorHandler)
+    public void SetMouseRectangle(Rectangle rectangle)
     {
         int code = Sdl.SetWindowMouseRect(this, rectangle);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException($"Unable to set the mouse rectangle to {rectangle}", code);
         }
     }
 
-    public Rectangle GetMouseRectangle(ErrorHandler errorHandler)
+    public Rectangle GetMouseRectangle()
     {
         Rectangle result = Sdl.GetWindowMouseRect(this);
         if (result == Rectangle.Empty)
         {
-            errorHandler(Sdl.GetError());
+            throw new WindowException("Unable to get the mouse rectangle");
         }
 
         return result;
     }
 
-    public void SetBrightness(float brightness, ErrorCodeHandler errorHandler)
+    public void SetBrightness(float brightness)
     {
         int code = Sdl.SetWindowBrightness(this, brightness);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException(
+                $"Unable to set the window brightness to {brightness:F2}",
+                code
+            );
         }
     }
 
-    public void SetOpacity(float opacity, ErrorCodeHandler errorHandler)
+    public void SetOpacity(float opacity)
     {
         int code = Sdl.SetWindowOpacity(this, opacity);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException($"Unable to set the window opacity to {opacity:F2}", code);
         }
     }
 
-    public void SetModalFor(Window parent, ErrorCodeHandler errorHandler)
+    public void SetModalFor(Window parent)
     {
         int code = Sdl.SetWindowModalFor(this, parent);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException($"Unable to set window as modal for {parent}", code);
         }
     }
 
-    public void SetInputFocus(ErrorCodeHandler errorHandler)
+    public void SetInputFocus()
     {
         int code = Sdl.SetWindowInputFocus(this);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException("Unable to set the window input focus", code);
         }
     }
 
-    public void SetGammaRamp(WindowGammaRamp gammaRamp, ErrorCodeHandler errorHandler)
+    public void SetGammaRamp(WindowGammaRamp gammaRamp)
     {
         int code = Sdl.SetWindowGammaRamp(this, gammaRamp.Red, gammaRamp.Green, gammaRamp.Blue);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException($"Unable to set the window gamma ramp to {gammaRamp}", code);
         }
     }
 
-    public WindowGammaRamp GetGammaRamp(ErrorCodeHandler errorHandler)
+    public WindowGammaRamp GetGammaRamp()
     {
         ushort[] red = new ushort[256];
         ushort[] green = new ushort[256];
         ushort[] blue = new ushort[256];
         int code = Sdl.GetWindowGammaRamp(this, red, green, blue);
-        if (code >= 0)
+        if (code < 0)
         {
-            return new WindowGammaRamp(red, green, blue);
+            throw new WindowException("Unable to get the window gamma ramp", code);
         }
 
-        errorHandler(Sdl.GetError(), code);
-        return new WindowGammaRamp();
+        return new WindowGammaRamp(red, green, blue);
     }
 
-    public void SetHitTest(HitTestFunction callback, byte[]? data, ErrorCodeHandler errorHandler)
+    public void SetHitTest(HitTestFunction callback, byte[]? data)
     {
         int dataLength = data?.Length ?? 0;
         unsafe
@@ -553,39 +557,38 @@ public class Window : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Window>
 
                 if (code < 0)
                 {
-                    errorHandler(Sdl.GetError(), code);
+                    throw new WindowException("Unable to set the window hit test function", code);
                 }
             }
         }
     }
 
-    public void Flash(FlashOperation operation, ErrorCodeHandler errorHandler)
+    public void Flash(FlashOperation operation)
     {
         int code = Sdl.FlashWindow(this, operation);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException($"Unable to set the window flash operation to {operation}");
         }
     }
 
-    public Context? CreateOpenGlContext(ErrorHandler errorHandler)
+    public Context CreateOpenGlContext()
     {
         nint result = Sdl.GlCreateContext(this);
-        if (result != nint.Zero)
+        if (result == nint.Zero)
         {
-            return new Context(result, true);
+            throw new WindowException("Unable to create the window OpenGL context");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Context(result, true);
     }
 
-    public void MakeOpenGlContextCurrent(Context context, ErrorCodeHandler errorHandler)
+    public void MakeOpenGlContextCurrent(Context context)
     {
         int code = Sdl.GlMakeCurrent(this, context);
         if (code < 0)
         {
-            errorHandler(Sdl.GetError(), code);
+            throw new WindowException("Unable to set the window current OpenGL context");
         }
     }
 

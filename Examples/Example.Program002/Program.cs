@@ -16,8 +16,7 @@ try
             {
                 Title = "Example Vmr.Sdl2.Net Program 002",
                 Position = new Point(WindowPredefinedPosition.Centered),
-                Size = new Size(640, 480),
-                Flags = WindowOptions.Shown
+                Size = new Size(640, 480)
             }
         );
 
@@ -25,13 +24,6 @@ try
 }
 catch (Exception e)
 {
-    MessageBox.Show(
-        MessageBoxOptions.Error,
-        "Unmanaged Exception",
-        e.ToString(),
-        null,
-        (_, _) => Console.Error.WriteLine(e)
-    );
-
+    MessageBox.Show(MessageBoxOptions.Error, "Unmanaged Exception", e.ToString(), null);
     throw;
 }

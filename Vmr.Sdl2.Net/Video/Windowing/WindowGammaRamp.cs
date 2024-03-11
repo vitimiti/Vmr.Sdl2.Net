@@ -2,7 +2,7 @@
 
 namespace Vmr.Sdl2.Net.Video.Windowing;
 
-public struct WindowGammaRamp
+public struct WindowGammaRamp : IEquatable<WindowGammaRamp>
 {
     private ushort[] _blue = new ushort[256];
     private ushort[] _green = new ushort[256];
@@ -88,5 +88,36 @@ public struct WindowGammaRamp
 
             _blue = value;
         }
+    }
+
+    public bool Equals(WindowGammaRamp other)
+    {
+        return _blue.Equals(other._blue) && _green.Equals(other._green) && _red.Equals(other._red);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is WindowGammaRamp other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_blue, _green, _red);
+    }
+
+    public override string ToString()
+    {
+        return
+            $"{{Red: [{string.Join(", ", Red)}], Green: [{string.Join(", ", Green)}], Blue: [{string.Join(", ", Blue)}]}}";
+    }
+
+    public static bool operator ==(WindowGammaRamp left, WindowGammaRamp right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(WindowGammaRamp left, WindowGammaRamp right)
+    {
+        return !left.Equals(right);
     }
 }

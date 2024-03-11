@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Text;
 
 using Vmr.Sdl2.Net;
 using Vmr.Sdl2.Net.Graphics;
@@ -11,95 +9,25 @@ using Vmr.Sdl2.Net.Video.Windowing;
 
 try
 {
-    using Application app =
-        new(
-            ApplicationSubsystems.Video,
-            CriticalErrorWithCode,
-            (expectedVersion, version) =>
-                MessageBox.Show(
-                    MessageBoxOptions.Warning,
-                    "SDL2 Version Mismatch",
-                    GenerateMismatchInfo(expectedVersion, version),
-                    null,
-                    (_, _) => Console.WriteLine(GenerateMismatchInfo(expectedVersion, version))
-                )
-        );
-
+    using Application application = new(ApplicationSubsystems.Video);
     using Window window =
         new(
             "Example Vmr.Sdl2.Net Program 001",
             new Point(WindowPredefinedPosition.Centered),
             new Size(640, 480),
-            WindowOptions.Shown,
-            CriticalError
+            WindowOptions.Shown
         );
 
-    using Surface? screenSurface = window.GetSurface(CriticalError);
-    screenSurface?.Fill(
-        Rectangle.Empty,
-        screenSurface.PixelFormat?.MapRgb(Color.Black) ?? 0U,
-        CriticalErrorWithCode
-    );
+    using Surface screenSurface = window.GetSurface();
+    screenSurface.Fill(Rectangle.Empty, screenSurface.PixelFormat?.MapRgb(Color.Black) ?? 0U);
 
-    window.UpdateSurface(CriticalErrorWithCode);
-    bool quit = false;
-    MainLoop.OnQuit += (_, _) => quit = true;
-    while (!quit)
-    {
-        MainLoop.PollEvents();
-    }
+    window.UpdateSurface();
+    Events.OnQuit += (_, _) => Application.ShouldQuit = true;
+    application.Run();
 }
 catch (Exception e)
 {
-    MessageBox.Show(
-        MessageBoxOptions.Error,
-        "Unmanaged Exception",
-        e.ToString(),
-        null,
-        (_, _) => Console.Error.WriteLine(e)
-    );
+    MessageBox.Show(MessageBoxOptions.Error, "Unmanaged Exception", e.ToString(), null);
 
     throw;
-}
-
-return;
-
-static string GenerateMismatchInfo(Version expectedVersion, Version version)
-{
-    return
-        $"Expected SDL2 v{expectedVersion}, but SDL2 v{version} was found. Some unexpected behaviors or errors may be encountered, reinstall the game or update your SDL2 version to match v{expectedVersion}";
-}
-
-static void CriticalError(string? message)
-{
-    MessageBox.Show(
-        MessageBoxOptions.Error,
-        "Critical Error",
-        message ?? string.Empty,
-        null,
-        (innerMessage, code) =>
-            throw new Exception(message, new ExternalException(innerMessage, code))
-    );
-
-    throw new ExternalException(message);
-}
-
-static void CriticalErrorWithCode(string? message, int code)
-{
-    StringBuilder messageBuilder = new();
-    messageBuilder.AppendLine(message);
-    messageBuilder.AppendLine($"Return Code: 0x{code:X8}");
-    MessageBox.Show(
-        MessageBoxOptions.Error,
-        "Critical Error",
-        messageBuilder.ToString(),
-        null,
-        (innerMessage, innerCode) =>
-            throw new Exception(
-                messageBuilder.ToString(),
-                new ExternalException(innerMessage, innerCode)
-            )
-    );
-
-    throw new ExternalException(message, code);
 }

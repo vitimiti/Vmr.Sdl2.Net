@@ -2,22 +2,21 @@
 
 using System.Drawing;
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Extensions;
 
 public static class SurfaceExtensions
 {
-    public static byte[]? Convert(
+    public static byte[] Convert(
         this byte[] src,
         Size size,
         uint srcFormat,
         int srcPitch,
         uint dstFormat,
         byte[] dst,
-        int dstPitch,
-        ErrorCodeHandler errorHandler
+        int dstPitch
     )
     {
         unsafe
@@ -38,8 +37,7 @@ public static class SurfaceExtensions
 
                 if (code < 0)
                 {
-                    errorHandler(Sdl.GetError(), code);
-                    return null;
+                    throw new SurfaceException("Unable to convert the given data", code);
                 }
 
                 byte[] dstResult = new byte[dst.Length];
@@ -53,15 +51,14 @@ public static class SurfaceExtensions
         }
     }
 
-    public static byte[]? PremultiplyAlpha(
+    public static byte[] PremultiplyAlpha(
         this byte[] src,
         Size size,
         uint srcFormat,
         int srcPitch,
         uint dstFormat,
         byte[] dst,
-        int dstPitch,
-        ErrorCodeHandler errorHandler
+        int dstPitch
     )
     {
         unsafe
@@ -82,8 +79,7 @@ public static class SurfaceExtensions
 
                 if (code < 0)
                 {
-                    errorHandler(Sdl.GetError(), code);
-                    return null;
+                    throw new SurfaceException("Unable to convert the given data", code);
                 }
 
                 byte[] dstResult = new byte[dst.Length];

@@ -2,10 +2,12 @@
 
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.SensorUtilities;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Input;
 
@@ -18,13 +20,13 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
         handle = preexistingHandle;
     }
 
-    public Sensor(int deviceIndex, ErrorHandler errorHandler)
+    public Sensor(int deviceIndex)
         : base(true)
     {
         handle = Sdl.SensorOpen(deviceIndex);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SensorException($"Unable to open the sensor for device index {deviceIndex}");
         }
     }
 
@@ -45,49 +47,55 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
         Sdl.UnlockSensors();
     }
 
-    public static SensorType GetTypeForDevice(int deviceIndex, ErrorCodeHandler errorHandler)
+    public static SensorType GetTypeForDevice(int deviceIndex)
     {
         SensorType result = Sdl.SensorGetDeviceType(deviceIndex);
         if (result == SensorType.Invalid)
         {
-            errorHandler(Sdl.GetError(), (int)result);
+            throw new SensorException(
+                $"Unable to get the sensor type for device index {deviceIndex}"
+            );
         }
 
         return result;
     }
 
-    public static int GetNonPortableTypeForDevice(int deviceIndex, ErrorCodeHandler errorHandler)
+    public static int GetNonPortableTypeForDevice(int deviceIndex)
     {
         int result = Sdl.SensorGetDeviceNonPortableType(deviceIndex);
         if (result < 0)
         {
-            errorHandler(Sdl.GetError(), result);
+            throw new SensorException(
+                $"Unable to get the sensor non portable type for device index {deviceIndex}",
+                result
+            );
         }
 
         return result;
     }
 
-    public static int GetInstanceIdForDevice(int deviceIndex, ErrorCodeHandler errorHandler)
+    public static int GetInstanceIdForDevice(int deviceIndex)
     {
         int result = Sdl.SensorGetDeviceInstanceId(deviceIndex);
         if (result < 0)
         {
-            errorHandler(Sdl.GetError(), result);
+            throw new SensorException(
+                $"Unable to get the sensor instance ID for device index {deviceIndex}"
+            );
         }
 
         return result;
     }
 
-    public static Sensor? FromInstanceId(int instanceId, ErrorHandler errorHandler)
+    public static Sensor FromInstanceId(int instanceId)
     {
         nint sensorHandle = Sdl.SensorFromInstanceId(instanceId);
-        if (sensorHandle != nint.Zero)
+        if (sensorHandle == nint.Zero)
         {
-            return new Sensor(sensorHandle, true);
+            throw new SensorException($"Unable to get sensor from instance ID {instanceId}");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Sensor(sensorHandle, true);
     }
 
     public static void Update()
@@ -95,7 +103,7 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
         Sdl.SensorUpdate();
     }
 
-    public float[]? GetState(int numberOfValues, ErrorCodeHandler errorHandler)
+    public float[] GetState(int numberOfValues)
     {
         unsafe
         {
@@ -103,14 +111,13 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
             try
             {
                 int code = Sdl.SensorGetData(this, dataPtr, numberOfValues);
-                if (code >= 0)
+                if (code < 0)
                 {
-                    Span<float> data = new(dataPtr, numberOfValues);
-                    return data.ToArray();
+                    throw new SensorException("Unable to get the sensor state", code);
                 }
 
-                errorHandler(Sdl.GetError(), code);
-                return null;
+                Span<float> data = new(dataPtr, numberOfValues);
+                return data.ToArray();
             }
             finally
             {
@@ -119,7 +126,7 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
         }
     }
 
-    public FullSensorState GetFullState(int numberOfValues, ErrorCodeHandler errorHandler)
+    public FullSensorState GetFullState(int numberOfValues)
     {
         unsafe
         {
@@ -135,14 +142,13 @@ public class Sensor : SafeHandleZeroOrMinusOneIsInvalid
 
                 if (code < 0)
                 {
-                    errorHandler(Sdl.GetError(), code);
+                    throw new SensorException("Unable to get the sensor full data", code);
                 }
 
                 Span<float> data = new(dataPtr, numberOfValues);
                 return new FullSensorState
                 {
-                    TimeStamp = TimeSpan.FromMicroseconds(timeStamp),
-                    Data = code < 0 ? null : data.ToArray()
+                    TimeStamp = TimeSpan.FromMicroseconds(timeStamp), Data = data.ToArray()
                 };
             }
             finally

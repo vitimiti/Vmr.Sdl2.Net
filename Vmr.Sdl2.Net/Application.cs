@@ -1,47 +1,76 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net;
 
-public sealed class Application : IDisposable
+public class Application : IDisposable
 {
-    private readonly bool _isInitialized;
+    private readonly ApplicationSubsystems _subsystems;
 
-    public Application(
-        ApplicationSubsystems subsystems,
-        ErrorCodeHandler errorHandler,
-        VersionMismatchHandler? versionMismatchHandler = null
-    )
+    public Application(ApplicationSubsystems subsystems)
     {
-        if (NativeLibraryInformation.ExpectedVersion != NativeLibraryInformation.Version)
-        {
-            versionMismatchHandler?.Invoke(
-                NativeLibraryInformation.ExpectedVersion,
-                NativeLibraryInformation.Version
-            );
-        }
-
-        int code = Sdl.Init(subsystems);
-        if (code < 0)
-        {
-            errorHandler(Sdl.GetError(), code);
-        }
-        else
-        {
-            _isInitialized = true;
-        }
+        _subsystems = subsystems;
+        ShouldQuit = false;
     }
 
     public static ApplicationSubsystems InitializedSubsystems =>
         Sdl.WasInit(ApplicationSubsystems.None);
 
+    public static bool ShouldQuit { get; set; }
+
     public void Dispose()
     {
-        if (_isInitialized)
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void ReleaseUnmanagedResources()
+    {
+        Sdl.Quit();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        ReleaseUnmanagedResources();
+        if (disposing)
         {
-            Sdl.Quit();
+            // Nothing to do here.
+        }
+    }
+
+    ~Application()
+    {
+        Dispose(false);
+    }
+
+    protected virtual void Init()
+    {
+        int code = Sdl.Init(_subsystems);
+        if (code < 0)
+        {
+            throw new AppException(
+                $"Unable to initialize SDL2 with subsystems [{_subsystems}]",
+                code
+            );
+        }
+    }
+
+    protected virtual void Load() { }
+
+    protected virtual void Update()
+    {
+        Events.Poll();
+    }
+
+    public void Run()
+    {
+        Init();
+        Load();
+        while (!ShouldQuit)
+        {
+            Update();
         }
     }
 }

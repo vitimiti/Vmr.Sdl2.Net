@@ -3,6 +3,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+
 using Vmr.Sdl2.Net.Input.GameControllerUtilities;
 using Vmr.Sdl2.Net.Input.JoystickUtilities;
 
@@ -114,10 +115,8 @@ internal static unsafe class VirtualJoystickDescMarshaller
                                         managedUserData.IsEmpty ? null : managedUserData.ToArray(),
                                         new RumbleFrequency
                                         {
-                                            Low = lowFrequencyRumble,
-                                            High = highFrequencyRumble
-                                        },
-                                        managed.RumbleErrorHandler
+                                            Low = lowFrequencyRumble, High = highFrequencyRumble
+                                        }
                                     );
                                 }
                             ),
@@ -140,10 +139,8 @@ internal static unsafe class VirtualJoystickDescMarshaller
                                         managedUserData.IsEmpty ? null : managedUserData.ToArray(),
                                         new RumbleFrequency
                                         {
-                                            Low = lowFrequencyRumble,
-                                            High = highFrequencyRumble
-                                        },
-                                        managed.RumbleTriggersErrorHandler
+                                            Low = lowFrequencyRumble, High = highFrequencyRumble
+                                        }
                                     );
                                 }
                             ),
@@ -160,8 +157,7 @@ internal static unsafe class VirtualJoystickDescMarshaller
 
                                     return managed.SetLed(
                                         managedUserData.IsEmpty ? null : managedUserData.ToArray(),
-                                        Color.FromArgb(red, green, blue),
-                                        managed.SetLedErrorHandler
+                                        Color.FromArgb(red, green, blue)
                                     );
                                 }
                             ),
@@ -179,8 +175,7 @@ internal static unsafe class VirtualJoystickDescMarshaller
                                     Span<byte> managedData = new(data, size);
                                     return managed.SendEffect(
                                         managedUserData.IsEmpty ? null : managedUserData.ToArray(),
-                                        managedData.ToArray(),
-                                        managed.SendEffectErrorHandler
+                                        managedData.ToArray()
                                     );
                                 }
                             )

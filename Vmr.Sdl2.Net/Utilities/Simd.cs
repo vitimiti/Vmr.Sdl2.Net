@@ -4,6 +4,7 @@ using System.Runtime.InteropServices.Marshalling;
 
 using Microsoft.Win32.SafeHandles;
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
 
 namespace Vmr.Sdl2.Net.Utilities;
@@ -11,13 +12,13 @@ namespace Vmr.Sdl2.Net.Utilities;
 [NativeMarshalling(typeof(SafeHandleMarshaller<Simd>))]
 public class Simd : SafeHandleZeroOrMinusOneIsInvalid
 {
-    public Simd(uint length, ErrorHandler errorHandler, bool ownsHandle = true)
+    public Simd(uint length, bool ownsHandle = true)
         : base(ownsHandle)
     {
         handle = Sdl.SimdAlloc(length);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SimdException($"Unable to allocate a SIMD block of {length} bytes");
         }
     }
 
@@ -35,12 +36,14 @@ public class Simd : SafeHandleZeroOrMinusOneIsInvalid
         return true;
     }
 
-    public void Realloc(uint length, ErrorHandler errorHandler)
+    public void Realloc(uint length)
     {
         nint resultHandle = Sdl.SimdRealloc(this, length);
         if (resultHandle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new SimdException(
+                $"Unable to reallocate the SIMD block to length {length} bytes"
+            );
         }
 
         handle = resultHandle;

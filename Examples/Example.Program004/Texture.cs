@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
+
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Utilities;
 
@@ -16,8 +17,8 @@ public class Texture : IDisposable
     public Texture(string path)
     {
         _currentFileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        _currentRwOps = new RwOps(_currentFileStream, Game.ErrorHandler);
-        _current = Surface.LoadBmp(_currentRwOps, Game.ErrorHandler);
+        _currentRwOps = new RwOps(_currentFileStream);
+        _current = Surface.LoadBmp(_currentRwOps);
     }
 
     public void Dispose()
@@ -28,13 +29,7 @@ public class Texture : IDisposable
 
     public void Update(Surface screenSurface)
     {
-        _current?.Blit(
-            Rectangle.Empty,
-            screenSurface,
-            ref _currentDstRect,
-            false,
-            Game.ErrorCodeHandler
-        );
+        _current?.Blit(Rectangle.Empty, screenSurface, ref _currentDstRect, false);
     }
 
     protected virtual void Dispose(bool disposing)

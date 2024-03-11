@@ -2,10 +2,12 @@
 
 using System.Drawing;
 using System.Runtime.InteropServices.Marshalling;
+
 using Microsoft.Win32.SafeHandles;
+
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Graphics;
 
@@ -19,13 +21,15 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
         handle = preexistingHandle;
     }
 
-    public Palette(int numberOfColors, ErrorHandler errorHandler)
+    public Palette(int numberOfColors)
         : base(true)
     {
         handle = Sdl.AllocPalette(numberOfColors);
         if (handle == nint.Zero)
         {
-            errorHandler(Sdl.GetError());
+            throw new PaletteException(
+                $"Unable to create a palette with {numberOfColors} color(s)"
+            );
         }
     }
 
@@ -97,12 +101,7 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
         return true;
     }
 
-    public void SetColors(
-        Color[]? colors,
-        int firstColor,
-        int numberOfColors,
-        ErrorCodeHandler errorHandler
-    )
+    public void SetColors(Color[]? colors, int firstColor, int numberOfColors)
     {
         unsafe
         {
@@ -121,7 +120,10 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
                 int code = Sdl.SetPaletteColors(handle, colorsHandle, firstColor, numberOfColors);
                 if (code < 0)
                 {
-                    errorHandler(Sdl.GetError(), code);
+                    throw new PaletteException(
+                        "Unable to set the given new colors to the palette",
+                        code
+                    );
                 }
             }
         }
@@ -154,7 +156,8 @@ public class Palette : SafeHandleZeroOrMinusOneIsInvalid, IEquatable<Palette>
 
     public override string ToString()
     {
-        return $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
+        return
+            $"{{Colors: [{string.Join(", ", Colors ?? Array.Empty<Color>())}], Version: {Version}, Reference Count: {ReferenceCount}}}";
     }
 
     public static bool operator ==(Palette? left, Palette? right)

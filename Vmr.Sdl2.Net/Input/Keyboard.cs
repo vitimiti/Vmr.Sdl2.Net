@@ -1,9 +1,9 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
 using Vmr.Sdl2.Net.Input.KeyboardUtilities;
 using Vmr.Sdl2.Net.Marshalling;
-using Vmr.Sdl2.Net.Utilities;
 using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Vmr.Sdl2.Net.Input;
@@ -38,16 +38,15 @@ public static class Keyboard
         set => Sdl.SetModState(value);
     }
 
-    public static Window? GetFocus(ErrorHandler errorHandler)
+    public static Window GetFocus()
     {
         nint handle = Sdl.GetKeyboardFocus();
-        if (handle != nint.Zero)
+        if (handle == nint.Zero)
         {
-            return new Window(handle, false);
+            throw new KeyboardException("Unable to get the keyboard focused window");
         }
 
-        errorHandler(Sdl.GetError());
-        return null;
+        return new Window(handle, false);
     }
 
     public static void Reset()

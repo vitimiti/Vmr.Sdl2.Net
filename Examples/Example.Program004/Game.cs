@@ -1,107 +1,27 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
-using System.Runtime.InteropServices;
-using System.Text;
-
-using Example.Program002.Settings;
+using Example.Program004.Settings;
 
 using Vmr.Sdl2.Net;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Input.KeyboardUtilities;
-using Vmr.Sdl2.Net.Utilities;
-using Vmr.Sdl2.Net.Video.Messages;
 using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Example.Program004;
 
-public class Game : IDisposable
+public class Game(WindowSettings windowSettings) : Application(ApplicationSubsystems.Video)
 {
-    private readonly Application? _application;
-    private readonly Surface? _screenSurface;
     private readonly Dictionary<TextureType, Texture> _textures = new();
-    private readonly Window? _window;
     private Texture? _currentTexture;
-    private bool _quit;
+    private Surface? _screenSurface;
+    private Window? _window;
 
-    public Game(WindowSettings windowSettings)
+    protected override void Init()
     {
-        _application = new Application(
-            ApplicationSubsystems.Video,
-            CriticalErrorWithCode,
-            (expectedVersion, version) =>
-                MessageBox.Show(
-                    MessageBoxOptions.Warning,
-                    "SDL2 Version Mismatch",
-                    GenerateMismatchInfo(expectedVersion, version),
-                    null,
-                    (_, _) => Console.WriteLine(GenerateMismatchInfo(expectedVersion, version))
-                )
-        );
+        base.Init();
 
-        _window = new Window(
-            windowSettings.Title,
-            windowSettings.Position,
-            windowSettings.Size,
-            windowSettings.Flags,
-            CriticalError
-        );
-
-        _screenSurface = _window.GetSurface(CriticalError);
-    }
-
-    public static ErrorHandler ErrorHandler { get; set; } = CriticalError;
-    public static ErrorCodeHandler ErrorCodeHandler { get; set; } = CriticalErrorWithCode;
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    private static string GenerateMismatchInfo(Version expectedVersion, Version version)
-    {
-        return
-            $"Expected SDL2 v{expectedVersion}, but SDL2 v{version} was found. Some unexpected behaviors or errors may be encountered, reinstall the game or update your SDL2 version to match v{expectedVersion}";
-    }
-
-    private static void CriticalError(string? message)
-    {
-        MessageBox.Show(
-            MessageBoxOptions.Error,
-            "Critical Error",
-            message ?? string.Empty,
-            null,
-            (innerMessage, code) =>
-                throw new Exception(message, new ExternalException(innerMessage, code))
-        );
-
-        throw new ExternalException(message);
-    }
-
-    private static void CriticalErrorWithCode(string? message, int code)
-    {
-        StringBuilder messageBuilder = new();
-        messageBuilder.AppendLine(message);
-        messageBuilder.AppendLine($"Return Code: 0x{code:X8}");
-        MessageBox.Show(
-            MessageBoxOptions.Error,
-            "Critical Error",
-            messageBuilder.ToString(),
-            null,
-            (innerMessage, innerCode) =>
-                throw new Exception(
-                    messageBuilder.ToString(),
-                    new ExternalException(innerMessage, innerCode)
-                )
-        );
-
-        throw new ExternalException(message, code);
-    }
-
-    private void Init()
-    {
-        MainLoop.OnQuit += (_, _) => _quit = true;
-        MainLoop.OnKeyDown += (_, eventArgs) =>
+        Events.OnQuit += (_, _) => ShouldQuit = true;
+        Events.OnKeyDown += (_, eventArgs) =>
         {
             _currentTexture = eventArgs.KeySymbol.KeyCode switch
             {
@@ -113,10 +33,21 @@ public class Game : IDisposable
                 _ => _currentTexture
             };
         };
+
+        _window = new Window(
+            windowSettings.Title,
+            windowSettings.Position,
+            windowSettings.Size,
+            WindowOptions.Hidden
+        );
+
+        _screenSurface = _window.GetSurface();
     }
 
-    private void Load()
+    protected override void Load()
     {
+        base.Load();
+
         _textures.Add(TextureType.Default, new Texture("res/press_me.bmp"));
         _textures.Add(TextureType.Left, new Texture("res/left.bmp"));
         _textures.Add(TextureType.Up, new Texture("res/up.bmp"));
@@ -124,26 +55,19 @@ public class Game : IDisposable
         _textures.Add(TextureType.Down, new Texture("res/down.bmp"));
 
         _currentTexture = _textures[TextureType.Default];
+
+        _window?.Show();
     }
 
-    private void Update()
+    protected override void Update()
     {
-        MainLoop.PollEvents();
+        base.Update();
+
         _currentTexture?.Update(_screenSurface!);
-        _window?.UpdateSurface(CriticalErrorWithCode);
+        _window?.UpdateSurface();
     }
 
-    public void Run()
-    {
-        Init();
-        Load();
-        while (!_quit)
-        {
-            Update();
-        }
-    }
-
-    protected virtual void Dispose(bool disposing)
+    protected override void Dispose(bool disposing)
     {
         if (!disposing)
         {
@@ -157,6 +81,7 @@ public class Game : IDisposable
 
         _screenSurface?.Dispose();
         _window?.Dispose();
-        _application?.Dispose();
+
+        base.Dispose(disposing);
     }
 }

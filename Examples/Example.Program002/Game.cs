@@ -1,147 +1,60 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Text;
 
 using Example.Program002.Settings;
 
 using Vmr.Sdl2.Net;
 using Vmr.Sdl2.Net.Graphics;
 using Vmr.Sdl2.Net.Utilities;
-using Vmr.Sdl2.Net.Video.Messages;
 using Vmr.Sdl2.Net.Video.Windowing;
 
 namespace Example.Program002;
 
-public class Game : IDisposable
+public class Game(WindowSettings windowSettings) : Application(ApplicationSubsystems.Video)
 {
-    private readonly Application? _application;
-    private readonly Surface? _screenSurface;
-    private readonly Window? _window;
     private Surface? _helloWorld;
     private FileStream? _helloWorldFileStream;
     private RwOps? _helloWorldRwOps;
-    private bool _quit;
+    private Surface? _screenSurface;
+    private Window? _window;
 
-    public Game(WindowSettings windowSettings)
+    protected override void Init()
     {
-        _application = new Application(
-            ApplicationSubsystems.Video,
-            CriticalErrorWithCode,
-            (expectedVersion, version) =>
-                MessageBox.Show(
-                    MessageBoxOptions.Warning,
-                    "SDL2 Version Mismatch",
-                    GenerateMismatchInfo(expectedVersion, version),
-                    null,
-                    (_, _) => Console.WriteLine(GenerateMismatchInfo(expectedVersion, version))
-                )
-        );
+        base.Init();
+
+        Events.OnQuit += (_, _) => ShouldQuit = true;
 
         _window = new Window(
             windowSettings.Title,
             windowSettings.Position,
             windowSettings.Size,
-            windowSettings.Flags,
-            CriticalError
+            WindowOptions.Hidden
         );
 
-        _screenSurface = _window.GetSurface(CriticalError);
+        _screenSurface = _window.GetSurface();
     }
 
-    public static ErrorHandler ErrorHandler { get; set; } = CriticalError;
-    public static ErrorCodeHandler ErrorCodeHandler { get; set; } = CriticalErrorWithCode;
-
-    public void Dispose()
+    protected override void Load()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
+        base.Load();
 
-    private static string GenerateMismatchInfo(Version expectedVersion, Version version)
-    {
-        return
-            $"Expected SDL2 v{expectedVersion}, but SDL2 v{version} was found. Some unexpected behaviors or errors may be encountered, reinstall the game or update your SDL2 version to match v{expectedVersion}";
-    }
-
-    private static void CriticalError(string? message)
-    {
-        MessageBox.Show(
-            MessageBoxOptions.Error,
-            "Critical Error",
-            message ?? string.Empty,
-            null,
-            (innerMessage, code) =>
-                throw new Exception(message, new ExternalException(innerMessage, code))
-        );
-
-        throw new ExternalException(message);
-    }
-
-    private static void CriticalErrorWithCode(string? message, int code)
-    {
-        StringBuilder messageBuilder = new();
-        messageBuilder.AppendLine(message);
-        messageBuilder.AppendLine($"Return Code: 0x{code:X8}");
-        MessageBox.Show(
-            MessageBoxOptions.Error,
-            "Critical Error",
-            messageBuilder.ToString(),
-            null,
-            (innerMessage, innerCode) =>
-                throw new Exception(
-                    messageBuilder.ToString(),
-                    new ExternalException(innerMessage, innerCode)
-                )
-        );
-
-        throw new ExternalException(message, code);
-    }
-
-    private static void Update()
-    {
-        MainLoop.PollEvents();
-    }
-
-    private void Init()
-    {
-        MainLoop.OnQuit += (_, _) => _quit = true;
-    }
-
-    private void Load()
-    {
         _helloWorldFileStream = new FileStream(
             "res/hello_world.bmp",
             FileMode.Open,
             FileAccess.Read
         );
 
-        _helloWorldRwOps = new RwOps(_helloWorldFileStream, CriticalError);
-        _helloWorld = Surface.LoadBmp(_helloWorldRwOps, CriticalError);
+        _helloWorldRwOps = new RwOps(_helloWorldFileStream);
+        _helloWorld = Surface.LoadBmp(_helloWorldRwOps);
         Rectangle dstRect = Rectangle.Empty;
-        _helloWorld?.Blit(
-            Rectangle.Empty,
-            _screenSurface!,
-            ref dstRect,
-            false,
-            CriticalErrorWithCode
-        );
+        _helloWorld.Blit(Rectangle.Empty, _screenSurface!, ref dstRect, false);
 
-        _window?.UpdateSurface(CriticalErrorWithCode);
+        _window?.Show();
+        _window?.UpdateSurface();
     }
 
-    public void Run()
-    {
-        Init();
-        Load();
-        while (!_quit)
-        {
-            Update();
-        }
-    }
-
-    protected virtual void Dispose(bool disposing)
+    protected override void Dispose(bool disposing)
     {
         if (!disposing)
         {
@@ -153,6 +66,7 @@ public class Game : IDisposable
         _helloWorldFileStream?.Dispose();
         _screenSurface?.Dispose();
         _window?.Dispose();
-        _application?.Dispose();
+
+        base.Dispose(disposing);
     }
 }

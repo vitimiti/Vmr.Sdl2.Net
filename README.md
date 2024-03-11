@@ -41,6 +41,52 @@ using Application app = new(ApplicationSubsystems.Video, Error.DefaultCodeHandle
 using Window window = new("title", new Point(x, y), new Size(w, h), WindowOptions.Shown, Error.DefaultCodeHandler);
 ```
 
+At the same time, the `Vmr.Sdl2.Net.Application` class can be inherited to make, for example, a game:
+
+```csharp
+internal class Game : Application(ApplicationSubsystems.Video)
+{
+    protected override void Init()
+    {
+        base.Init();
+        
+        // Initialize what you require here.
+    }
+    
+    protected override void Load()
+    {
+        base.Load();
+        
+        // Load what you require here.
+    }
+    
+    protected override void Update()
+    {
+        base.Update();
+        
+        // Do your update logic here, this goes in the main loop.
+    }
+    
+    protected override void Dispose(bool disposing)
+    {
+        // Dispose my disposable classes here.
+        
+        base.Dispose(disposing);
+    }
+}
+
+public static class Program
+{
+    public static void Main()
+    {
+        using Game game = new();
+        game.run();
+    }
+}
+```
+
+Refer to the [examples](#examples) for further ways this library can be used, including the aforementioned methods.
+
 ## Current Library Support:
 
 - Vmr.Sdl2.Net - version 2.30.1
@@ -157,7 +203,8 @@ A rough, simple example on how to create a basic window and handle the quit even
 
 ### Example 002:
 
-A more refined example on how to load a BMP file and display it into the window's screen surface.
+A more refined example on how to load a BMP file and display it into the window's screen surface. This makes use of the
+inherited properties of the `Application` class.
 
 ### Example 003:
 

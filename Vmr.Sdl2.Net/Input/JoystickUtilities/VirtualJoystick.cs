@@ -1,42 +1,43 @@
 // Copyright (c) 2024 Victor Matia <vmatir@gmail.com>
 
+using Vmr.Sdl2.Net.Exceptions;
 using Vmr.Sdl2.Net.Imports;
-using Vmr.Sdl2.Net.Utilities;
 
 namespace Vmr.Sdl2.Net.Input.JoystickUtilities;
 
 public class VirtualJoystick : IDisposable
 {
-    private readonly ErrorCodeHandler _errorHandler;
-
     public VirtualJoystick(
         JoystickType type,
         int numberOfAxes,
         int numberOfButtons,
-        int numberOfHats,
-        ErrorCodeHandler errorHandler
+        int numberOfHats
     )
     {
         int index = Sdl.JoystickAttachVirtual(type, numberOfAxes, numberOfButtons, numberOfHats);
         if (index < 0)
         {
-            errorHandler(Sdl.GetError(), index);
+            throw new JoystickException(
+                $"Unable to create a virtual joystick as {{Type: {type}, Number of Axes: {numberOfAxes}, Number of Buttons: {numberOfButtons}, Number of Hats: {numberOfHats}}}",
+                index
+            );
         }
 
         Index = index;
-        _errorHandler = errorHandler;
     }
 
-    public VirtualJoystick(VirtualJoystickDesc desc, ErrorCodeHandler errorHandler)
+    public VirtualJoystick(VirtualJoystickDesc desc)
     {
         int index = Sdl.JoystickAttachVirtualEx(desc);
         if (index < 0)
         {
-            errorHandler(Sdl.GetError(), index);
+            throw new JoystickException(
+                $"Unable to create a virtual joystick as described: {desc}",
+                index
+            );
         }
 
         Index = index;
-        _errorHandler = errorHandler;
     }
 
     public int Index { get; }
@@ -52,7 +53,7 @@ public class VirtualJoystick : IDisposable
         int code = Sdl.JoystickDetachVirtual(Index);
         if (code < 0)
         {
-            _errorHandler(Sdl.GetError(), code);
+            throw new JoystickException("Unable to detach the virtual joystick");
         }
     }
 
